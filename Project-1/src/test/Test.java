@@ -5,9 +5,9 @@ import java.sql.*;
 public class Test {
     public static void main(String[] args) {
         String driver = "oracle.jdbc.driver.OracleDriver";
-        String url = "jdbc:oracle:thin:@localhost:1521:orcl";
+        String url = "jdbc:oracle:thin:@localhost:1521:XE";
         String user = "c##sahmyook";
-        String password = "qwer1234";
+        String password = "1234";
  
         try {
             Class.forName(driver);
