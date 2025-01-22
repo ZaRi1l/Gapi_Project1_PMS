@@ -7,7 +7,7 @@ public class Test {
         String driver = "oracle.jdbc.driver.OracleDriver";
         String url = "jdbc:oracle:thin:@localhost:1521:orcl";
         String user = "c##sahmyook";
-        String password = "1111";
+        String password = "qwer1234";
  
         try {
             Class.forName(driver);
