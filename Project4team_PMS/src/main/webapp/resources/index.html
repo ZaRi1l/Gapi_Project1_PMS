@@ -50,27 +50,54 @@
 	href="css/index_css/main-4fc63177fb30db971ffe.css"
 	crossorigin="anonymous">
 <style>
-body {
-	font-size: 140%;
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	font-family: Arial, sans-serif;
+	text-align: left;
 }
 
-h2 {
+.table th, .table td {
+	padding: 10px;
+	border: 1px solid #ddd;
+}
+
+.table th {
+	background-color: #f4f4f4;
+	font-weight: bold;
+}
+
+.table-hover tbody tr:hover {
+	background-color: #f9f9f9;
+}
+
+.table .owner-icon {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+.table .status-in-progress {
+	color: white;
+	background-color: orange;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 0.9rem;
+}
+
+.table .status-done {
+	color: white;
+	background-color: green;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 0.9rem;
+}
+
+.table .sp-column {
 	text-align: center;
-	padding: 20px 0;
-}
-
-table caption {
-	padding: .5em 0;
-}
-
-table.dataTable th, table.dataTable td {
-	white-space: nowrap;
-}
-
-.p {
-	text-align: center;
-	padding-top: 140px;
-	font-size: 14px;
 }
 </style>
 </head>
@@ -412,88 +439,109 @@ table.dataTable th, table.dataTable td {
 				<div class="container">
 					<div class="row">
 						<div class="col-xs-12">
-							<table
-								summary="This table shows how to create responsive tables using Datatables' extended functionality"
-								class="table table-bordered table-hover dt-responsive">
-								<caption class="text-center">
-									An example of a responsive table based on <a
-										href="https://datatables.net/extensions/responsive/"
-										target="_blank">DataTables</a>:
-								</caption>
+							<table class="table table-bordered table-hover">
 								<thead>
 									<tr>
 										<th>태스크</th>
 										<th>Owner</th>
-										<th>진행 상황</th>
-										<th>SP</th>
-										<th>요구사항</th>
+										<th>Status</th>
+										<th class="sp-column">Estimated SP</th>
+										<th>Epic</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
-										<td>Argentina</td>
-										<td>Spanish (official), English, Italian, German, French</td>
-										<td>41,803,125</td>
-										<td>31.3</td>
-										<td>연습용</td>
+										<td>유스케이스 다이어그램 그리기</td>
+										<td><div class="owner-icon"
+												style="background-color: #000;"></div> 사용자 1</td>
+										<td><span class="status-in-progress">In Progress</span></td>
+										<td class="sp-column">3 SP</td>
+										<td>Infrastructure</td>
 									</tr>
 									<tr>
-										<td>Australia</td>
-										<td>English 79%, native and other languages</td>
-										<td>23,630,169</td>
-										<td>37.3</td>
-										<td>7,739,983</td>
+										<td>클래스 다이어그램</td>
+										<td><div class="owner-icon"
+												style="background-color: #2ecc71;"></div> 사용자 Y</td>
+										<td><span class="status-done">Done</span></td>
+										<td class="sp-column">0 SP</td>
+										<td>Infrastructure</td>
 									</tr>
 									<tr>
-										<td>Greece</td>
-										<td>Greek 99% (official), English, French</td>
-										<td>11,128,404</td>
-										<td>43.2</td>
-										<td>131,956</td>
+										<td>시퀀스 다이어그램 그리기</td>
+										<td><div class="owner-icon"
+												style="background-color: #f1c40f;"></div> 사용자 K</td>
+										<td><span class="status-done">Done</span></td>
+										<td class="sp-column">13 SP</td>
+										<td>Infrastructure</td>
 									</tr>
 									<tr>
-										<td>Luxembourg</td>
-										<td>Luxermbourgish (national) French, German (both
-											administrative)</td>
-										<td>536,761</td>
-										<td>39.1</td>
-										<td>2,586</td>
-									</tr>
-									<tr>
-										<td>Russia</td>
-										<td>Russian, others</td>
-										<td>142,467,651</td>
-										<td>38.4</td>
-										<td>17,076,310</td>
-									</tr>
-									<tr>
-										<td>Sweden</td>
-										<td>Swedish, small Sami- and Finnish-speaking minorities</td>
-										<td>9,631,261</td>
-										<td>41.1</td>
-										<td>449,954</td>
+										<td>E-R 다이어그램 그리기</td>
+										<td><div class="owner-icon"
+												style="background-color: #e74c3c;"></div> 사용자 박</td>
+										<td><span class="status-in-progress">In Progress</span></td>
+										<td class="sp-column">0 SP</td>
+										<td>Infrastructure</td>
 									</tr>
 								</tbody>
-								<tfoot>
-									<tr>
-										<td colspan="5" class="text-center">Data retrieved from <a
-											href="http://www.infoplease.com/ipa/A0855611.html"
-											target="_blank">infoplease</a> and <a
-											href="http://www.worldometers.info/world-population/population-by-country/"
-											target="_blank">worldometers</a>.
-										</td>
-									</tr>
-								</tfoot>
 							</table>
 						</div>
 					</div>
 				</div>
-
-				<p class="p">
-					Demo by George Martsoukos. <a
-						href="http://www.sitepoint.com/responsive-data-tables-comprehensive-list-solutions"
-						target="_blank">See article</a>.
-				</p>
+				<br>
+				<br>
+				<br>
+				<br>
+				<div class="container">
+					<div class="row">
+						<div class="col-xs-12">
+							<table class="table table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>태스크</th>
+										<th>Owner</th>
+										<th>Status</th>
+										<th class="sp-column">Estimated SP</th>
+										<th>Epic</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>유스케이스 다이어그램 그리기</td>
+										<td><div class="owner-icon"
+												style="background-color: #000;"></div> 사용자 1</td>
+										<td><span class="status-in-progress">In Progress</span></td>
+										<td class="sp-column">3 SP</td>
+										<td>Infrastructure</td>
+									</tr>
+									<tr>
+										<td>클래스 다이어그램</td>
+										<td><div class="owner-icon"
+												style="background-color: #2ecc71;"></div> 사용자 Y</td>
+										<td><span class="status-done">Done</span></td>
+										<td class="sp-column">0 SP</td>
+										<td>Infrastructure</td>
+									</tr>
+									<tr>
+										<td>시퀀스 다이어그램 그리기</td>
+										<td><div class="owner-icon"
+												style="background-color: #f1c40f;"></div> 사용자 K</td>
+										<td><span class="status-done">Done</span></td>
+										<td class="sp-column">13 SP</td>
+										<td>Infrastructure</td>
+									</tr>
+									<tr>
+										<td>E-R 다이어그램 그리기</td>
+										<td><div class="owner-icon"
+												style="background-color: #e74c3c;"></div> 사용자 박</td>
+										<td><span class="status-in-progress">In Progress</span></td>
+										<td class="sp-column">0 SP</td>
+										<td>Infrastructure</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 				<!-- End of Topbar -->
 
 				<!-- Begin Page Content -->
@@ -566,6 +614,6 @@ table.dataTable th, table.dataTable td {
 
 </body>
 <script>
-$('table').DataTable();
+	$('table').DataTable();
 </script>
 </html>
