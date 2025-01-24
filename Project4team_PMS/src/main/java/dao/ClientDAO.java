@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class ClientDAO {
     String driver = "oracle.jdbc.driver.OracleDriver";
-    String url = "jdbc:oracle:thin:@localhost:1521/orcl";
+    String url = "jdbc:oracle:thin:@localhost:1521/xe";
     String user = "c##apple";
     String password = "1111";
 
