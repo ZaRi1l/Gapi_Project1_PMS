@@ -1,41 +1,17 @@
 package dao;
 
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.Properties;
+import java.sql.*;
+import java.util.*;
 
 public class ClientDAO {
 	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url;
+	String url = "jdbc:oracle:thin:@localhost:1521/orcl";
 	String user = "c##apple";
 	String password = "1111";
 
 	private Connection con;
 	private PreparedStatement stmt;
 	private ResultSet rs;
-
-	public ClientDAO() {
-		try {
-			// db.properties 파일 읽기
-			Properties properties = new Properties();
-			properties.load(new FileInputStream("db.properties"));
-			String dbServiceName = properties.getProperty("db.serviceName");
-
-			// dbServiceName에 따라 URL을 설정
-			if ("XE".equals(dbServiceName)) {
-				this.url = "jdbc:oracle:thin:@localhost:1521/XE"; // XE로 설정
-			} else {
-				this.url = "jdbc:oracle:thin:@localhost:1521/orcl"; // 기본 orcl로 설정
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public ArrayList<String> list(String name) {
 
@@ -71,8 +47,20 @@ public class ClientDAO {
 		try {
 			Class.forName(driver); // JDBC 드라이버 로드
 			System.out.println("jdbc driver loading success.");
-			con = DriverManager.getConnection(url, user, password); // DB 연결
-			System.out.println("oracle connection success.");
+
+			// 첫 번째 URL로 연결 시도
+			try {
+				con = DriverManager.getConnection(url, user, password); // DB 연결
+				System.out.println("oracle connection success with URL: " + url);
+			} catch (Exception e) {
+				System.out.println("Connection failed with URL: " + url);
+				System.out.println("Retrying with alternate URL...");
+
+				// 두 번째 URL로 재시도
+				String alternateUrl = "jdbc:oracle:thin:@localhost:1521/XE";
+				con = DriverManager.getConnection(alternateUrl, user, password);
+				System.out.println("oracle connection success with alternate URL: " + alternateUrl);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
