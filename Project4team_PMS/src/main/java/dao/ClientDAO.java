@@ -46,6 +46,43 @@ public class ClientDAO {
       return str; // 결과 반환
    }
    
+   public boolean insert(String cEmail, String cName, String cPassword) throws NamingException, SQLException {
+       PreparedStatement stmt = null;
+       connDB();
+       
+       try {
+    	   // 이메일 중복 확인
+    	   String checkSql = "SELECT COUNT(*) FROM client WHERE email = ?";
+           PreparedStatement checkStmt = con.prepareStatement(checkSql);
+           checkStmt.setString(1, cEmail);
+           rs = checkStmt.executeQuery();
+           if (rs.next() && rs.getInt(1) > 0) {
+               return false; // 이메일 중복
+           }
+    	   
+    	   
+    	   
+    	   
+    	   // 이메일 삽입
+           String sql = "INSERT INTO client(email, name, password) VALUES(?, ?, ?)";
+           
+           
+           stmt = con.prepareStatement(sql);
+           stmt.setString(1, cEmail);
+           stmt.setString(2, cName);
+           stmt.setString(3, cPassword);
+           
+           
+           
+           int count = stmt.executeUpdate();
+           return (count == 1) ? true : false;
+           
+       } finally {
+           if (stmt != null) stmt.close(); 
+           if (con != null) con.close();
+       }
+   }
+   
    
    public int login(String cEmail, String cPassword) throws NamingException, SQLException, ParseException {
         PreparedStatement stmt = null;
