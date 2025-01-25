@@ -157,26 +157,18 @@
 					<div class="bg-white py-2 collapse-inner rounded">
 						<h6 class="collapse-header">Custom Components:</h6>
 						<a class="collapse-item" href="buttons.html">Buttons</a> <a
-							class="collapse-item" href="cards.html">Cards</a>
-					</div>
-				</div></li>
-
-			<!-- Nav Item - Utilities Collapse Menu -->
-			<li class="nav-item"><a class="nav-link collapsed" href="#"
-				data-toggle="collapse" data-target="#collapseUtilities"
-				aria-expanded="true" aria-controls="collapseUtilities"> <i
-					class="fas fa-fw fa-wrench"></i> <span>Utilities</span>
-			</a>
-				<div id="collapseUtilities" class="collapse"
-					aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-					<div class="bg-white py-2 collapse-inner rounded">
-						<h6 class="collapse-header">Custom Utilities:</h6>
-						<a class="collapse-item" href="utilities-color.html">Colors</a> <a
-							class="collapse-item" href="utilities-border.html">Borders</a> <a
-							class="collapse-item" href="utilities-animation.html">Animations</a>
-						<a class="collapse-item" href="utilities-other.html">Other</a>
-					</div>
-				</div></li>
+							class="collapse-item" href="cards.html">Cards</a> </a>
+						<div id="collapseUtilities" class="collapse"
+							aria-labelledby="headingUtilities"
+							data-parent="#accordionSidebar">
+							<div class="bg-white py-2 collapse-inner rounded">
+								<h6 class="collapse-header">Custom Utilities:</h6>
+								<a class="collapse-item" href="utilities-color.html">Colors</a>
+								<a class="collapse-item" href="utilities-border.html">Borders</a>
+								<a class="collapse-item" href="utilities-animation.html">Animations</a>
+								<a class="collapse-item" href="utilities-other.html">Other</a>
+							</div>
+						</div></li>
 
 			<!-- Divider -->
 			<hr class="sidebar-divider">
@@ -457,39 +449,8 @@
 										<th>Epic</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td>유스케이스 다이어그램 그리기</td>
-										<td><div class="owner-icon"
-												style="background-color: #000;"></div> 사용자 1</td>
-										<td><span class="status-in-progress">In Progress</span></td>
-										<td class="sp-column">3 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>클래스 다이어그램</td>
-										<td><div class="owner-icon"
-												style="background-color: #2ecc71;"></div> 사용자 Y</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">0 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>시퀀스 다이어그램 그리기</td>
-										<td><div class="owner-icon"
-												style="background-color: #f1c40f;"></div> 사용자 K</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">13 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>E-R 다이어그램 그리기</td>
-										<td><div class="owner-icon"
-												style="background-color: #e74c3c;"></div> 사용자 박</td>
-										<td><span class="status-ready-to-start">Ready To Start</span></td>
-										<td class="sp-column">0 SP</td>
-										<td>Infrastructure</td>
-									</tr>
+								<tbody id="taskTableBody">
+									<!-- 동적으로 데이터가 추가될 영역 -->
 								</tbody>
 							</table>
 						</div>
@@ -634,7 +595,59 @@
 	<script src="js/demo/chart-pie-demo.js"></script>
 
 </body>
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="js/core.js"></script>
 <script>
-	$('table').DataTable();
+$(document).ready(function () {
+    fetchTasks(); // 최초 실행
+    setInterval(fetchTasks, 5000); // 5초마다 실행
+});
+
+function fetchTasks() {
+	   // 서버에서 데이터를 가져오는 AJAX 호출
+	   var url = "jsp/getTask.jsp";
+	   AJAX.call(url, null, function(data) {
+	      // 서버에서 받은 데이터를 테이블에 추가
+	      console.log("AJAX.call 실행");
+	      populateTable(data.trim());
+	   });
+	}
+
+	function populateTable(data) {
+		console.log("populateTable(data) 함수 실행 data: " + data);
+		const tableBody = $("#taskTableBody"); // tbody 선택
+	   tableBody.empty(); // 기존 데이터를 모두 제거
+
+	   // 서버에서 받은 데이터를 줄바꿈으로 나눔
+	   const rows = data.split("\n");
+	   rows.forEach(function(row) {
+	       const columns = row.split("|"); // '|'로 각 열을 구분
+	       const task = columns[0];
+	       const name = columns[1];
+	       const status = columns[2];
+
+	       // 상태에 따라 동적 클래스 지정
+	       let statusHTML = ""; // 상태에 따른 HTML을 담을 변수
+	       if (status === "완료") {
+	           statusHTML = `<span class="status-done">Done</span>`;
+	       } else if (status === "진행") {
+	           statusHTML = `<span class="status-in-progress">In Progress</span>`;
+	       } else if (status === "예정") {
+	           statusHTML = `<span class="status-ready-to-start">Ready To Start</span>`;
+	       }
+
+	       // 동적으로 행 추가
+	       const newRow = `
+	           <tr>
+	               <td>${task}</td>
+	               <td>${name}</td>
+	               <td>${statusHTML}</td>
+	               <td> </td>
+	               <td> </td>
+	           </tr>`;
+	       tableBody.append(newRow); // 테이블에 행 추가
+	       console.log("tableBody.append(newRow) 실행 newRow: " + newRow);
+	   });
+	}
 </script>
 </html>
