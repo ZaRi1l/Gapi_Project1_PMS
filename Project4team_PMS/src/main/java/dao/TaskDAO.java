@@ -1,10 +1,9 @@
 package dao;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
-import vo.TaskVo;
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
 
 public class TaskDAO {
 	// 데이터베이스 연결 정보
@@ -17,30 +16,33 @@ public class TaskDAO {
 	private PreparedStatement stmt;
 	private ResultSet rs;
 
-	// 1. Task 목록 조회
-	public ArrayList<TaskVo> getTasks() {
-		ArrayList<TaskVo> tasks = new ArrayList<>();
-		String query = "SELECT c.NAME, t.TASK, t.STATUS FROM CLIENT c, TASK t WHERE c.EMAIL = t.EMAIL";
-
+	public JSONArray getTasks() {  // 그냥 모든 작업을 다 보는 메서드
+		JSONArray tasks = new JSONArray();
+		// CLIENT 테이블이랑 TASK 테이블이랑 조인해서 누가 어느 작업을 올렸는지 조회한다.
+		String query = "SELECT C.CUSTOMER_ID, C.JSONSTR AS CLIENT_JSON, T.TASK_ID, T.DASHBOARD_ID, T.JSONSTR AS TASK_JSON "
+                + "FROM CLIENT C, TASK T "
+                + "WHERE C.CUSTOMER_ID = T.CUSTOMER_ID";
 		try {
-			connDB(); // DB 연결
+			connDB();
 			stmt = con.prepareStatement(query);
 			rs = stmt.executeQuery();
-			System.out.println("select문 실행");
-			
-			while (rs.next()) {
-				TaskVo task = new TaskVo();
-				task.setName(rs.getString("NAME"));
-				task.setTask(rs.getString("TASK")); // 필드명 TASK
-				task.setStatus(rs.getString("STATUS")); // 필드명 STATUS
-				tasks.add(task);
-			}
-			System.out.println("select문으로 부터 조회한 값");
-			for(TaskVo t : tasks) {
-				System.out.println(t);
-			}
-			System.out.println("--------------------------------");
 
+			while (rs.next()) {
+				// CLIENT 테이블 JSONSTR 파싱
+				String clientJsonStr = rs.getString("CLIENT_JSON");
+				JSONObject clientJson = (JSONObject) new JSONParser().parse(clientJsonStr);
+				String customerName = clientJson.get("name").toString();
+
+				// TASK 테이블 데이터 생성
+				JSONObject taskObj = new JSONObject();
+				taskObj.put("taskData", rs.getString("TASK_JSON"));
+				taskObj.put("dashboardId", rs.getString("DASHBOARD_ID"));
+				taskObj.put("customerName", customerName);
+
+				// JSONArray에 추가
+				tasks.add(taskObj);
+			}
+			System.out.println(tasks.toJSONString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -48,6 +50,51 @@ public class TaskDAO {
 		}
 
 		return tasks;
+	}
+	
+	public JSONArray getFriendTasks(String customerId) { // 동료과의 작업물만 보는 메서드
+		System.out.println(customerId);
+	    JSONArray tasks = new JSONArray();
+	    //로그인한 사용자의 동료들과 관련된 작업들만 조회
+	    String query = "SELECT C.CUSTOMER_ID, C.JSONSTR AS CLIENT_JSON, T.TASK_ID, T.DASHBOARD_ID, T.JSONSTR AS TASK_JSON "
+	                    + "FROM FRIENDLIST F "
+	                    + "JOIN CLIENT C ON C.CUSTOMER_ID = F.FRIEND_ID "
+	                    + "JOIN TASK T ON T.CUSTOMER_ID = F.FRIEND_ID "
+	                    + "WHERE F.CUSTOMER_ID = ?";
+
+
+	    try {
+	        connDB(); // DB 연결
+	        stmt = con.prepareStatement(query);
+	        stmt.setString(1, customerId); // 사용자의 CUSTOMER_ID를 인자로 이용
+	        rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            try {
+	                // CLIENT JSON 파싱
+	                String clientJsonStr = rs.getString("CLIENT_JSON");
+	                JSONObject clientJson = (JSONObject) new JSONParser().parse(clientJsonStr);
+	                String customerName = clientJson.get("name").toString();
+
+	                // TASK JSON 생성
+	                String taskJsonStr = rs.getString("TASK_JSON");
+	                JSONObject taskJson = (JSONObject) new JSONParser().parse(taskJsonStr);
+	                taskJson.put("dashboardId", rs.getString("DASHBOARD_ID"));
+	                taskJson.put("customerName", customerName);
+
+	                tasks.add(taskJson); // 결과 배열에 추가
+	                System.out.println(tasks.toJSONString());
+	            } catch (Exception e) {
+	                System.err.println("JSON 파싱 오류: " + e.getMessage());
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 에러 출력
+	    } finally {
+	    	closeResources();
+	    }
+
+	    return tasks;
 	}
 
 	public void connDB() {
