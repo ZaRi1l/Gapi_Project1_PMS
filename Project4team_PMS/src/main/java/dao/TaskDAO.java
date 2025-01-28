@@ -55,18 +55,26 @@ public class TaskDAO {
 	public JSONArray getFriendTasks(String customerId) { // 동료과의 작업물만 보는 메서드
 		System.out.println(customerId);
 	    JSONArray tasks = new JSONArray();
-	    //로그인한 사용자의 동료들과 관련된 작업들만 조회
+	    //로그인한 사용자의 동료들 + 나자신과의 관련된 작업들만 조회
 	    String query = "SELECT C.CUSTOMER_ID, C.JSONSTR AS CLIENT_JSON, T.TASK_ID, T.DASHBOARD_ID, T.JSONSTR AS TASK_JSON "
-	                    + "FROM FRIENDLIST F "
-	                    + "JOIN CLIENT C ON C.CUSTOMER_ID = F.FRIEND_ID "
-	                    + "JOIN TASK T ON T.CUSTOMER_ID = F.FRIEND_ID "
-	                    + "WHERE F.CUSTOMER_ID = ?";
+	             + "FROM FRIENDLIST F "
+	             + "JOIN CLIENT C ON C.CUSTOMER_ID = F.FRIEND_ID "
+	             + "JOIN TASK T ON T.CUSTOMER_ID = F.FRIEND_ID "
+	             + "WHERE F.CUSTOMER_ID = ? "
+
+	             + "UNION "
+
+	             + "SELECT C.CUSTOMER_ID, C.JSONSTR AS CLIENT_JSON, T.TASK_ID, T.DASHBOARD_ID, T.JSONSTR AS TASK_JSON "
+	             + "FROM CLIENT C "
+	             + "JOIN TASK T ON C.CUSTOMER_ID = T.CUSTOMER_ID "
+	             + "WHERE C.CUSTOMER_ID = ?";
 
 
 	    try {
 	        connDB(); // DB 연결
 	        stmt = con.prepareStatement(query);
 	        stmt.setString(1, customerId); // 사용자의 CUSTOMER_ID를 인자로 이용
+	        stmt.setString(2, customerId);
 	        rs = stmt.executeQuery();
 
 	        while (rs.next()) {
@@ -96,6 +104,51 @@ public class TaskDAO {
 
 	    return tasks;
 	}
+	
+	public int insertTask(String taskName, String customerId) {
+	    String checkDashboardQuery = "SELECT COUNT(*) FROM DASHBOARD WHERE DASHBOARD_ID = ?";
+	    String insertDashboardQuery = "INSERT INTO DASHBOARD (DASHBOARD_ID, JSONSTR) VALUES (?, ?)";
+	    String insertTaskQuery = "INSERT INTO TASK (TASK_ID, DASHBOARD_ID, CUSTOMER_ID, JSONSTR) VALUES (?, ?, ?, ?)";
+
+	    String TASK_ID = customerId + "_" + taskName;
+	    String DASHBOARD_ID = taskName + "_dashboard";
+	    JSONObject jsonstr = new JSONObject();
+	    jsonstr.put("task", taskName); 
+
+	    try {
+	        connDB();
+
+	        // 1. DASHBOARD_ID 존재 여부 확인
+	        stmt = con.prepareStatement(checkDashboardQuery);
+	        stmt.setString(1, DASHBOARD_ID);
+	        rs = stmt.executeQuery();
+	        rs.next();
+	        int count = rs.getInt(1);
+	        
+	        // 2. 만약 DASHBOARD_ID가 없으면 먼저 삽입 DASHBOARD_ID 이게 문제인데; x 100
+	        if (count == 0) {
+	            stmt = con.prepareStatement(insertDashboardQuery);
+	            stmt.setString(1, DASHBOARD_ID);
+	            stmt.setString(2, "{}");  // 기본 JSON 데이터 저장 (빈 객체)
+	            stmt.executeUpdate();
+	        }
+
+	        // 3. TASK 삽입
+	        stmt = con.prepareStatement(insertTaskQuery);
+	        stmt.setString(1, TASK_ID);
+	        stmt.setString(2, DASHBOARD_ID);
+	        stmt.setString(3, customerId);
+	        stmt.setString(4, jsonstr.toJSONString());
+
+	        return stmt.executeUpdate(); // 성공 시 1 반환
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return 0; // 실패 시 0 반환
+	    } finally {
+	        closeResources();
+	    }
+	}
+
 
 	public void connDB() {
 		try {

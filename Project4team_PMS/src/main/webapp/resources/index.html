@@ -600,44 +600,105 @@
 <script>
 $(document).ready(function () {
     fetchTasks(); // 최초 실행
+    getSession(); //login.jsp로 부터 세션 가져와서 여기서 쓰기
     setInterval(fetchTasks, 5000); // 5초마다 실행 - 비동기 실시간 처리 같은 기능을 최대한 구현하기위해
+    
+    /* $("#addTaskForm").submit(function (event) {
+        event.preventDefault();
+        addTask();
+    }); */
 });
+
+var customerId = ""; // 전역 변수
+
+function getSession() {
+    var url = "jsp/getSession.jsp";
+
+    AJAX.call(url, null, function (data) {
+        if (data.trim() !== "noting") {
+            customerId = data.trim(); // 세션에서 가져온 ID 저장
+            console.log("세션에서 가져온 customerId: ", customerId);
+            fetchTasks(); // 세션을 가져온 후 fetchTasks 실행
+        } else {
+            alert("세션이 만료되었습니다. 로그인 해주세요!");
+            window.location.href = "login.html"; // 세션이 없으면 로그인 페이지로 이동
+        }
+    });
+}
 
 function fetchTasks() {
     var url = "jsp/getTask.jsp";
 
     AJAX.call(url, null, function(data) {
-        console.log("AJAX 응답 데이터: ", data); // jsp로 부터 온 응답 데이터 확인
-        var tasks = JSON.parse(data); // 결국 html에서 쓰려면 객체로 파싱해야한다...
+        console.log("AJAX 응답 데이터: ", data);
+        var tasks = JSON.parse(data);
         populateTable(tasks); // 테이블 업데이트 함수 호출
     });
 }
 
 function populateTable(tasks) {
-    const tableBody = $("#taskTableBody"); // tbody 태그 선택
-    tableBody.empty(); // 기존 데이터를 모두 제거 <-- 혹시 모를 데이터 충돌,불일치를 위해서
+    const tableBody = $("#taskTableBody");
+    tableBody.empty(); // 기존 데이터를 모두 제거
 
-    tasks.forEach(tasks => {
-        // 상태에 따라 동적 클래스 지정
+    tasks.forEach(task => {
         let statusHTML = ""; 
-        if (tasks.status === "완료") {
+        if (task.status === "완료") {
             statusHTML = `<span class="status-done">Done</span>`;
-        } else if (tasks.status === "진행") {
+        } else if (task.status === "진행") {
             statusHTML = `<span class="status-in-progress">In Progress</span>`;
-        } else if (tasks.status === "예정") {
+        } else if (task.status === "예정") {
             statusHTML = `<span class="status-ready-to-start">Ready To Start</span>`;
         }
 
-        // 행 추가
         const newRow = `
             <tr>
-                <td>${tasks.task}</td>
-                <td>${tasks.customerName}</td>
+                <td>${task.task}</td>
+                <td>${task.customerName}</td>
                 <td>${statusHTML}</td>
-                <td>${tasks.startdate}</td>
-                <td>${tasks.enddate}</td>
+                <td>${task.startdate}</td>
+                <td>${task.enddate}</td>
             </tr>`;
-        tableBody.append(newRow); // 테이블에 행 추가
+        tableBody.append(newRow);
+    });
+
+    // 새 작업 추가 입력란
+    const addTaskRow = `
+        <tr>
+            <td><input type="text" id="addTaskInput" placeholder="작업 추가"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>`;
+    tableBody.append(addTaskRow);
+}
+
+// Enter 키 이벤트를 document에 바인딩 (이벤트 중복 방지)
+$(document).on("keypress", "#addTaskInput", function (event) {
+    if (event.which === 13) { // 13 = Enter 키
+        addTask();
+    }
+});
+
+function addTask() {
+    var taskName = $("#addTaskInput").val().trim();
+    if (taskName === "") {
+        alert("작업명을 입력하세요.");
+        return;
+    }
+
+    var params = {
+        task: taskName,
+        customerId: customerId
+    };
+
+    var url = "jsp/addTask.jsp";
+    AJAX.call(url, params, function (data) {
+        if (data.trim() === "OK") {
+            alert("작업이 추가되었습니다.");
+        } else {
+            alert("작업 추가 실패!");
+        }
     });
 }
 </script>

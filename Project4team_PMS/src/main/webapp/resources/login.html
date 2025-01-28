@@ -113,8 +113,10 @@
 			return;
 		}
 		
-		var url = "jsp/login.jsp?id=" + id + "&ps=" + ps;
-		AJAX.call(url, null, function(data) {
+		var params = {id:id, ps:ps}; // {id:choi@naver.com, ps:1111}
+		
+		var url = "jsp/login.jsp";
+		AJAX.call(url, params, function(data) {
 			var code = data.trim();
 			if (code == "NE") {
 				alert("아이디가 존재하지 않습니다.");
