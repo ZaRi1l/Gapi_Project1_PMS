@@ -87,6 +87,8 @@ public class TaskDAO {
 	                // TASK JSON 생성
 	                String taskJsonStr = rs.getString("TASK_JSON");
 	                JSONObject taskJson = (JSONObject) new JSONParser().parse(taskJsonStr);
+	                // taskId 추가!!
+	                taskJson.put("taskId", rs.getString("TASK_ID")); 
 	                taskJson.put("dashboardId", rs.getString("DASHBOARD_ID"));
 	                taskJson.put("customerName", customerName);
 
@@ -148,6 +150,28 @@ public class TaskDAO {
 	        closeResources();
 	    }
 	}
+	
+	public boolean updateTask(String taskId, String task, String status, String estimited_ep, String epic) {
+        String query = "UPDATE TASK SET JSONSTR = ? WHERE TASK_ID = ?";
+        try {
+            connDB();
+            stmt = con.prepareStatement(query);
+
+            String jsonStr = String.format("{\"task\": \"%s\", \"status\": \"%s\", \"Estimeted_SP\": \"%s\", \"epic\": \"%s\"}", 
+                task, status, estimited_ep, epic);
+
+            stmt.setString(1, jsonStr);
+            stmt.setString(2, taskId);
+
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+        	closeResources();
+        }
+    }
 
 
 	public void connDB() {
