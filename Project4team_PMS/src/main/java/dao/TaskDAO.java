@@ -156,14 +156,15 @@ public class TaskDAO {
         try {
             connDB();
             stmt = con.prepareStatement(query);
-
+            
+            //문자열 포매팅으로 사용자의 입력값 할당
             String jsonStr = String.format("{\"task\": \"%s\", \"status\": \"%s\", \"Estimeted_SP\": \"%s\", \"epic\": \"%s\"}", 
                 task, status, estimited_ep, epic);
 
             stmt.setString(1, jsonStr);
             stmt.setString(2, taskId);
 
-            int rowsUpdated = stmt.executeUpdate();
+            int rowsUpdated = stmt.executeUpdate(); // 수정 성공하면 '1' 반환
             return rowsUpdated > 0;
         } catch (SQLException e) {
             e.printStackTrace();

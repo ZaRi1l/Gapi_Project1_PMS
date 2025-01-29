@@ -7,7 +7,7 @@
     String taskId = request.getParameter("taskId");
     String task = request.getParameter("task");
     String status = request.getParameter("status");
-    String estimited_ep = request.getParameter("estimited_ep");
+    String estimited_ep = request.getParameter("Estimated_SP");
     String epic = request.getParameter("epic");
 
     TaskDAO dao = new TaskDAO();

@@ -487,9 +487,8 @@
 									<option value="멈춤">Stuck</option>
 									<option value="예정">Ready To Start</option>
 									<option value="완료">Done</option>
-								</select> <label>시작일:</label> <input type="date" id="editTaskStartDate">
-
-								<label>종료일:</label> <input type="date" id="editTaskEndDate">
+								</select>
+								<label>Estimated SP</label> <input type="text" id="Estimated_SP">
 
 								<label>Epic:</label> <input type="text" id="editTaskEpic">
 							</div>
@@ -693,7 +692,8 @@ function populateTable(tasks) {
         else if (task.status === "멈춤") {
             statusHTML = `<span class="status-stuck">Stuck</span>`;
         }
-
+		
+        //테이블 클릭하면 모달 열림
         const newRow = `
             <tr onclick="openEditModal('${task.taskId}', '${task.task}', '${task.status}', '${task.Estimeted_SP}', '${task.epic}')">
                 <td>${task.task}</td>
@@ -747,33 +747,34 @@ function addTask() {
     });
 }
 
-function openEditModal(taskId, taskName, status, startDate, endDate, epic) {
+function openEditModal(taskId, taskName, status, Estimated_SP, endDate, epic) {
 	console.log("모달 열기 실행됨!"); // 로그 확인용
     $("#editTaskId").val(taskId);
     $("#editTaskName").val(taskName);
     $("#editTaskStatus").val(status);
-    $("#editTaskStartDate").val(startDate);
-    $("#editTaskEndDate").val(endDate);
+    $("#Estimated_SP").val(Estimated_SP);
     $("#editTaskEpic").val(epic);
     console.log("모달 ID 확인:", $("#editTaskModal").length); // 모달이 존재하는지 확인
-    console.log("Task 클릭됨: ", taskId, taskName, status, startDate, endDate, epic);
+    console.log("Task 클릭됨: ", taskId, taskName, status, Estimated_SP, epic);
 
     $("#editTaskModal").modal("show");
 }
 
 function updateTask() {
+	// JSON 형식으로 데이터 구조 생성
     var params = {
         taskId: $("#editTaskId").val(),
         task: $("#editTaskName").val(),
         status: $("#editTaskStatus").val(),
-        startdate: $("#editTaskStartDate").val(),
-        enddate: $("#editTaskEndDate").val(),
+        Estimated_SP: $("#Estimated_SP").val(),
         epic: $("#editTaskEpic").val()
     };
-
+	
+	//AJAX.call( ) 이용해서 비동기 처리 --> updateTask.jsp
     AJAX.call("jsp/updateTask.jsp", params, function (data) {
         if (data.trim() === "OK") {
             alert("작업이 수정되었습니다.");
+            // 수정 완료후 모달 닫기
             $("#editTaskModal").modal("hide");
             fetchTasks();
         } else {
