@@ -1,107 +1,114 @@
 package dao;
 
 import java.sql.*;
-import java.text.ParseException;
-import java.util.*;
 
 import javax.naming.NamingException;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 public class ClientDAO {
-   String driver = "oracle.jdbc.driver.OracleDriver";
-   String url = "jdbc:oracle:thin:@localhost:1521/orcl";
-   String user = "c##apple";
-   String password = "1111";
+	String driver = "oracle.jdbc.driver.OracleDriver";
+	String url = "jdbc:oracle:thin:@localhost:1521/orcl";
+	String user = "c##apple";
+	String password = "1111";
 
-   private Connection con;
-   private PreparedStatement stmt;
-   private ResultSet rs;
+	private Connection con;
+	private PreparedStatement stmt;
+	private ResultSet rs;
 
-   public ArrayList<String> list(String name) {
+	public int insert(String cEmail, String jsonstr) throws NamingException, SQLException {
+		System.out.println(cEmail);
+		System.out.println(jsonstr);
+		stmt = null;
+		connDB();
 
-      ArrayList<String> str = new ArrayList<>();
+		try {
+			// 이메일 중복 확인
+			String checkSql = "SELECT COUNT(*) FROM client WHERE customer_id = ?";
+			PreparedStatement checkStmt = con.prepareStatement(checkSql);
+			checkStmt.setString(1, cEmail);
+			rs = checkStmt.executeQuery();
+			if (rs.next() && rs.getInt(1) > 0) {
+				return 1; // 이메일 중복
+			}
 
-      try {
-         connDB();
+			// 이메일 삽입
+			String sql = "INSERT INTO client(customer_id, jsonstr) VALUES(?, ?)";
 
-         // SQL 쿼리에서 파라미터 바인딩
-         String query = "SELECT * FROM Client WHERE name = ?";
-         stmt = con.prepareStatement(query); // PreparedStatement 사용
-         stmt.setString(1, name); // 첫 번째 파라미터에 name 값을 바인딩
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, cEmail);
+			stmt.setString(2, jsonstr);
+			
+			int count = stmt.executeUpdate();
+			return (count == 1) ? 0 : 2;
 
-         rs = stmt.executeQuery(); // 쿼리 실행
+		} finally {
+			closeResources();
+		}
+	}
 
-         while (rs.next()) {
-            String irum = rs.getString("NAME");
-            String email = rs.getString("EMAIL");
-            String ps = rs.getString("PASSWORD");
+	public int login(String email, String password) throws SQLException, ParseException {
+		try {
+			connDB();
+			System.out.println(email);
+			String query = "SELECT jsonstr FROM client WHERE customer_id = ?";
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, email);
 
-            // name, email, password 값을 하나의 문자열로 결합하여 리스트에 추가
-            String record = "Name: " + irum + ", Email: " + email + ", Password: " + ps;
-            str.add(record);
-         }
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
+			rs = stmt.executeQuery();
+			if (!rs.next())
+				return 1; // 일치하는 이메일(id)X
 
-      return str; // 결과 반환
-   }
-   
-   
-   public int login(String cEmail, String cPassword) throws NamingException, SQLException, ParseException {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        
-        connDB();
-        
-        try {
-           connDB();
+			String jsonstr = rs.getString("jsonstr");
+			JSONObject obj = (JSONObject) (new JSONParser()).parse(jsonstr);
+			String pass = obj.get("password").toString();
+			System.out.println(pass);
 
-         // SQL 쿼리에서 파라미터 바인딩
-         String query = "SELECT * FROM Client WHERE email = ?";
-         stmt = con.prepareStatement(query); // PreparedStatement 사용
-         stmt.setString(1, cEmail); // 첫 번째 파라미터에 name 값을 바인딩
+			if (!password.equals(pass)) // 비민번호 틀림
+				return 2;
 
-         rs = stmt.executeQuery(); // 쿼리 실행
-         if (!rs.next()) return 1;
-         
-         String name = rs.getString("NAME");
-         String email = rs.getString("EMAIL");
-         String password = rs.getString("PASSWORD");
-         
-         
-         if (cPassword.equals(password)) return 2;
-         
-         return 0;
-         
-        } finally {
-            if (rs != null) rs.close(); 
-            if (stmt != null) stmt.close(); 
-            if (con != null) con.close();
-        }
-    }
-   
+			return 0; // 로그인 성공
+		} finally {
+			closeResources();
+		}
+	}
 
-   public void connDB() {
-      try {
-         Class.forName(driver); // JDBC 드라이버 로드
-         System.out.println("jdbc driver loading success.");
+	public void connDB() {
+		try {
+			Class.forName(driver); // JDBC 드라이버 로드
+			System.out.println("jdbc driver loading success.");
 
-         // 첫 번째 URL로 연결 시도
-         try {
-            con = DriverManager.getConnection(url, user, password); // DB 연결
-            System.out.println("oracle connection success with URL: " + url);
-         } catch (Exception e) {
-            System.out.println("Connection failed with URL: " + url);
-            System.out.println("Retrying with alternate URL...");
+			// 첫 번째 URL로 연결 시도
+			try {
+				con = DriverManager.getConnection(url, user, password); // DB 연결
+				System.out.println("ocrl로 OracleDB접속 성공!: " + url);
+			} catch (Exception e) {
+				System.out.println("orcl --> XE");
 
-            // 두 번째 URL로 재시도
-            String alternateUrl = "jdbc:oracle:thin:@localhost:1521/XE";
-            con = DriverManager.getConnection(alternateUrl, user, password);
-            System.out.println("oracle connection success with alternate URL: " + alternateUrl);
-         }
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-   }
-   
+				// 두 번째 URL로 재시도
+				String alternateUrl = "jdbc:oracle:thin:@localhost:1521/XE";
+				con = DriverManager.getConnection(alternateUrl, user, password);
+				System.out.println("XE로 OracleDB접속 성공: " + alternateUrl);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void closeResources() {
+		try {
+			if (rs != null)
+				rs.close();
+			if (stmt != null)
+				stmt.close();
+			if (con != null)
+				con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

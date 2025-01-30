@@ -96,6 +96,14 @@
 	font-size: 0.9rem;
 }
 
+.table .status-stuck {
+	color: white;
+	background-color: red;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 0.9rem;
+}
+
 .table .status-done {
 	color: white;
 	background-color: green;
@@ -106,6 +114,17 @@
 
 .table .sp-column {
 	text-align: center;
+}
+
+.table-hover tbody tr:hover {
+	cursor: pointer;
+	background-color: #f9f9f9;
+}
+
+.modal-body input, .modal-body select {
+	width: 100%;
+	padding: 5px;
+	margin-bottom: 10px;
 }
 </style>
 </head>
@@ -157,26 +176,18 @@
 					<div class="bg-white py-2 collapse-inner rounded">
 						<h6 class="collapse-header">Custom Components:</h6>
 						<a class="collapse-item" href="buttons.html">Buttons</a> <a
-							class="collapse-item" href="cards.html">Cards</a>
-					</div>
-				</div></li>
-
-			<!-- Nav Item - Utilities Collapse Menu -->
-			<li class="nav-item"><a class="nav-link collapsed" href="#"
-				data-toggle="collapse" data-target="#collapseUtilities"
-				aria-expanded="true" aria-controls="collapseUtilities"> <i
-					class="fas fa-fw fa-wrench"></i> <span>Utilities</span>
-			</a>
-				<div id="collapseUtilities" class="collapse"
-					aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-					<div class="bg-white py-2 collapse-inner rounded">
-						<h6 class="collapse-header">Custom Utilities:</h6>
-						<a class="collapse-item" href="utilities-color.html">Colors</a> <a
-							class="collapse-item" href="utilities-border.html">Borders</a> <a
-							class="collapse-item" href="utilities-animation.html">Animations</a>
-						<a class="collapse-item" href="utilities-other.html">Other</a>
-					</div>
-				</div></li>
+							class="collapse-item" href="cards.html">Cards</a> </a>
+						<div id="collapseUtilities" class="collapse"
+							aria-labelledby="headingUtilities"
+							data-parent="#accordionSidebar">
+							<div class="bg-white py-2 collapse-inner rounded">
+								<h6 class="collapse-header">Custom Utilities:</h6>
+								<a class="collapse-item" href="utilities-color.html">Colors</a>
+								<a class="collapse-item" href="utilities-border.html">Borders</a>
+								<a class="collapse-item" href="utilities-animation.html">Animations</a>
+								<a class="collapse-item" href="utilities-other.html">Other</a>
+							</div>
+						</div></li>
 
 			<!-- Divider -->
 			<hr class="sidebar-divider">
@@ -445,53 +456,48 @@
 
 				</nav>
 				<div class="container">
-					<div class="row">
-						<div class="col-xs-12">
-							<table class="table table-bordered table-hover">
-								<thead>
-									<tr>
-										<th>태스크</th>
-										<th>Owner</th>
-										<th>Status</th>
-										<th class="sp-column">Estimated SP</th>
-										<th>Epic</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>유스케이스 다이어그램 그리기</td>
-										<td><div class="owner-icon"
-												style="background-color: #000;"></div> 사용자 1</td>
-										<td><span class="status-in-progress">In Progress</span></td>
-										<td class="sp-column">3 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>클래스 다이어그램</td>
-										<td><div class="owner-icon"
-												style="background-color: #2ecc71;"></div> 사용자 Y</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">0 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>시퀀스 다이어그램 그리기</td>
-										<td><div class="owner-icon"
-												style="background-color: #f1c40f;"></div> 사용자 K</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">13 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>E-R 다이어그램 그리기</td>
-										<td><div class="owner-icon"
-												style="background-color: #e74c3c;"></div> 사용자 박</td>
-										<td><span class="status-ready-to-start">Ready To Start</span></td>
-										<td class="sp-column">0 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-								</tbody>
-							</table>
+					<h2 class="my-4">Sprint</h2>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>태스크</th>
+								<th>Owner</th>
+								<th>Status</th>
+								<th>Estimated SP</th>
+								<th>Epic</th>
+							</tr>
+						</thead>
+						<tbody id="taskTableBody"></tbody>
+					</table>
+				</div>
+
+				<!-- 📌 수정 모달 창 -->
+				<div id="editTaskModal" class="modal fade">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">작업 수정</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+								<input type="hidden" id="editTaskId"> <label>작업명:</label>
+								<input type="text" id="editTaskName"> <label>상태:</label>
+								<select id="editTaskStatus">
+									<option value="진행">In Progress</option>
+									<option value="멈춤">Stuck</option>
+									<option value="예정">Ready To Start</option>
+									<option value="완료">Done</option>
+								</select>
+								<label>Estimated SP</label> <input type="text" id="Estimated_SP">
+
+								<label>Epic:</label> <input type="text" id="editTaskEpic">
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary"
+									onclick="updateTask()">수정 완료</button>
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">닫기</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -615,26 +621,166 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Bootstrap core JavaScript-->
-	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Core plugin JavaScript-->
-	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-	<!-- Custom scripts for all pages-->
-	<script src="js/sb-admin-2.min.js"></script>
-
-	<!-- Page level plugins -->
-	<script src="vendor/chart.js/Chart.min.js"></script>
-
-	<!-- Page level custom scripts -->
-	<script src="js/demo/chart-area-demo.js"></script>
-	<script src="js/demo/chart-pie-demo.js"></script>
-
 </body>
+
+<script src="js/jquery-3.5.1.min.js"></script>
+<script src="js/core.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="js/demo/chart-area-demo.js"></script>
+<script src="js/demo/chart-pie-demo.js"></script>
 <script>
-	$('table').DataTable();
+console.log(typeof $.fn.modal);
+$(document).ready(function () {
+    fetchTasks(); // 최초 실행
+    getSession(); //login.jsp로 부터 세션 가져와서 여기서 쓰기
+    setInterval(fetchTasks, 5000); // 5초마다 실행 - 비동기 실시간 처리 같은 기능을 최대한 구현하기위해
+});
+
+var customerId = ""; // 전역 변수
+
+function getSession() {
+    var url = "jsp/getSession.jsp";
+
+    AJAX.call(url, null, function (data) {
+        if (data.trim() !== "noting") {
+            customerId = data.trim(); // 세션에서 가져온 ID 저장
+            console.log("세션에서 가져온 customerId: ", customerId);
+            fetchTasks(); // 세션을 가져온 후 fetchTasks 실행
+        } else {
+            alert("세션이 만료되었습니다. 로그인 해주세요!");
+            window.location.href = "login.html"; // 세션이 없으면 로그인 페이지로 이동
+        }
+    });
+}
+
+function fetchTasks() {
+    var url = "jsp/getTask.jsp";
+
+    AJAX.call(url, null, function(data) {
+    	console.log("📌 AJAX 응답 데이터: ", data);
+        var tasks = JSON.parse(data);
+        console.log("📌 변환된 객체 데이터: ", tasks); // JSON 데이터 확인
+        populateTable(tasks);
+    });
+}
+
+function populateTable(tasks) {
+    const tableBody = $("#taskTableBody");
+    tableBody.empty(); // 기존 데이터를 모두 제거
+
+    tasks.forEach(task => {
+        let statusHTML = ""; 
+        if (task.status === "완료") {
+            statusHTML = `<span class="status-done">Done</span>`;
+        } else if (task.status === "진행") {
+            statusHTML = `<span class="status-in-progress">In Progress</span>`;
+        } else if (task.status === "예정") {
+            statusHTML = `<span class="status-ready-to-start">Ready To Start</span>`;
+        }
+        else if (task.status === "멈춤") {
+            statusHTML = `<span class="status-stuck">Stuck</span>`;
+        }
+		
+        //테이블 클릭하면 모달 열림
+        const newRow = `
+            <tr onclick="openEditModal('${task.taskId}', '${task.task}', '${task.status}', '${task.Estimeted_SP}', '${task.epic}')">
+                <td>${task.task}</td>
+                <td>${task.customerName}</td>
+                <td>${statusHTML}</td>
+                <td>${task.Estimeted_SP}</td>
+                <td>${task.epic}</td>
+            </tr>`;
+            
+        tableBody.append(newRow);
+    });
+
+    // 새 작업 추가 입력란
+    const addTaskRow = `
+        <tr>
+            <td><input type="text" id="addTaskInput" placeholder="작업 추가"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>`;
+    tableBody.append(addTaskRow);
+}
+
+// Enter 키 이벤트를 document에 바인딩 (이벤트 중복 방지)
+$(document).on("keypress", "#addTaskInput", function (event) {
+    if (event.which === 13) { // 13 = Enter 키
+        addTask();
+    }
+});
+
+function addTask() {
+    var taskName = $("#addTaskInput").val().trim();
+    if (taskName === "") {
+        alert("작업명을 입력하세요.");
+        return;
+    }
+
+    var params = {
+        task: taskName,
+        customerId: customerId
+    };
+
+    var url = "jsp/addTask.jsp";
+    AJAX.call(url, params, function (data) {
+        if (data.trim() === "OK") {
+            alert("작업이 추가되었습니다.");
+        } else {
+            alert("작업 추가 실패!");
+        }
+    });
+}
+
+function openEditModal(taskId, taskName, status, Estimated_SP, endDate, epic) {
+	console.log("모달 열기 실행됨!"); // 로그 확인용
+    $("#editTaskId").val(taskId);
+    $("#editTaskName").val(taskName);
+    $("#editTaskStatus").val(status);
+    $("#Estimated_SP").val(Estimated_SP);
+    $("#editTaskEpic").val(epic);
+    console.log("모달 ID 확인:", $("#editTaskModal").length); // 모달이 존재하는지 확인
+    console.log("Task 클릭됨: ", taskId, taskName, status, Estimated_SP, epic);
+
+    $("#editTaskModal").modal("show");
+}
+
+function updateTask() {
+	// JSON 형식으로 데이터 구조 생성
+    var params = {
+        taskId: $("#editTaskId").val(),
+        task: $("#editTaskName").val(),
+        status: $("#editTaskStatus").val(),
+        Estimated_SP: $("#Estimated_SP").val(),
+        epic: $("#editTaskEpic").val()
+    };
+	
+	//AJAX.call( ) 이용해서 비동기 처리 --> updateTask.jsp
+    AJAX.call("jsp/updateTask.jsp", params, function (data) {
+        if (data.trim() === "OK") {
+            alert("작업이 수정되었습니다.");
+            // 수정 완료후 모달 닫기
+            $("#editTaskModal").modal("hide");
+            fetchTasks();
+        } else {
+            alert("수정 실패!");
+        }
+    });
+}
 </script>
 </html>
