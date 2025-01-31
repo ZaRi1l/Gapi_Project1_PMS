@@ -7,12 +7,13 @@
 
     String taskName = request.getParameter("task");
     String customerId = request.getParameter("customerId");
-    System.out.println("작업 추가를 위해 받은 값들 task: " + taskName + " 세션 값: " + customerId);
+    int dashboardId = Integer.valueOf(request.getParameter("dashboardId"));
+    System.out.println("작업 추가를 위해 받은 값들 task: " + taskName + " customerId 값:" + customerId + "dashboardId 값" + dashboardId);
     TaskDAO dao = new TaskDAO();
 
     try {
 
-        int result = dao.insertTask(taskName, customerId);
+        int result = dao.insertTask(taskName, customerId, dashboardId);
 
         if (result == 1) {
             out.print("OK");

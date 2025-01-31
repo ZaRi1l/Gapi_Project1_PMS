@@ -151,38 +151,51 @@ public class TaskDAO {
 	    return tasks;
 	}
 	
-	public int insertTask(String taskName, String customerId) {
-	    String checkDashboardQuery = "SELECT COUNT(*) FROM DASHBOARD WHERE DASHBOARD_ID = ?";
+	public int insertTask(String taskName, String customerId, int dashboardId) {
+		String checkDashboardQuery = "SELECT COUNT(*) FROM DASHBOARD WHERE DASHBOARD_ID = ?";
 	    String insertDashboardQuery = "INSERT INTO DASHBOARD (DASHBOARD_ID, JSONSTR) VALUES (?, ?)";
 	    String insertTaskQuery = "INSERT INTO TASK (TASK_ID, DASHBOARD_ID, CUSTOMER_ID, JSONSTR) VALUES (?, ?, ?, ?)";
-
-	    String TASK_ID = customerId + "_" + taskName;
-	    String DASHBOARD_ID = taskName + "_dashboard";
+	    // task_id의 최대값을 추출한 후 +1 하기
+	    String maxTaskIdQuery = "SELECT Max(task_id) + 1 AS MAXTASKID FROM task";
+	    
+	    int TASK_ID = 0;
+	    
+	    // DASHBOARD_ID가 숫자형일 경우
+	    int DASHBOARD_ID = dashboardId;  // 예시로 taskName의 해시코드를 사용하여 숫자로 처리
+	    
 	    JSONObject jsonstr = new JSONObject();
-	    jsonstr.put("task", taskName); 
+	    jsonstr.put("task", taskName);  // JSON 데이터 삽입
 
 	    try {
 	        connDB();
+	        
+	        stmt = con.prepareStatement(maxTaskIdQuery);
+		    rs = stmt.executeQuery();
+		    if(rs.next()) {
+		    	// 최대값 할당
+		        TASK_ID = rs.getInt("MAXTASKID");
+		    }
+		    System.out.println("New TASK_ID: " + TASK_ID);
 
-	        // 1. DASHBOARD_ID 존재 여부 확인
+	        // 1. 대시보드 존재 여부 확인
 	        stmt = con.prepareStatement(checkDashboardQuery);
-	        stmt.setString(1, DASHBOARD_ID);
+	        stmt.setInt(1, DASHBOARD_ID);  // 숫자형으로 설정
 	        rs = stmt.executeQuery();
 	        rs.next();
 	        int count = rs.getInt(1);
 	        
-	        // 2. 만약 DASHBOARD_ID가 없으면 먼저 삽입 DASHBOARD_ID 이게 문제인데; x 100
+	        // 2. 대시보드가 없으면 생성
 	        if (count == 0) {
 	            stmt = con.prepareStatement(insertDashboardQuery);
-	            stmt.setString(1, DASHBOARD_ID);
-	            stmt.setString(2, "{}");  // 기본 JSON 데이터 저장 (빈 객체)
+	            stmt.setInt(1, DASHBOARD_ID);  // 숫자형으로 설정
+	            stmt.setString(2, "{}");  // 기본 JSON 데이터
 	            stmt.executeUpdate();
 	        }
 
-	        // 3. TASK 삽입
+	        // 3. 새로운 TASK 삽입
 	        stmt = con.prepareStatement(insertTaskQuery);
-	        stmt.setString(1, TASK_ID);
-	        stmt.setString(2, DASHBOARD_ID);
+	        stmt.setInt(1, TASK_ID);  // TASK_ID 설정
+	        stmt.setInt(2, DASHBOARD_ID);  // 숫자형 DASHBOARD_ID 설정
 	        stmt.setString(3, customerId);
 	        stmt.setString(4, jsonstr.toJSONString());
 
@@ -194,6 +207,7 @@ public class TaskDAO {
 	        closeResources();
 	    }
 	}
+
 	
 	public boolean updateTask(String taskId, String task, String status, String estimited_ep, String epic) {
         String query = "UPDATE TASK SET JSONSTR = ? WHERE TASK_ID = ?";

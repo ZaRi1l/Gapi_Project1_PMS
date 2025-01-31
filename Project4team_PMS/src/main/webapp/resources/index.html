@@ -794,7 +794,8 @@ function addTask() {
 
     var params = {
         task: taskName,
-        customerId: customerId
+        customerId: customerId,
+        dashboardId : dashboardId
     };
 
     var url = "jsp/addTask.jsp";
@@ -820,7 +821,7 @@ function openAddDashboardModal() {
 function addDashboard() {
 	var url = "jsp/addDashboard.jsp";
     
-    var params = {addDashboardName:$("#addDashboardName").val()}; // {id:choi@naver.com, ps:1111}
+    var params = {addDashboardName:$("#addDashboardName").val()}; // {addDashboardName:공부 앱}
 
     AJAX.call(url, params, function (data) {
         if (data.trim() === "OK") {
