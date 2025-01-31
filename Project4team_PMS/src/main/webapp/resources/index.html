@@ -487,17 +487,16 @@
 									<option value="멈춤">Stuck</option>
 									<option value="예정">Ready To Start</option>
 									<option value="완료">Done</option>
-								</select>
-								<label>Estimated SP</label> <input type="text" id="Estimated_SP">
-
-								<label>Epic:</label> <input type="text" id="editTaskEpic">
+								</select> <label>Estimated SP</label> <input type="text"
+									id="Estimated_SP"> <label>Epic:</label> <input
+									type="text" id="editTaskEpic">
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-primary"
 									onclick="updateTask()">수정 완료</button>
 								<button type="button" class="btn btn-secondary"
 									data-dismiss="modal">닫기</button>
-								<button type="button" class="btn btn-danger" 
+								<button type="button" class="btn btn-danger"
 									onclick="deleteTask()">삭제</button>
 							</div>
 						</div>
@@ -505,71 +504,19 @@
 				</div>
 				<br> <br> <br> <br>
 				<div class="container">
-					<div class="row">
-						<div class="col-xs-12">
-							<table class="table table-bordered table-hover">
-								<thead>
-									<tr>
-										<th>태스크</th>
-										<th>Owner</th>
-										<th>Status</th>
-										<th class="sp-column">Estimated SP</th>
-										<th>Epic</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>깃연동</td>
-										<td><div class="owner-icon"
-												style="background-color: #000;"></div> 사용자 1</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">3 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>UML 분업</td>
-										<td><div class="owner-icon"
-												style="background-color: #2ecc71;"></div> 사용자 Y</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">0 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>클래스 다이어그램 그리기</td>
-										<td><div class="owner-icon"
-												style="background-color: #f1c40f;"></div> 사용자 K</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">13 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>DB구축 & DB연동</td>
-										<td><div class="owner-icon"
-												style="background-color: #e74c3c;"></div> 사용자 박</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">0 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>이름정하기</td>
-										<td><div class="owner-icon"
-												style="background-color: #e74c3c;"></div> 사용자 박</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">0 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-									<tr>
-										<td>템플릿 적용하기</td>
-										<td><div class="owner-icon"
-												style="background-color: #e74c3c;"></div> 사용자 박</td>
-										<td><span class="status-done">Done</span></td>
-										<td class="sp-column">0 SP</td>
-										<td>Infrastructure</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
+					<h2 class="my-4">백로그</h2>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>태스크</th>
+								<th>Owner</th>
+								<th>Status</th>
+								<th>Estimated SP</th>
+								<th>Epic</th>
+							</tr>
+						</thead>
+						<tbody id="taskTableBodyDone"></tbody>
+					</table>
 				</div>
 				<!-- End of Topbar -->
 
@@ -628,7 +575,8 @@
 <script src="js/jquery-3.5.1.min.js"></script>
 <script src="js/core.js"></script>
 <!-- Bootstrap core JavaScript-->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <!-- Core plugin JavaScript-->
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -680,7 +628,9 @@ function fetchTasks() {
 
 function populateTable(tasks) {
     const tableBody = $("#taskTableBody");
+    const taskTableBodyDone = $("#taskTableBodyDone");
     tableBody.empty(); // 기존 데이터를 모두 제거
+    taskTableBodyDone.empty(); // 기존 데이터를 모두 제거
 
     tasks.forEach(task => {
         let statusHTML = ""; 
@@ -694,18 +644,32 @@ function populateTable(tasks) {
         else if (task.status === "멈춤") {
             statusHTML = `<span class="status-stuck">Stuck</span>`;
         }
-		
-        //테이블 클릭하면 모달 열림
-        const newRow = `
-            <tr onclick="openEditModal('${task.taskId}', '${task.task}', '${task.status}', '${task.Estimeted_SP}', '${task.epic}')">
-                <td>${task.task}</td>
-                <td>${task.customerName}</td>
-                <td>${statusHTML}</td>
-                <td>${task.Estimeted_SP}</td>
-                <td>${task.epic}</td>
-            </tr>`;
-            
-        tableBody.append(newRow);
+        
+        if(task.status === "완료"){
+        	const newRow2 = `
+                <tr onclick="openEditModal('${task.taskId}', '${task.task}', '${task.status}', '${task.Estimeted_SP}', '${task.epic}')">
+                    <td>${task.task}</td>
+                    <td>${task.customerName}</td>
+                    <td>${statusHTML}</td>
+                    <td>${task.Estimeted_SP}</td>
+                    <td>${task.epic}</td>
+                </tr>`;
+                
+                taskTableBodyDone.append(newRow2);
+        }
+        else{
+        	//테이블 클릭하면 모달 열림
+            const newRow = `
+                <tr onclick="openEditModal('${task.taskId}', '${task.task}', '${task.status}', '${task.Estimeted_SP}', '${task.epic}')">
+                    <td>${task.task}</td>
+                    <td>${task.customerName}</td>
+                    <td>${statusHTML}</td>
+                    <td>${task.Estimeted_SP}</td>
+                    <td>${task.epic}</td>
+                </tr>`;
+                
+                tableBody.append(newRow);
+        }
     });
 
     // 새 작업 추가 입력란
