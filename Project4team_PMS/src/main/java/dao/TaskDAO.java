@@ -93,6 +93,50 @@ public class TaskDAO {
 	                taskJson.put("customerName", customerName);
 
 	                tasks.add(taskJson); // 결과 배열에 추가
+//	                System.out.println(tasks.toJSONString());
+	            } catch (Exception e) {
+	                System.err.println("JSON 파싱 오류: " + e.getMessage());
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 에러 출력
+	    } finally {
+	    	closeResources();
+	    }
+
+	    return tasks;
+	}
+	
+	public JSONArray getDashboardTasks(String dashboardId) { // 대시보드 작업물 보는 메서드
+		System.out.println(dashboardId);
+	    JSONArray tasks = new JSONArray();
+	    //대시보드 작업물 조회
+	    String query = "SELECT T.TASK_ID, T.DASHBOARD_ID, T.JSONSTR AS TASK_JSON, C.JSONSTR AS CLIENT_JSON "
+	    		+ "FROM TASK T" +  " JOIN CLIENT C ON T.CUSTOMER_ID = C.CUSTOMER_ID "
+	    		+ "WHERE T.DASHBOARD_ID = ?";
+
+
+	    try {
+	        connDB(); // DB 연결
+	        stmt = con.prepareStatement(query);
+	        stmt.setString(1, dashboardId); // DASHBOARD_ID를 인자로 이용
+	        rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            try {
+	                // CLIENT JSON 파싱
+	                String clientJsonStr = rs.getString("CLIENT_JSON");
+	                JSONObject clientJson = (JSONObject) new JSONParser().parse(clientJsonStr);
+	                String customerName = clientJson.get("name").toString();
+
+	                // TASK JSON 생성
+	                String taskJsonStr = rs.getString("TASK_JSON");
+	                JSONObject taskJson = (JSONObject) new JSONParser().parse(taskJsonStr);
+	                // taskId 추가!!
+	                taskJson.put("taskId", rs.getString("TASK_ID")); 
+	                taskJson.put("dashboardId", rs.getString("DASHBOARD_ID"));
+	                taskJson.put("customerName", customerName);
+
+	                tasks.add(taskJson); // 결과 배열에 추가
 	                System.out.println(tasks.toJSONString());
 	            } catch (Exception e) {
 	                System.err.println("JSON 파싱 오류: " + e.getMessage());

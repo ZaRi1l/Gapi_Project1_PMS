@@ -216,15 +216,29 @@
 					</div>
 				</div></li>
 
-			<!-- Nav Item - Charts -->
-			<li class="nav-item"><a class="nav-link" href="charts.html">
-					<i class="fas fa-fw fa-chart-area"></i> <span>Charts</span>
-			</a></li>
 
-			<!-- Nav Item - Tables -->
-			<li class="nav-item"><a class="nav-link" href="tables.html">
-					<i class="fas fa-fw fa-table"></i> <span>Tables</span>
-			</a></li>
+			<!-- Nav Item - Pages Dashboard Menu -->
+			<li class="nav-item"><a class="nav-link" href="#"
+				data-toggle="collapse" data-target="#dashboardPages"
+				aria-expanded="true" aria-controls="dashboardPages"> <i
+					class="fas fa-fw fa-folder"></i> <span>Dashboards</span>
+			</a>
+				<div id="dashboardPages" class="collapse show"
+					aria-labelledby="headingPages" data-parent="#accordionSidebar">
+					<div id="dashboardBody"
+						class="bg-white py-2 collapse-inner rounded">
+						<h6 class="collapse-header">DashBoard Screens:</h6>
+						<a class="collapse-item" href="login.html">Login</a> <a
+							class="collapse-item" href="register.html">Register</a> <a
+							class="collapse-item" href="forgot-password.html">Forgot
+							Password</a>
+						<div class="collapse-divider"></div>
+						<h6 class="collapse-header">Other Pages:</h6>
+						<a class="collapse-item" href="404.html">404 Page</a> <a
+							class="collapse-item" href="blank.html">Blank Page</a>
+					</div>
+				</div></li>
+
 
 			<!-- Divider -->
 			<hr class="sidebar-divider d-none d-md-block">
@@ -595,10 +609,12 @@ console.log(typeof $.fn.modal);
 $(document).ready(function () {
     fetchTasks(); // 최초 실행
     getSession(); //login.jsp로 부터 세션 가져와서 여기서 쓰기
+    getDashboard(); // getdashboard.jsp
     setInterval(fetchTasks, 5000); // 5초마다 실행 - 비동기 실시간 처리 같은 기능을 최대한 구현하기위해
 });
 
 var customerId = ""; // 전역 변수
+var dashboardId = ""; 
 
 function getSession() {
     var url = "jsp/getSession.jsp";
@@ -607,7 +623,7 @@ function getSession() {
         if (data.trim() !== "noting") {
             customerId = data.trim(); // 세션에서 가져온 ID 저장
             console.log("세션에서 가져온 customerId: ", customerId);
-            fetchTasks(); // 세션을 가져온 후 fetchTasks 실행
+//            fetchTasks(); // 세션을 가져온 후 fetchTasks 실행
         } else {
             alert("세션이 만료되었습니다. 로그인 해주세요!");
             window.location.href = "login.html"; // 세션이 없으면 로그인 페이지로 이동
@@ -615,16 +631,65 @@ function getSession() {
     });
 }
 
+function getDashboard() {
+    var url = "jsp/getDashboard.jsp";
+
+    AJAX.call(url, null, function (data) {
+    	var dashboards = JSON.parse(data);
+    	console.log("📌 데시보드 객체 데이터: ", dashboards);
+
+        if (dashboards.length !== 0) {
+        	populateDashboard(dashboards);
+        		
+        	if (dashboardId == "") {
+        			dashboardId = dashboards[0].dashboardId
+        	}
+        	
+            console.log("현재 dashboardId: ", dashboardId);
+            fetchTasks(); // 세션을 가져온 후 fetchTasks 실행
+        } else {
+            alert("데시보드를 생성해주세요!");
+        }
+    });
+}
+
 function fetchTasks() {
     var url = "jsp/getTask.jsp";
+    
+    var params = {dashboardId:dashboardId}; // {id:choi@naver.com, ps:1111}
 
-    AJAX.call(url, null, function(data) {
+    AJAX.call(url, params, function(data) {
     	console.log("📌 AJAX 응답 데이터: ", data);
         var tasks = JSON.parse(data);
         console.log("📌 변환된 객체 데이터: ", tasks); // JSON 데이터 확인
         populateTable(tasks);
     });
 }
+
+
+function populateDashboard(dashboards) {
+    const dashboardBody = $("#dashboardBody");
+    dashboardBody.empty(); // 기존 데이터를 모두 제거
+
+    dashboards.forEach(dashboard => {
+    	dashboardData = JSON.parse(dashboard.dashboardData);
+//        let newRow = `<a class="collapse-item" href="404.html">${dashboardData.name}</a>`; 
+//		let newRow = `<button class="collapse-item" onclick="changeDashboardId(${dashboard.dashboardId})">${dashboardData.name}</button>`; 
+        let newRow = `<a class="collapse-item" href="#" onclick="changeDashboardId(${dashboard.dashboardId})">${dashboardData.name}</a>`; 
+        
+        dashboardBody.append(newRow);
+    });
+
+    // 새 작업 추가 입력란
+    const addTaskRow = `<a class="collapse-item" href="404.html">작업추가</a>`;
+     dashboardBody.append(addTaskRow);
+}
+
+function changeDashboardId(dashboardId) {
+	window.dashboardId = dashboardId; 
+	console.log("현재 dashboardId: ", dashboardId);
+}
+
 
 function populateTable(tasks) {
     const tableBody = $("#taskTableBody");
