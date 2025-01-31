@@ -605,15 +605,15 @@
 <script src="js/demo/chart-area-demo.js"></script>
 <script src="js/demo/chart-pie-demo.js"></script>
 <script>
-console.log(typeof $.fn.modal);
+console.log(typeof $.fn.modal)
+
+// 페이지 로드될 때 처음에 실행
 $(document).ready(function () {
-    fetchTasks(); // 최초 실행
     getSession(); //login.jsp로 부터 세션 가져와서 여기서 쓰기
     getDashboard(); // getdashboard.jsp
-    setInterval(fetchTasks, 5000); // 5초마다 실행 - 비동기 실시간 처리 같은 기능을 최대한 구현하기위해
 });
 
-var customerId = ""; // 전역 변수
+var customerId = "";  // 전역 변수
 var dashboardId = ""; 
 
 function getSession() {
@@ -623,7 +623,6 @@ function getSession() {
         if (data.trim() !== "noting") {
             customerId = data.trim(); // 세션에서 가져온 ID 저장
             console.log("세션에서 가져온 customerId: ", customerId);
-//            fetchTasks(); // 세션을 가져온 후 fetchTasks 실행
         } else {
             alert("세션이 만료되었습니다. 로그인 해주세요!");
             window.location.href = "login.html"; // 세션이 없으면 로그인 페이지로 이동
@@ -642,11 +641,10 @@ function getDashboard() {
         	populateDashboard(dashboards);
         		
         	if (dashboardId == "") {
-        			dashboardId = dashboards[0].dashboardId
+        			window.dashboardId = dashboards[0].dashboardId
         	}
         	
             console.log("현재 dashboardId: ", dashboardId);
-            fetchTasks(); // 세션을 가져온 후 fetchTasks 실행
         } else {
             alert("데시보드를 생성해주세요!");
         }
@@ -811,7 +809,6 @@ function updateTask() {
             alert("작업이 수정되었습니다.");
             // 수정 완료후 모달 닫기
             $("#editTaskModal").modal("hide");
-            fetchTasks();
         } else {
             alert("수정 실패!");
         }
@@ -835,7 +832,6 @@ function deleteTask() {
         if (data.trim() === "OK") {
             alert("작업이 삭제되었습니다.");
             $("#editTaskModal").modal("hide"); // 모달 닫기
-            fetchTasks(); // 테이블 갱신
         } else {
             alert("삭제 실패!");
         }

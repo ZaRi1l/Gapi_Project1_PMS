@@ -7,5 +7,6 @@
 <%	
 	String customerId = (String) session.getAttribute("customerId"); // 세션 테이블에서 로그인한 id 얻어오기
 	JSONArray dashboards = new DashboardDAO().getDashboard(customerId); // TaskDAO를 통해서 DB접근 후 Task 데이터 가져오기
+	
 	out.print(dashboards);
 %>
