@@ -239,6 +239,28 @@
 					</div>
 				</div></li>
 
+			<!-- 📌 수정 모달 창 -->
+			<div id="addDashboardModal" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">대시보드 생성</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body">
+							<input type="hidden" id="editTaskId"> <label>대시보드
+								명:</label> <input type="text" id="addDashboardName">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary"
+								onclick="addDashboard()">생성</button>
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">닫기</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 
 			<!-- Divider -->
 			<hr class="sidebar-divider d-none d-md-block">
@@ -635,19 +657,21 @@ function getDashboard() {
 
     AJAX.call(url, null, function (data) {
     	var dashboards = JSON.parse(data);
-    	console.log("📌 데시보드 객체 데이터: ", dashboards);
+    	console.log("📌 대시보드 객체 데이터: ", dashboards);
 
         if (dashboards.length !== 0) {
         	populateDashboard(dashboards);
         		
         	if (dashboardId == "") {
-        			window.dashboardId = dashboards[0].dashboardId
+        			window.dashboardId = dashboards[0].dashboardId;
+        	} else {
+        		window.dashboardId = dashboards[dashboards.length - 1].dashboardId;
         	}
         	
             console.log("현재 dashboardId: ", dashboardId);
             fetchTasks()
         } else {
-            alert("데시보드를 생성해주세요!");
+            alert("대시보드를 생성해주세요!");
         }
     });
 }
@@ -680,7 +704,7 @@ function populateDashboard(dashboards) {
     });
 
     // 새 작업 추가 입력란
-    const addTaskRow = `<a class="collapse-item" href="404.html">작업추가</a>`;
+    const addTaskRow = `<a class="collapse-item" href="#" onclick="openAddDashboardModal()">대시보드 생성</a>`;
      dashboardBody.append(addTaskRow);
 }
 
@@ -783,6 +807,33 @@ function addTask() {
         }
     });
 }
+
+// 대시보드 모달
+function openAddDashboardModal() {
+	console.log("대시보드 모달 열기 실행됨!"); // 로그 확인용
+
+    console.log("모달 ID 확인:", $("#addDashboardModal").length); // 모달이 존재하는지 확인
+
+    $("#addDashboardModal").modal("show");
+}
+
+function addDashboard() {
+	var url = "jsp/addDashboard.jsp";
+    
+    var params = {addDashboardName:$("#addDashboardName").val()}; // {id:choi@naver.com, ps:1111}
+
+    AJAX.call(url, params, function (data) {
+        if (data.trim() === "OK") {
+            alert("대시보드가 생성 되었습니다.");
+            getDashboard();
+            // 수정 완료후 모달 닫기
+            $("#addDashboardModal").modal("hide");
+        } else {
+            alert("대시보드 생성 실패!");
+        }
+    });
+}
+
 
 function openEditModal(taskId, taskName, status, Estimated_SP, endDate, epic) {
 	console.log("모달 열기 실행됨!"); // 로그 확인용
