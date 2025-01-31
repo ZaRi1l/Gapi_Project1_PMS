@@ -497,6 +497,8 @@
 									onclick="updateTask()">수정 완료</button>
 								<button type="button" class="btn btn-secondary"
 									data-dismiss="modal">닫기</button>
+								<button type="button" class="btn btn-danger" 
+									onclick="deleteTask()">삭제</button>
 							</div>
 						</div>
 					</div>
@@ -779,6 +781,30 @@ function updateTask() {
             fetchTasks();
         } else {
             alert("수정 실패!");
+        }
+    });
+}
+function deleteTask() {
+    var taskId = $("#editTaskId").val();
+
+    if (!taskId) {
+        alert("삭제할 작업이 선택되지 않았습니다.");
+        return;
+    }
+
+    if (!confirm("정말 이 작업을 삭제하시겠습니까?")) {
+        return; // 사용자가 취소하면 실행하지 않음
+    }
+
+    var params = { taskId: taskId };
+    
+    AJAX.call("jsp/deleteTask.jsp", params, function (data) {
+        if (data.trim() === "OK") {
+            alert("작업이 삭제되었습니다.");
+            $("#editTaskModal").modal("hide"); // 모달 닫기
+            fetchTasks(); // 테이블 갱신
+        } else {
+            alert("삭제 실패!");
         }
     });
 }
