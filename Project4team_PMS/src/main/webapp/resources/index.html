@@ -645,6 +645,7 @@ function getDashboard() {
         	}
         	
             console.log("현재 dashboardId: ", dashboardId);
+            fetchTasks()
         } else {
             alert("데시보드를 생성해주세요!");
         }
@@ -686,6 +687,7 @@ function populateDashboard(dashboards) {
 function changeDashboardId(dashboardId) {
 	window.dashboardId = dashboardId; 
 	console.log("현재 dashboardId: ", dashboardId);
+	fetchTasks();
 }
 
 
@@ -755,6 +757,7 @@ function populateTable(tasks) {
 $(document).on("keypress", "#addTaskInput", function (event) {
     if (event.which === 13) { // 13 = Enter 키
         addTask();
+        fetchTasks();
     }
 });
 
@@ -774,6 +777,7 @@ function addTask() {
     AJAX.call(url, params, function (data) {
         if (data.trim() === "OK") {
             alert("작업이 추가되었습니다.");
+            fetchTasks();
         } else {
             alert("작업 추가 실패!");
         }
@@ -807,6 +811,7 @@ function updateTask() {
     AJAX.call("jsp/updateTask.jsp", params, function (data) {
         if (data.trim() === "OK") {
             alert("작업이 수정되었습니다.");
+            fetchTasks();
             // 수정 완료후 모달 닫기
             $("#editTaskModal").modal("hide");
         } else {
@@ -831,6 +836,7 @@ function deleteTask() {
     AJAX.call("jsp/deleteTask.jsp", params, function (data) {
         if (data.trim() === "OK") {
             alert("작업이 삭제되었습니다.");
+            fetchTasks();
             $("#editTaskModal").modal("hide"); // 모달 닫기
         } else {
             alert("삭제 실패!");
