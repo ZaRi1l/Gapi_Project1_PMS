@@ -210,4 +210,22 @@ public class TaskDAO {
 			e.printStackTrace();
 		}
 	}
+	//삭제
+	public boolean deleteTask(String taskId) {
+	    String query = "DELETE FROM TASK WHERE TASK_ID = ?";
+
+	    try {
+	        connDB();
+	        stmt = con.prepareStatement(query);
+	        stmt.setString(1, taskId);
+
+	        int rowsDeleted = stmt.executeUpdate(); // 삭제된 행 수 반환
+	        return rowsDeleted > 0; // 성공 시 true, 실패 시 false
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        closeResources();
+	    }
+	}
 }
