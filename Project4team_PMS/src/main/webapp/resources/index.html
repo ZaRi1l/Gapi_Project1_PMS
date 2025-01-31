@@ -645,7 +645,9 @@ function populateTable(tasks) {
             statusHTML = `<span class="status-stuck">Stuck</span>`;
         }
         
+        // 진행 상태가 "완료(Done)"이면 밑에 테이블(백로그)로 내려가기
         if(task.status === "완료"){
+        	//테이블 클릭하면 모달 열림
         	const newRow2 = `
                 <tr onclick="openEditModal('${task.taskId}', '${task.task}', '${task.status}', '${task.Estimeted_SP}', '${task.epic}')">
                     <td>${task.task}</td>
@@ -657,6 +659,7 @@ function populateTable(tasks) {
                 
                 taskTableBodyDone.append(newRow2);
         }
+        // 진행 상태가 "진행", "멈춤", "예정"이면 위에 테이블
         else{
         	//테이블 클릭하면 모달 열림
             const newRow = `
