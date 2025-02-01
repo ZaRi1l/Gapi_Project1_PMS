@@ -523,9 +523,9 @@
 									<option value="멈춤">Stuck</option>
 									<option value="예정">Ready To Start</option>
 									<option value="완료">Done</option>
-								</select> <label>Estimated SP</label> <input type="text"
-									id="Estimated_SP"> <label>Epic:</label> <input
-									type="text" id="editTaskEpic">
+								</select> 
+								<label>Estimated SP</label> <input type="text"id="Estimated_SP"> 
+								<label>Epic:</label> <input type="text" id="editTaskEpic">
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-primary"
@@ -738,7 +738,7 @@ function populateTable(tasks) {
         if(task.status === "완료"){
         	//테이블 클릭하면 모달 열림
         	const newRow2 = `
-                <tr onclick="openEditModal('${task.taskId}', '${task.task}', '${task.status}', '${task.Estimeted_SP}', '${task.epic}')">
+                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimeted_SP}','${task.epic}')">
                     <td>${task.task}</td>
                     <td>${task.customerName}</td>
                     <td>${statusHTML}</td>
@@ -753,7 +753,7 @@ function populateTable(tasks) {
         	//테이블 클릭하면 모달 열림
         	//ㄹ효
             const newRow = `
-                <tr onclick="openEditModal('${task.taskId}', '${task.task}', '${task.status}', '${task.Estimeted_SP}', '${task.epic}')">
+                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimeted_SP}','${task.epic}')">
                     <td>${task.task}</td>
                     <td>${task.customerName}</td>
                     <td>${statusHTML}</td>
@@ -786,25 +786,30 @@ $(document).on("keypress", "#addTaskInput", function (event) {
 });
 
 function addTask() {
+	// id 태그가 "addTaskInput"인 것의 값(value) 가져오기
     var taskName = $("#addTaskInput").val().trim();
+	//유효성 검사: 작업명이 없으면 경고창 띄움
     if (taskName === "") {
         alert("작업명을 입력하세요.");
         return;
     }
 
     var params = {
-        task: taskName,
-        customerId: customerId,
-        dashboardId : dashboardId
+        task: taskName, //작업명
+        customerId: customerId,  // 로그인 아이디 세션: 추가하려는 사용자 
+        dashboardId : dashboardId  // 대시보드 세션 : 추가하려는 대시보드
     };
 
     var url = "jsp/addTask.jsp";
     AJAX.call(url, params, function (data) {
-        if (data.trim() === "OK") {
+    	console.log(typeof(data)); // 수신한 데이터(data)는 문자열로 받아옴.
+    	//비지니스 로직
+        if (data.trim() === "1") {  // 작업 추가 성공
             alert("작업이 추가되었습니다.");
             fetchTasks();
         } else {
-            alert("작업 추가 실패!");
+            alert("작업 추가 실패!");  // 작업 추가 실패
+            fetchTasks();
         }
     });
 }
@@ -836,7 +841,7 @@ function addDashboard() {
 }
 
 
-function openEditModal(taskId, taskName, status, Estimated_SP, endDate, epic) {
+function openEditModal(taskId, taskName, status, Estimated_SP, epic) {
 	console.log("모달 열기 실행됨!"); // 로그 확인용
     $("#editTaskId").val(taskId);
     $("#editTaskName").val(taskName);

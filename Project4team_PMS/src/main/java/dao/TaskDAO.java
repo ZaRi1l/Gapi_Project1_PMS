@@ -175,7 +175,7 @@ public class TaskDAO {
 		    	// 최대값 할당
 		        TASK_ID = rs.getInt("MAXTASKID");
 		    }
-		    System.out.println("New TASK_ID: " + TASK_ID);
+		    System.out.println("새로운 TASK_ID: " + TASK_ID);
 
 	        // 1. 대시보드 존재 여부 확인
 	        stmt = con.prepareStatement(checkDashboardQuery);
