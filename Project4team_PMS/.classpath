@@ -15,5 +15,7 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="C:/ojdbc/ojdbc11.jar"/>
 	<classpathentry kind="lib" path="C:/ojdbc/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/ojdbc/javax.mail.jar"/>
+	<classpathentry kind="lib" path="C:/ojdbc/javax.activation.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

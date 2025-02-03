@@ -49,7 +49,7 @@ public class DashboardDAO {
 
 	public int insertDashboard(String dashboardName, String customerId) {
 		String checkDashboardKey = "SELECT MAX(Dashboard_id) + 1 AS MK FROM DASHBOARD";
-		String insertDashboardQuery = "INSERT INTO DASHBOARD (DASHBOARD_ID, JSONSTR) VALUES (?, ?)";
+		String insertDashboardQuery = "INSERT INTO DASHBOARD (DASHBOARD_ID, CUSTOMER_ID, JSONSTR) VALUES (?, ?, ?)";
 		String insertClientDashboardQuery = "INSERT INTO CLIENT_DASHBOARD (CUSTOMER_ID, DASHBOARD_ID) VALUES (?, ?)";
 
 		// dashboard 테이블에 들어갈 json
@@ -70,7 +70,8 @@ public class DashboardDAO {
 			// 2. 대시보드 삽입
 			stmt = con.prepareStatement(insertDashboardQuery);
 			stmt.setLong(1, index);
-			stmt.setString(2, jsonstr.toJSONString()); // JSON 데이터 저장
+			stmt.setString(2, customerId);
+			stmt.setString(3, jsonstr.toJSONString()); // JSON 데이터 저장
 			stmt.executeUpdate();
 
 			// 3. CLIENT DASHBOARD 삽입
