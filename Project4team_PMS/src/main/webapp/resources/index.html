@@ -227,15 +227,7 @@
 					aria-labelledby="headingPages" data-parent="#accordionSidebar">
 					<div id="dashboardBody"
 						class="bg-white py-2 collapse-inner rounded">
-						<h6 class="collapse-header">DashBoard Screens:</h6>
-						<a class="collapse-item" href="login.html">Login</a> <a
-							class="collapse-item" href="register.html">Register</a> <a
-							class="collapse-item" href="forgot-password.html">Forgot
-							Password</a>
-						<div class="collapse-divider"></div>
-						<h6 class="collapse-header">Other Pages:</h6>
-						<a class="collapse-item" href="404.html">404 Page</a> <a
-							class="collapse-item" href="blank.html">Blank Page</a>
+						<a class="collapse-item" href="#" onclick="openAddDashboardModal()">대시보드 생성</a>
 					</div>
 				</div></li>
 
@@ -947,6 +939,7 @@ function addDashboard() {
             getDashboard();
             // 수정 완료후 모달 닫기
             $("#addDashboardModal").modal("hide");
+            $("#addDashboardName").val("");
         } else {
             alert("대시보드 생성 실패!");
         }
