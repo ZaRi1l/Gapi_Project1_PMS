@@ -306,6 +306,7 @@
 						<i class="fa fa-bars"></i>
 					</button>
 
+
 					<!-- Topbar Search -->
 					<form
 						class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -347,6 +348,30 @@
 									</div>
 								</form>
 							</div></li>
+						<div id="addFriendModal" class="modal fade">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h4 class="modal-title">동료 추가</h4>
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+									</div>
+									<div class="modal-body">
+										<label>이메일:</label> <input type="text" id="friendEmail"
+											placeholder="동료의 이메일을 입력하세요" class="form-control">
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-primary"
+											onclick="addFriend()">추가</button>
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal">닫기</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Button to open the add friend modal -->
+						<button type="button" class="btn btn-info" data-toggle="modal"
+							data-target="#addFriendModal">동료 추가</button>
 
 						<!-- Nav Item - Alerts -->
 						<li class="nav-item dropdown no-arrow mx-1"><a
@@ -1034,6 +1059,27 @@ function deleteTask() {
             $("#editTaskModal").modal("hide"); // 모달 닫기
         } else {
             alert("삭제 실패!");
+        }
+    });
+}
+
+function addFriend() {
+    var friendEmail = $("#friendEmail").val().trim();
+
+    if (friendEmail === "") {
+        alert("이메일을 입력하세요.");
+        return;
+    }
+
+    var params = { customerId: customerId, email: friendEmail };
+
+    // AJAX 호출하여 이메일로 동료 추가
+    AJAX.call("jsp/addFriend.jsp", params, function(data) {
+        if (data.trim() === "OK") {
+            alert("동료가 추가되었습니다.");
+            $("#addFriendModal").modal("hide"); // 모달 닫기
+        } else {
+            alert("동료 추가 실패: " + data);
         }
     });
 }

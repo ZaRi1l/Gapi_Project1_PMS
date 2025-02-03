@@ -165,6 +165,8 @@ public class TaskDAO {
 	    
 	    JSONObject jsonstr = new JSONObject();
 	    jsonstr.put("task", taskName);  // JSON 데이터 삽입
+	    jsonstr.put("Estimeted_SP", "");  // JSON 데이터 삽입
+	    jsonstr.put("epic", "");  // JSON 데이터 삽입
 
 	    try {
 	        connDB();
