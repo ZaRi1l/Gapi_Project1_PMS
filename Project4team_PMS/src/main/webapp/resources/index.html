@@ -147,7 +147,7 @@
 					<i class="fas fa-laugh-wink"></i>
 				</div>
 				<div class="sidebar-brand-text mx-3">
-					SB Admin <sup>2</sup>
+					GAPI
 				</div>
 			</a>
 
@@ -239,7 +239,7 @@
 					</div>
 				</div></li>
 
-			<!-- 📌 수정 모달 창 -->
+			<!-- 📌 대시보드 추가 모달 창 -->
 			<div id="addDashboardModal" class="modal fade">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -491,6 +491,39 @@
 					</ul>
 
 				</nav>
+				<!-- 대시보드 해드라인 -->
+				<div id="dashboardHeadLine" class="container">
+					<h2 class="btn-primary btn" onclick="openDashboardInformationModal()" style="font-size:2rem"></h2>
+				</div>
+				
+				<!-- 📌 대시보드 정보, 삭제 모달 창 -->
+				<div id="dashboardInformationModal" class="modal fade">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">대시보드 정보</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+								<label>대시보드 이름:</label> <div id="dashboardName"><input id="dashboardNameText" type="text" value=""></div>
+								<label>소유자:</label> <label id="dashboardOwner"></label>
+								<br>
+								<label>생성일:</label> <label id="dashboardStartDate"></label>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" id="updateDashboardBtn"
+									onclick="updateDashboard()">수정</button>
+								<button type="button" class="btn btn-primary" id="deleteDashboardBtn"
+									onclick="deleteDashboard()">삭제</button>
+								<button type="button" class="btn btn-primary" id="outDashboardBtn"
+									onclick="outDashboard()">나가기</button>
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">닫기</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div class="container">
 					<h2 class="my-4">Sprint</h2>
 					<table class="table table-bordered table-hover">
@@ -523,9 +556,9 @@
 									<option value="멈춤">Stuck</option>
 									<option value="예정">Ready To Start</option>
 									<option value="완료">Done</option>
-								</select> 
-								<label>Estimated SP</label> <input type="text"id="Estimated_SP"> 
-								<label>Epic:</label> <input type="text" id="editTaskEpic">
+								</select> <label>Estimated SP</label> <input type="text"
+									id="Estimated_SP"> <label>Epic:</label> <input
+									type="text" id="editTaskEpic">
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-primary"
@@ -652,6 +685,7 @@ function getSession() {
     });
 }
 
+// 페이지로딩, 대시보드 생성 용
 function getDashboard() {
     var url = "jsp/getDashboard.jsp";
 
@@ -660,7 +694,6 @@ function getDashboard() {
     	console.log("📌 대시보드 객체 데이터: ", dashboards);
 
         if (dashboards.length !== 0) {
-        	populateDashboard(dashboards);
         		
         	if (dashboardId == "") {
         			window.dashboardId = dashboards[0].dashboardId;
@@ -668,11 +701,26 @@ function getDashboard() {
         		window.dashboardId = dashboards[dashboards.length - 1].dashboardId;
         	}
         	
+        	populateDashboard(dashboards);
+        	
             console.log("현재 dashboardId: ", dashboardId);
             fetchTasks()
         } else {
             alert("대시보드를 생성해주세요!");
         }
+    });
+}
+
+// 대시보드 목록 선택, 수정 용
+function fetchDashboard() {
+    var url = "jsp/getDashboard.jsp";
+
+    AJAX.call(url, null, function (data) {
+    	var dashboards = JSON.parse(data);
+        	
+       	populateDashboard(dashboards);
+        	
+        console.log("현재 dashboardId: ", dashboardId);
     });
 }
 
@@ -689,28 +737,68 @@ function fetchTasks() {
     });
 }
 
-
+// 대시보드 최신화 알고리즘
 function populateDashboard(dashboards) {
+	// 대시보드 목록 업데이트
     const dashboardBody = $("#dashboardBody");
     dashboardBody.empty(); // 기존 데이터를 모두 제거
+    
+    // 대시보드 이름 업데이트
+    const dashboardHeadLine = $("#dashboardHeadLine");
+    dashboardHeadLine.empty();
+    
+    // 대시보드 정보 모달 업데이트
+    const dashboardName = $("#dashboardName");
+    const dashboardOwner = $("#dashboardOwner");
+    const dashboardStartDate = $("#dashboardStartDate");
+    dashboardName.empty();
+    dashboardOwner.empty();
+    dashboardStartDate.empty();
 
     dashboards.forEach(dashboard => {
     	dashboardData = JSON.parse(dashboard.dashboardData);
+    	
+    	// 대시보드 목록 업데이트
 //        let newRow = `<a class="collapse-item" href="404.html">${dashboardData.name}</a>`; 
 //		let newRow = `<button class="collapse-item" onclick="changeDashboardId(${dashboard.dashboardId})">${dashboardData.name}</button>`; 
         let newRow = `<a class="collapse-item" href="#" onclick="changeDashboardId(${dashboard.dashboardId})">${dashboardData.name}</a>`; 
         
         dashboardBody.append(newRow);
+        
+        // 대시보드 이름, 정보 업데이트
+        if (window.dashboardId == dashboard.dashboardId) {
+        	newRow = `<h2 class="btn-primary btn" style="font-size:2rem" onclick="openDashboardInformationModal()">${dashboardData.name}</h2>`
+        	dashboardHeadLine.append(newRow);
+        	
+        	dashboardOwner.append(`${dashboard.customerId}`);
+        	dashboardStartDate.append(`${dashboardData.startdate}`);
+        	dashboardName.append(`<input id="dashboardNameText" type="text" value="${dashboardData.name}">`);
+        	
+        	if (dashboard.customerId == window.customerId) {
+        		document.getElementById('updateDashboardBtn').disabled = false;
+        		document.getElementById('deleteDashboardBtn').disabled = false;
+        		document.getElementById('dashboardNameText').disabled = false;
+        		document.getElementById('outDashboardBtn').disabled = true;
+
+        	} else {
+        		document.getElementById('updateDashboardBtn').disabled = true;
+        		document.getElementById('deleteDashboardBtn').disabled = true;
+        		document.getElementById('dashboardNameText').disabled = true;
+        		document.getElementById('outDashboardBtn').disabled = false;
+        	}
+        }
     });
 
-    // 새 작업 추가 입력란
+    // 대시보드 목록의 새 작업 생성 버튼
     const addTaskRow = `<a class="collapse-item" href="#" onclick="openAddDashboardModal()">대시보드 생성</a>`;
      dashboardBody.append(addTaskRow);
+ 
 }
 
 function changeDashboardId(dashboardId) {
 	window.dashboardId = dashboardId; 
 	console.log("현재 dashboardId: ", dashboardId);
+	fetchDashboard();
 	fetchTasks();
 }
 
@@ -814,7 +902,7 @@ function addTask() {
     });
 }
 
-// 대시보드 모달
+// 대시보드 생성용 모달
 function openAddDashboardModal() {
 	console.log("대시보드 모달 열기 실행됨!"); // 로그 확인용
 
@@ -839,6 +927,55 @@ function addDashboard() {
         }
     });
 }
+
+// 대시보드 정보용 모달
+function openDashboardInformationModal() {
+	console.log("대시보드 정보용 모달 실행됨!"); // 로그 확인용
+
+    console.log("모달 ID 확인:", $("#addDashboardModal").length); // 모달이 존재하는지 확인
+
+    $("#dashboardInformationModal").modal("show");
+}
+
+// 대시보드 정보 업데이트
+function updateDashboard() {
+	// JSON 형식으로 데이터 구조 생성
+    var params = {
+        dashboardId: window.dashboardId,
+        dashboardName: document.getElementById('dashboardNameText').value,
+        dashboardStartDate: $("#dashboardStartDate").text()
+    };
+	
+	//AJAX.call( ) 이용해서 비동기 처리 --> updateTask.jsp
+    AJAX.call("jsp/updateDashboard.jsp", params, function (data) {
+        if (data.trim() === "OK") {
+            alert("대시보드가 수정되었습니다.");
+            fetchDashboard();
+            // 수정 완료후 모달 닫기
+            $("#dashboardInformationModal").modal("hide");
+        } else {
+            alert("수정 실패!");
+        }
+    });
+}
+
+// 대시보드 나가기
+function outDashboard() {
+
+    var params = { customerId: window.customerId,
+    		dashboardId: window.dashboardId};
+    
+    AJAX.call("jsp/outDashboard.jsp", params, function (data) {
+        if (data.trim() === "OK") {
+            alert("해당 대시보드에서 탈퇴하셨습니다.");
+            getDashboard();
+            $("#dashboardInformationModal").modal("hide"); // 모달 닫기
+        } else {
+            alert("탈퇴 실패!");
+        }
+    });
+}
+
 
 
 function openEditModal(taskId, taskName, status, Estimated_SP, epic) {
