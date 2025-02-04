@@ -1080,7 +1080,7 @@ function addFriend() {
         return;
     }
 
-    var params = { customerId: customerId, email: friendEmail };
+    var params = { customerId: window.customerId, dashboardId: window.dashboardId, email: friendEmail };
 
     // AJAX 호출하여 이메일로 동료 추가
     AJAX.call("jsp/addFriend.jsp", params, function(data) {
