@@ -7,8 +7,8 @@ import org.json.simple.parser.JSONParser;
 
 public class DashboardDAO {
 	// 데이터베이스 연결 정보
-	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@localhost:1521/orcl";
+	String driver = "com.mysql.jdbc.Driver";
+	String url = "jdbc:mysql://localhost/gapi?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
 	String user = "c##apple";
 	String password = "1111";
 
@@ -59,6 +59,8 @@ public class DashboardDAO {
 		jsonstr.put("startdate", "2024-12-12");
 		jsonstr.put("enddate", "2025-12-11");
 
+		System.out.println("-------------------------------------------------------hh");
+		System.out.println(jsonstr.toJSONString());
 		try {
 			connDB();
 
