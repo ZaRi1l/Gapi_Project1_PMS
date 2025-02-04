@@ -27,7 +27,7 @@ public class ClientDAO {
 
 		try {
 			// 이메일 중복 확인
-			String checkSql = "SELECT COUNT(*) FROM client WHERE customer_id = ?";
+			String checkSql = "SELECT COUNT(*) FROM CLIENT WHERE customer_id = ?";
 			PreparedStatement checkStmt = con.prepareStatement(checkSql);
 			checkStmt.setString(1, cEmail);
 			rs = checkStmt.executeQuery();
@@ -36,7 +36,7 @@ public class ClientDAO {
 			}
 
 			// 이메일 삽입
-			String sql = "INSERT INTO client(customer_id, jsonstr) VALUES(?, ?)";
+			String sql = "INSERT INTO CLIENT(customer_id, jsonstr) VALUES(?, ?)";
 
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, cEmail);
@@ -80,7 +80,7 @@ public class ClientDAO {
 		try {
 			connDB();
 			System.out.println(email);
-			String query = "SELECT jsonstr FROM client WHERE customer_id = ?";
+			String query = "SELECT jsonstr FROM CLIENT WHERE customer_id = ?";
 			stmt = con.prepareStatement(query);
 			stmt.setString(1, email);
 
