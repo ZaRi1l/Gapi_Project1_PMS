@@ -146,9 +146,7 @@
 				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
-				<div class="sidebar-brand-text mx-3">
-					GAPI
-				</div>
+				<div class="sidebar-brand-text mx-3">GAPI</div>
 			</a>
 
 			<!-- Divider -->
@@ -227,7 +225,8 @@
 					aria-labelledby="headingPages" data-parent="#accordionSidebar">
 					<div id="dashboardBody"
 						class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item" href="#" onclick="openAddDashboardModal()">대시보드 생성</a>
+						<a class="collapse-item" href="#"
+							onclick="openAddDashboardModal()">대시보드 생성</a>
 					</div>
 				</div></li>
 
@@ -361,9 +360,8 @@
 							</div>
 						</div>
 
-						<!-- Button to open the add friend modal -->
-						<button type="button" class="btn btn-info" data-toggle="modal"
-							data-target="#addFriendModal">동료 추가</button>
+
+
 
 						<!-- Nav Item - Alerts -->
 						<li class="nav-item dropdown no-arrow mx-1"><a
@@ -509,10 +507,22 @@
 
 				</nav>
 				<!-- 대시보드 해드라인 -->
-				<div id="dashboardHeadLine" class="container">
-					<h2 class="btn-primary btn" onclick="openDashboardInformationModal()" style="font-size:2rem"></h2>
+				<div class="container"
+					style="display: flex; justify-content: space-between">
+					<div id="dashboardHeadLine">
+						<h2 class="btn-primary btn"
+							onclick="openDashboardInformationModal()" style="font-size: 2rem"></h2>
+					</div>
+
+					<!-- Button to open the add friend modal -->
+					<div>
+						<button type="button" class="btn btn-primary" data-toggle="modal"
+							style="font-size: 1rem" data-target="#addFriendModal">동료
+							추가</button>
+					</div>
 				</div>
-				
+
+
 				<!-- 📌 대시보드 정보, 삭제 모달 창 -->
 				<div id="dashboardInformationModal" class="modal fade">
 					<div class="modal-dialog">
@@ -522,18 +532,20 @@
 								<button type="button" class="close" data-dismiss="modal">&times;</button>
 							</div>
 							<div class="modal-body">
-								<label>대시보드 이름:</label> <div id="dashboardName"><input id="dashboardNameText" type="text" value=""></div>
-								<label>소유자:</label> <label id="dashboardOwner"></label>
-								<br>
+								<label>대시보드 이름:</label>
+								<div id="dashboardName">
+									<input id="dashboardNameText" type="text" value="">
+								</div>
+								<label>소유자:</label> <label id="dashboardOwner"></label> <br>
 								<label>생성일:</label> <label id="dashboardStartDate"></label>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-primary" id="updateDashboardBtn"
-									onclick="updateDashboard()">수정</button>
-								<button type="button" class="btn btn-primary" id="deleteDashboardBtn"
-									onclick="deleteDashboard()">삭제</button>
-								<button type="button" class="btn btn-primary" id="outDashboardBtn"
-									onclick="outDashboard()">나가기</button>
+								<button type="button" class="btn btn-primary"
+									id="updateDashboardBtn" onclick="updateDashboard()">수정</button>
+								<button type="button" class="btn btn-primary"
+									id="deleteDashboardBtn" onclick="deleteDashboard()">삭제</button>
+								<button type="button" class="btn btn-primary"
+									id="outDashboardBtn" onclick="outDashboard()">나가기</button>
 								<button type="button" class="btn btn-secondary"
 									data-dismiss="modal">닫기</button>
 							</div>
