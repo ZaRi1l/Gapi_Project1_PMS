@@ -16,6 +16,7 @@ public class ClientDAO {
 
 	private Connection con;
 	private PreparedStatement stmt;
+	private PreparedStatement stmt2; // invite 테이블에 있나 확인용
 	private ResultSet rs;
 
 	public int insert(String cEmail, String jsonstr) throws NamingException, SQLException {
@@ -40,8 +41,34 @@ public class ClientDAO {
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, cEmail);
 			stmt.setString(2, jsonstr);
-			
 			int count = stmt.executeUpdate();
+
+			// 초대받은 사용자인지 확인
+			String inviteSql = "SELECT FRIEND_ID, DASHBOARD_ID FROM INVITE WHERE FRIEND_ID = ?";
+			stmt2 = con.prepareStatement(inviteSql);
+			stmt2.setString(1, cEmail);
+			rs = stmt2.executeQuery();
+
+			// 대시보드 할당해주기, invite 테이블에서 삭제하기
+			while (rs.next()) {
+				String friendId = rs.getString("FRIEND_ID");
+				String dashboardId = rs.getString("DASHBOARD_ID");
+
+				// 대시보드 할당하기
+				String queryAddClient_dashboard = "INSERT INTO CLIENT_DASHBOARD (CUSTOMER_ID, DASHBOARD_ID) VALUES (?, ?)";
+				stmt = con.prepareStatement(queryAddClient_dashboard);
+				stmt.setString(1, friendId);
+				stmt.setString(2, dashboardId);
+				stmt.executeUpdate();
+
+				// invite 테이블에서 삭제하기
+				String queryDeleteInvite = "DELETE FROM INVITE WHERE FRIEND_ID = ? AND DASHBOARD_ID = ?";
+				stmt = con.prepareStatement(queryDeleteInvite);
+				stmt.setString(1, friendId);
+				stmt.setString(2, dashboardId);
+				stmt.executeUpdate();
+			}
+
 			return (count == 1) ? 0 : 2;
 
 		} finally {
