@@ -7,9 +7,9 @@ import org.json.simple.parser.JSONParser;
 
 public class TaskDAO {
 	// 데이터베이스 연결 정보
-	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@localhost:1521/orcl";
-	String user = "c##apple";
+	String driver = "com.mysql.jdbc.Driver";
+	String url = "jdbc:mysql://localhost/gapi?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
+	String user = "apple";
 	String password = "1111";
 
 	private Connection con;
@@ -241,8 +241,8 @@ public class TaskDAO {
 			System.out.println("JDBC driver loading success.");
 
 			try {
-				con = DriverManager.getConnection(url, user, password); // 첫 번째 URL로 연결
-				System.out.println("Oracle connection success with URL: " + url);
+				con = DriverManager.getConnection(url, user, password); // DB 연결
+				System.out.println("ocrl로 OracleDB접속 성공!: " + url);
 			} catch (Exception e) {
 				System.out.println("Connection failed with URL: " + url);
 				System.out.println("Retrying with alternate URL...");

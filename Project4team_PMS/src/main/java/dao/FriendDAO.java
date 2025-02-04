@@ -5,9 +5,9 @@ import java.sql.*;
 import javamailApi.*;
 
 public class FriendDAO {
-	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url = "jdbc:oracle:thin:@localhost:1521/orcl";
-	String user = "c##apple";
+	String driver = "com.mysql.jdbc.Driver";
+	String url = "jdbc:mysql://localhost/gapi?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
+	String user = "apple";
 	String password = "1111";
 
 	private Connection con;
