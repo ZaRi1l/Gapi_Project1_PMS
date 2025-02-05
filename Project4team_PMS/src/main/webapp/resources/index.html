@@ -471,7 +471,7 @@
 						<li class="nav-item dropdown no-arrow"><a
 							class="nav-link dropdown-toggle" href="#" id="userDropdown"
 							role="button" data-toggle="dropdown" aria-haspopup="true"
-							aria-expanded="false"> <span
+							aria-expanded="false"> <span id="userName"
 								class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas
 									McGee</span> <img class="img-profile rounded-circle"
 								src="img/undraw_profile.svg">
@@ -688,10 +688,19 @@ console.log(typeof $.fn.modal)
 $(document).ready(function () {
     getSession(); //login.jsp로 부터 세션 가져와서 여기서 쓰기
     getDashboard(); // getdashboard.jsp
+    getUserName(); // 유저 이름 가져오기
 });
 
 var customerId = "";  // 전역 변수
 var dashboardId = ""; 
+
+function getUserName() {
+	var url = "jsp/getClientName.jsp";
+
+    AJAX.call(url, null, function (data) {
+    	document.getElementById('userName').textContent = data;
+    });
+}
 
 function getSession() {
     var url = "jsp/getSession.jsp";
