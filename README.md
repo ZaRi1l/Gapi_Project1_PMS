@@ -22,24 +22,7 @@
 |김윤진|프론트 엔드: css / 로그인, 회원가입 화면 <br>백엔드: 회원 추가, 조회 <br>기타: Class Diagram / UI 정의서 |
 |박규태|프론트 엔드: css / 로그인, 회원가입 화면 / 대시보드 목록 / 대시보드 추가와 수정 모달 <br>백엔드: 회원 추가, 조회 / 대시보드 추가, 삭제, 수정, 조회 / 동료 추가, 삭제, 조회 <br>기타: 발표자료 / Sequence Diagram / ERD / DB 설계 / SQL문 작성 |
 
-
-
-<br><br><br>
-<div style="text-align: center;">
-    <img src="/docs/소프트웨어 설계/요구사항.png" alt="alt text" />
-</div>
-
-#### 요구사항 분석(기능 정리)
-
-- 로그인 & 회원가입
-- 작업
-- 백로그
-- 대시보드
-- 동료
-- 캘린더
-
-<br>
-
+<br><br>
 #### 개발환경
 ##### os
 <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white"/>
@@ -53,9 +36,25 @@
 ##### Data Base
 <img src="https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=Oracle&logoColor=white"/>
 
+<br><br>
+## 요구사항
+
+<div style="text-align: center;">
+    <img height="500px" src="/docs/소프트웨어 설계/요구사항.png" alt="alt text" />
+</div>
+
+#### 요구사항 분석(기능 정리)
+|요구사항|상세내용|
+|:---:|---|
+| 로그인 & 회원가입 | 회원 조회, 추가, 삭제, 수정 |
+| 작업 | 회원 조회, 추가, 삭제, 수정 |
+| 백로그 | 진행"완료"인 작업들의 모음 |
+| 대시보드 | 대시보드 추가, 삭제, 수정 |
+| 동료 | 동료 추가, 삭제, 조회 |
+| 캘린더 | 작업의 시작일을 캘린더의 표시 |
 
 
-<br>
+<br><br>
 
 # PMS 레퍼런스 (Monday.dev)
 
