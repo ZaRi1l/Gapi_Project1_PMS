@@ -102,6 +102,26 @@ public class ClientDAO {
 		}
 	}
 
+	public String getUserNameByCustomerId(String customerId) {
+		String userName = null;
+		try {
+			connDB();
+			String sql = "SELECT JSON_VALUE(JSONSTR, '$.name') AS NAME FROM CLIENT WHERE CUSTOMER_ID = ?";
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, customerId);
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				userName = rs.getString("NAME"); // JSON에서 추출한 이름 가져오기
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+		return userName;
+	}
+
 	public void connDB() {
 		try {
 			Class.forName(driver); // JDBC 드라이버 로드
