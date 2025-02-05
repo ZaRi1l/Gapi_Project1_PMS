@@ -1,6 +1,8 @@
 package dao;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -53,11 +55,15 @@ public class DashboardDAO {
 		String insertDashboardQuery = "INSERT INTO DASHBOARD (DASHBOARD_ID, CUSTOMER_ID, JSONSTR) VALUES (?, ?, ?)";
 		String insertClientDashboardQuery = "INSERT INTO CLIENT_DASHBOARD (CUSTOMER_ID, DASHBOARD_ID) VALUES (?, ?)";
 
+		// 현재 날짜 가져오기
+		Date today = new Date();
+		SimpleDateFormat formatMethod = new SimpleDateFormat("yyyy-MM-dd");
+		String todayDateStr = formatMethod.format(today);
+		
 		// dashboard 테이블에 들어갈 json
 		JSONObject jsonstr = new JSONObject();
 		jsonstr.put("name", dashboardName);
-		jsonstr.put("startdate", "2024-12-12");
-		jsonstr.put("enddate", "2025-12-11");
+		jsonstr.put("startdate", todayDateStr);
 
 		System.out.println("-------------------------------------------------------hh");
 		System.out.println(jsonstr.toJSONString());
