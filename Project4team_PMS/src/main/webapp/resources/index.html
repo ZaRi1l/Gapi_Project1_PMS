@@ -837,6 +837,7 @@ function populateTable(tasks) {
     const taskTableBodyDone = $("#taskTableBodyDone");
     tableBody.empty(); // 기존 데이터를 모두 제거
     taskTableBodyDone.empty(); // 기존 데이터를 모두 제거
+    console.log(tasks + "-------------------------------------------------------");
 
     tasks.forEach(task => {
         let statusHTML = ""; 
@@ -868,7 +869,6 @@ function populateTable(tasks) {
         // 진행 상태가 "진행", "멈춤", "예정"이면 위에 테이블
         else{
         	//테이블 클릭하면 모달 열림
-        	//ㄹ효
             const newRow = `
                 <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimeted_SP}','${task.epic}')">
                     <td>${task.task}</td>

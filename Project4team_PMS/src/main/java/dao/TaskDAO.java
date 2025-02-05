@@ -211,7 +211,7 @@ public class TaskDAO {
 		}
 	}
 
-	public boolean updateTask(String taskId, String task, String status, String estimatedSp, String epic) throws ParseException {
+	public boolean updateTask(String taskId, String task, String status, String estimited_ep, String epic) throws ParseException {
 	    String selectQuery = "SELECT JSONSTR FROM TASK WHERE TASK_ID = ?";
 	    String updateQuery = "UPDATE TASK SET JSONSTR = ? WHERE TASK_ID = ?";
 	    JSONObject updateJson = null;
@@ -229,7 +229,7 @@ public class TaskDAO {
 	            updateJson = (JSONObject) new JSONParser().parse(updateStr);
 	            updateJson.put("task", task);
 	            updateJson.put("status", status);
-	            updateJson.put("Estimated_SP", estimatedSp);  // 변수 오타 수정
+	            updateJson.put("Estimated_SP", estimited_ep);  // 변수 오타 수정
 	            updateJson.put("epic", epic);
 	        } else {
 	            return false;  // 해당 TASK_ID가 없으면 업데이트하지 않음
