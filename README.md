@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/d63051c2-9f97-4ed5-8bb2-4449449d4b51)## Gapi Project
+## Gapi Project
 <div style="text-align: center;">
     <img src="/docs/구현 사진/메인화면.png" height="300px" alt="alt text" />
 </div>
