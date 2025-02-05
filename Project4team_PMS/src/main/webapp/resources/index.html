@@ -856,11 +856,11 @@ function populateTable(tasks) {
         if(task.status === "완료"){
         	//테이블 클릭하면 모달 열림
         	const newRow2 = `
-                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimeted_SP}','${task.epic}')">
+                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimated_SP}','${task.epic}')">
                     <td>${task.task}</td>
                     <td>${task.customerName}</td>
                     <td>${statusHTML}</td>
-                    <td>${task.Estimeted_SP}</td>
+                    <td>${task.Estimated_SP}</td>
                     <td>${task.epic}</td>
                 </tr>`;
                 
@@ -870,11 +870,11 @@ function populateTable(tasks) {
         else{
         	//테이블 클릭하면 모달 열림
             const newRow = `
-                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimeted_SP}','${task.epic}')">
+                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimated_SP}','${task.epic}')">
                     <td>${task.task}</td>
                     <td>${task.customerName}</td>
                     <td>${statusHTML}</td>
-                    <td>${task.Estimeted_SP}</td>
+                    <td>${task.Estimated_SP}</td>
                     <td>${task.epic}</td>
                 </tr>`;
                 
