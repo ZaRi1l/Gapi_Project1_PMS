@@ -500,119 +500,13 @@
 
 				</nav>
 				<!-- 대시보드 해드라인 -->
-				<div class="container"
-					style="display: flex; justify-content: space-between">
-					<div id="dashboardHeadLine">
-						<h2 class="btn-primary btn"
-							onclick="openDashboardInformationModal()" style="font-size: 2rem"></h2>
-					</div>
 
-					<!-- Button to open the add friend modal -->
-					<div>
-						<button type="button" class="btn btn-primary" data-toggle="modal"
-							style="font-size: 1rem" data-target="#addFriendModal">동료
-							추가</button>
-					</div>
-				</div>
-
-
-				<!-- 📌 대시보드 정보, 삭제 모달 창 -->
-				<div id="dashboardInformationModal" class="modal fade">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 class="modal-title">대시보드 정보</h4>
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-							</div>
-							<div class="modal-body">
-								<label>대시보드 이름:</label>
-								<div id="dashboardName">
-									<input id="dashboardNameText" type="text" value="">
-								</div>
-								<label>소유자:</label> <label id="dashboardOwner"></label> <br>
-								<label>생성일:</label> <label id="dashboardStartDate"></label>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary"
-									id="updateDashboardBtn" onclick="updateDashboard()">수정</button>
-								<button type="button" class="btn btn-primary"
-									id="deleteDashboardBtn" onclick="deleteDashboard()">삭제</button>
-								<button type="button" class="btn btn-primary"
-									id="outDashboardBtn" onclick="outDashboard()">나가기</button>
-								<button type="button" class="btn btn-secondary"
-									data-dismiss="modal">닫기</button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="container">
-					<h2 class="my-4">Sprint</h2>
-					<table class="table table-bordered table-hover">
-						<thead>
-							<tr>
-								<th>태스크</th>
-								<th>Owner</th>
-								<th>Status</th>
-								<th>Estimated SP</th>
-								<th>Epic</th>
-							</tr>
-						</thead>
-						<tbody id="taskTableBody"></tbody>
-					</table>
-				</div>
-
-				<!-- 📌 수정 모달 창 -->
-				<div id="editTaskModal" class="modal fade">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 class="modal-title">작업 수정</h4>
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-							</div>
-							<div class="modal-body">
-								<input type="hidden" id="editTaskId"> <label>작업명:</label>
-								<input type="text" id="editTaskName"> <label>상태:</label>
-								<select id="editTaskStatus">
-									<option value="진행">In Progress</option>
-									<option value="멈춤">Stuck</option>
-									<option value="예정">Ready To Start</option>
-									<option value="완료">Done</option>
-								</select> <label>Estimated SP</label> <input type="text"
-									id="Estimated_SP"> <label>Epic:</label> <input
-									type="text" id="editTaskEpic">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary"
-									onclick="updateTask()">수정 완료</button>
-								<button type="button" class="btn btn-secondary"
-									data-dismiss="modal">닫기</button>
-								<button type="button" class="btn btn-danger"
-									onclick="deleteTask()">삭제</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<br> <br> <br> <br>
-				<div class="container">
-					<h2 class="my-4">백로그</h2>
-					<table class="table table-bordered table-hover">
-						<thead>
-							<tr>
-								<th>태스크</th>
-								<th>Owner</th>
-								<th>Status</th>
-								<th>Estimated SP</th>
-								<th>Epic</th>
-							</tr>
-						</thead>
-						<tbody id="taskTableBodyDone"></tbody>
-					</table>
-				</div>
 				<!-- End of Topbar -->
 
 				<!-- Begin Page Content -->
-				<div class="container-fluid"></div>
+				<div class="container-fluid">
+				<h1>📅 프로젝트 작업 캘린더</h1>
+    			<div id="calendar" class="container"></div></div>
 				<!-- /.container-fluid -->
 
 			</div>
@@ -681,6 +575,11 @@
 <!-- Page level custom scripts -->
 <script src="js/demo/chart-area-demo.js"></script>
 <script src="js/demo/chart-pie-demo.js"></script>
+
+<!-- FullCalendar 라이브러리 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    
 <script>
 console.log(typeof $.fn.modal)
 
@@ -726,7 +625,6 @@ function getDashboard() {
         	populateDashboard(dashboards);
         	
             console.log("현재 dashboardId: ", dashboardId);
-            fetchTasks()
         } else {
             alert("대시보드를 생성해주세요!");
         }
@@ -746,26 +644,13 @@ function fetchDashboard() {
     });
 }
 
-function fetchTasks() {
-    var url = "jsp/getTask.jsp";
-    
-    var params = {dashboardId:dashboardId}; // {id:choi@naver.com, ps:1111}
-
-    AJAX.call(url, params, function(data) {
-    	console.log("📌 AJAX 응답 데이터: ", data);
-        var tasks = JSON.parse(data);
-        console.log("📌 변환된 객체 데이터: ", tasks); // JSON 데이터 확인
-        populateTable(tasks);
-    });
-}
-
 // 대시보드 최신화 알고리즘
 function populateDashboard(dashboards) {
 	// 대시보드 목록 업데이트
     const dashboardBody = $("#dashboardBody");
     dashboardBody.empty(); // 기존 데이터를 모두 제거
     
-    // 대시보드 이름 업데이트
+/*     // 대시보드 이름 업데이트
     const dashboardHeadLine = $("#dashboardHeadLine");
     dashboardHeadLine.empty();
     
@@ -775,7 +660,7 @@ function populateDashboard(dashboards) {
     const dashboardStartDate = $("#dashboardStartDate");
     dashboardName.empty();
     dashboardOwner.empty();
-    dashboardStartDate.empty();
+    dashboardStartDate.empty(); */
 
     dashboards.forEach(dashboard => {
     	dashboardData = JSON.parse(dashboard.dashboardData);
@@ -783,12 +668,12 @@ function populateDashboard(dashboards) {
     	// 대시보드 목록 업데이트
 //        let newRow = `<a class="collapse-item" href="404.html">${dashboardData.name}</a>`; 
 //		let newRow = `<button class="collapse-item" onclick="changeDashboardId(${dashboard.dashboardId})">${dashboardData.name}</button>`; 
-        let newRow = `<a class="collapse-item" href="#" onclick="changeDashboardId(${dashboard.dashboardId})">${dashboardData.name}</a>`; 
+        let newRow = `<a class="collapse-item" href="index.html" onclick="changeDashboardId(${dashboard.dashboardId})">${dashboardData.name}</a>`; 
         
         dashboardBody.append(newRow);
         
         // 대시보드 이름, 정보 업데이트
-        if (window.dashboardId == dashboard.dashboardId) {
+        /* if (window.dashboardId == dashboard.dashboardId) {
         	newRow = `<h2 class="btn-primary btn" style="font-size:2rem" onclick="openDashboardInformationModal()">${dashboardData.name}</h2>`
         	dashboardHeadLine.append(newRow);
         	
@@ -808,11 +693,11 @@ function populateDashboard(dashboards) {
         		document.getElementById('dashboardNameText').disabled = true;
         		document.getElementById('outDashboardBtn').disabled = false;
         	}
-        }
+        } */
     });
 
     // 대시보드 목록의 새 작업 생성 버튼
-    const addTaskRow = `<a class="collapse-item" href="#" onclick="openAddDashboardModal()">대시보드 생성</a>`;
+    const addTaskRow = `<a class="collapse-item" href="index.html" onclick="openAddDashboardModal()">대시보드 생성</a>`;
      dashboardBody.append(addTaskRow);
  
 }
@@ -825,277 +710,36 @@ function changeDashboardId(dashboardId) {
 }
 
 
-function populateTable(tasks) {
-    const tableBody = $("#taskTableBody");
-    const taskTableBodyDone = $("#taskTableBodyDone");
-    tableBody.empty(); // 기존 데이터를 모두 제거
-    taskTableBodyDone.empty(); // 기존 데이터를 모두 제거
-    console.log(tasks + "-------------------------------------------------------");
 
-    tasks.forEach(task => {
-        let statusHTML = ""; 
-        if (task.status === "완료") {
-            statusHTML = `<span class="status-done">Done</span>`;
-        } else if (task.status === "진행") {
-            statusHTML = `<span class="status-in-progress">In Progress</span>`;
-        } else if (task.status === "예정") {
-            statusHTML = `<span class="status-ready-to-start">Ready To Start</span>`;
-        }
-        else if (task.status === "멈춤") {
-            statusHTML = `<span class="status-stuck">Stuck</span>`;
-        }
-        
-        // 진행 상태가 "완료(Done)"이면 밑에 테이블(백로그)로 내려가기
-        if(task.status === "완료"){
-        	//테이블 클릭하면 모달 열림
-        	const newRow2 = `
-                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimated_SP}','${task.epic}')">
-                    <td>${task.task}</td>
-                    <td>${task.customerName}</td>
-                    <td>${statusHTML}</td>
-                    <td>${task.Estimated_SP}</td>
-                    <td>${task.epic}</td>
-                </tr>`;
-                
-                taskTableBodyDone.append(newRow2);
-        }
-        // 진행 상태가 "진행", "멈춤", "예정"이면 위에 테이블
-        else{
-        	//테이블 클릭하면 모달 열림
-            const newRow = `
-                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimated_SP}','${task.epic}')">
-                    <td>${task.task}</td>
-                    <td>${task.customerName}</td>
-                    <td>${statusHTML}</td>
-                    <td>${task.Estimated_SP}</td>
-                    <td>${task.epic}</td>
-                </tr>`;
-                
-                tableBody.append(newRow);
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    // var customerId = "abcd@naver.com"; // 고객 ID (로그인 사용자 ID)
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ko', // 한국어 설정
+        events: function(fetchInfo, successCallback, failureCallback) {
+            $.ajax({
+                url: 'jsp/caltasks.jsp',
+                type: 'GET',
+                data: null, //{ customerId: customerId },
+                dataType: 'json',
+                success: function(data) {
+                    console.log("✅ 캘린더 데이터 로드 성공:", data);
+                    successCallback(data); // 캘린더에 이벤트 추가
+                },
+                error: function(xhr, status, error) {
+                    console.error("🚨 캘린더 데이터 로드 실패:", status, error);
+                    console.log("🚨 서버 응답:", xhr.responseText);
+                    failureCallback([]);
+                }
+            });
+        },
+        eventColor: '#3788d8' // 이벤트 기본 색상 지정 (선택 사항)
     });
 
-    // 새 작업 추가 입력란
-    const addTaskRow = `
-        <tr>
-            <td><input type="text" id="addTaskInput" placeholder="작업 추가"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>`;
-    tableBody.append(addTaskRow);
-}
-
-// Enter 키 이벤트를 document에 바인딩 (이벤트 중복 방지)
-$(document).on("keypress", "#addTaskInput", function (event) {
-    if (event.which === 13) { // 13 = Enter 키
-        addTask();
-        fetchTasks();
-    }
+    calendar.render();
 });
 
-function addTask() {
-	// id 태그가 "addTaskInput"인 것의 값(value) 가져오기
-    var taskName = $("#addTaskInput").val().trim();
-	//유효성 검사: 작업명이 없으면 경고창 띄움
-    if (taskName === "") {
-        alert("작업명을 입력하세요.");
-        return;
-    }
-
-    var params = {
-        task: taskName, //작업명
-        customerId: customerId,  // 로그인 아이디 세션: 추가하려는 사용자 
-        dashboardId : dashboardId  // 대시보드 세션 : 추가하려는 대시보드
-    };
-
-    var url = "jsp/addTask.jsp";
-    AJAX.call(url, params, function (data) {
-    	console.log(typeof(data)); // 수신한 데이터(data)는 문자열로 받아옴.
-    	//비지니스 로직
-        if (data.trim() === "1") {  // 작업 추가 성공
-            alert("작업이 추가되었습니다.");
-            fetchTasks();
-        } else {
-            alert("작업 추가 실패!");  // 작업 추가 실패
-            fetchTasks();
-        }
-    });
-}
-
-// 대시보드 생성용 모달
-function openAddDashboardModal() {
-	console.log("대시보드 모달 열기 실행됨!"); // 로그 확인용
-
-    console.log("모달 ID 확인:", $("#addDashboardModal").length); // 모달이 존재하는지 확인
-
-    $("#addDashboardModal").modal("show");
-}
-
-function addDashboard() {
-	var url = "jsp/addDashboard.jsp";
-    
-    var params = {addDashboardName:$("#addDashboardName").val()}; // {addDashboardName:공부 앱}
-
-    AJAX.call(url, params, function (data) {
-        if (data.trim() === "OK") {
-            alert("대시보드가 생성 되었습니다.");
-            getDashboard();
-            // 수정 완료후 모달 닫기
-            $("#addDashboardModal").modal("hide");
-            $("#addDashboardName").val("");
-        } else {
-            alert("대시보드 생성 실패!");
-        }
-    });
-}
-
-// 대시보드 정보용 모달
-function openDashboardInformationModal() {
-	console.log("대시보드 정보용 모달 실행됨!"); // 로그 확인용
-
-    console.log("모달 ID 확인:", $("#addDashboardModal").length); // 모달이 존재하는지 확인
-
-    $("#dashboardInformationModal").modal("show");
-}
-
-// 대시보드 정보 업데이트
-function updateDashboard() {
-	// JSON 형식으로 데이터 구조 생성
-    var params = {
-        dashboardId: window.dashboardId,
-        dashboardName: document.getElementById('dashboardNameText').value,
-        dashboardStartDate: $("#dashboardStartDate").text()
-    };
-	
-	//AJAX.call( ) 이용해서 비동기 처리 --> updateTask.jsp
-    AJAX.call("jsp/updateDashboard.jsp", params, function (data) {
-        if (data.trim() === "OK") {
-            alert("대시보드가 수정되었습니다.");
-            fetchDashboard();
-            // 수정 완료후 모달 닫기
-            $("#dashboardInformationModal").modal("hide");
-        } else {
-            alert("수정 실패!");
-        }
-    });
-}
-
-// 대시보드 나가기
-function outDashboard() {
-
-    var params = { customerId: window.customerId,
-    		dashboardId: window.dashboardId};
-    
-    AJAX.call("jsp/outDashboard.jsp", params, function (data) {
-        if (data.trim() === "OK") {
-            alert("해당 대시보드에서 탈퇴하셨습니다.");
-            getDashboard();
-            $("#dashboardInformationModal").modal("hide"); // 모달 닫기
-        } else {
-            alert("탈퇴 실패!");
-        }
-    });
-}
-
-//대시보드 삭제
-function deleteDashboard() {
-
-    var params = {dashboardId: window.dashboardId};
-    
-    AJAX.call("jsp/deleteDashboard.jsp", params, function (data) {
-        if (data.trim() === "OK") {
-            alert("대시보드가 삭제되었습니다.");
-            getDashboard();
-            $("#dashboardInformationModal").modal("hide"); // 모달 닫기
-        } else {
-            alert("삭제 실패!");
-        }
-    });
-}
-
-
-
-function openEditModal(taskId, taskName, status, Estimated_SP, epic) {
-	console.log("모달 열기 실행됨!"); // 로그 확인용
-    $("#editTaskId").val(taskId);
-    $("#editTaskName").val(taskName);
-    $("#editTaskStatus").val(status);
-    $("#Estimated_SP").val(Estimated_SP);
-    $("#editTaskEpic").val(epic);
-    console.log("모달 ID 확인:", $("#editTaskModal").length); // 모달이 존재하는지 확인
-    console.log("Task 클릭됨: ", taskId, taskName, status, Estimated_SP, epic);
-
-    $("#editTaskModal").modal("show");
-}
-
-function updateTask() {
-	// JSON 형식으로 데이터 구조 생성
-    var params = {
-        taskId: $("#editTaskId").val(),
-        task: $("#editTaskName").val(),
-        status: $("#editTaskStatus").val(),
-        Estimated_SP: $("#Estimated_SP").val(),
-        epic: $("#editTaskEpic").val()
-    };
-	
-	//AJAX.call( ) 이용해서 비동기 처리 --> updateTask.jsp
-    AJAX.call("jsp/updateTask.jsp", params, function (data) {
-        if (data.trim() === "OK") {
-            alert("작업이 수정되었습니다.");
-            fetchTasks();
-            // 수정 완료후 모달 닫기
-            $("#editTaskModal").modal("hide");
-        } else {
-            alert("수정 실패!");
-        }
-    });
-}
-function deleteTask() {
-    var taskId = $("#editTaskId").val();
-
-    if (!taskId) {
-        alert("삭제할 작업이 선택되지 않았습니다.");
-        return;
-    }
-
-    if (!confirm("정말 이 작업을 삭제하시겠습니까?")) {
-        return; // 사용자가 취소하면 실행하지 않음
-    }
-
-    var params = { taskId: taskId };
-    
-    AJAX.call("jsp/deleteTask.jsp", params, function (data) {
-        if (data.trim() === "OK") {
-            alert("작업이 삭제되었습니다.");
-            fetchTasks();
-            $("#editTaskModal").modal("hide"); // 모달 닫기
-        } else {
-            alert("삭제 실패!");
-        }
-    });
-}
-
-function addFriend() {
-    var friendEmail = $("#friendEmail").val().trim();
-
-    if (friendEmail === "") {
-        alert("이메일을 입력하세요.");
-        return;
-    }
-
-    var params = { customerId: window.customerId, dashboardId: window.dashboardId, email: friendEmail };
-
-    // AJAX 호출하여 이메일로 동료 추가
-    AJAX.call("jsp/addFriend.jsp", params, function(data) {
-        if (data.trim() === "OK") {
-            alert("동료가 추가되었습니다.");
-            $("#addFriendModal").modal("hide"); // 모달 닫기
-        } else {
-            alert("동료 추가 실패: " + data);
-        }
-    });
-}
 </script>
 </html>
