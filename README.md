@@ -27,12 +27,12 @@
 ## 개발환경
 |OS|Server|IDE|
 |:---:|:---:|:---:|
-|<img src="https://img.icons8.com/?size=100&id=TuXN3JNUBGOT&format=png&color=000000"/><img src="https://img.icons8.com/?size=100&id=63208&format=png&color=000000"/>|<img src="https://img.icons8.com/?size=100&id=QFcVqyh6lBh6&format=png&color=000000"/>|<img src="https://img.icons8.com/?size=100&id=w1uD6vtDitjr&format=png&color=ffffff" style="filter: invert(100%)"/>|
+|<img src="https://img.icons8.com/?size=100&id=TuXN3JNUBGOT&format=png&color=000000"/><img src="https://img.icons8.com/?size=100&id=63208&format=png&color=000000"/>|<img src="https://img.icons8.com/?size=100&id=QFcVqyh6lBh6&format=png&color=000000"/>|<img src="https://img.icons8.com/?size=100&id=w1uD6vtDitjr&format=png&color=422e7d"/>|
 |Window, Ubuntu|Apache Tomcat|Eclipse|
 
 |Language|DB|VCS|
 |:---:|:---:|:---:|
-|<img src="https://img.icons8.com/?size=100&id=5OD485koNIrb&format=png&color=000000"/><img src="https://img.icons8.com/?size=100&id=PXTY4q2Sq2lG&format=png&color=000000"/><img src="https://img.icons8.com/?size=100&id=20909&format=png&color=000000"/><img src="https://img.icons8.com/?size=100&id=21278&format=png&color=000000"/>|<img src="https://img.icons8.com/?size=100&id=UFXRpPFebwa2&format=png&color=000000"/>|<img src="https://img.icons8.com/?size=100&id=12599&format=png&color=ffffff" style="filter: invert(100%)"/>|
+|<img src="https://img.icons8.com/?size=100&id=5OD485koNIrb&format=png&color=000000"/><img src="https://img.icons8.com/?size=100&id=PXTY4q2Sq2lG&format=png&color=000000"/><img src="https://img.icons8.com/?size=100&id=20909&format=png&color=000000"/><img src="https://img.icons8.com/?size=100&id=21278&format=png&color=000000"/>|<img src="https://img.icons8.com/?size=100&id=UFXRpPFebwa2&format=png&color=000000"/>|<img src="https://img.icons8.com/?size=100&id=SzgQDfObXUbA&format=png&color=000000"/>|
 |Java, Javascript, HTML, CSS|MySQL|GitHub|
 
 #### 개발환경 상세     
