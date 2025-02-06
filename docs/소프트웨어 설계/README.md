@@ -18,7 +18,7 @@
 
 #### Class Diagram
 <div style="text-align: center;">
-    <img src="/docs/소프트웨어 설계/Class Diagram.png" alt="alt text" />
+    <img src="/docs/소프트웨어 설계/Class Diagram(전체적인).png" alt="alt text" />
 </div> 
 
 <br>
