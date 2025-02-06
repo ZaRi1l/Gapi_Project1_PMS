@@ -1154,7 +1154,7 @@ function showFriend() {
                         
                         // ✅ 현재 로그인한 사용자가 소유자인 경우에만 삭제 버튼 표시
                         if (window.customerId === window.dashboardOwnerId) {
-                            deleteButton = ` <button class="delete-btn" data-name="${friend.name}">삭제</button>`;
+                            deleteButton = ` <button class="delete-btn btn btn-primary" data-name="${friend.name}">삭제</button>`;
                         }
 
                         modalBody.append(
