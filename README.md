@@ -1,6 +1,6 @@
 ## Gapi Project
 <div style="text-align: center;">
-    <img src="/docs/구현 사진/메인화면.png" height="450px" alt="alt text" />
+    <img src="/docs/구현 사진/메인화면.png" alt="alt text" />
 </div>
 
 ##### 프로젝트 소개
@@ -68,21 +68,21 @@
 
 #### 작업
 <div style="text-align: center;">
-    <img src="/docs/구현 사진/메인화면.png" height="450px" alt="alt text" />
+    <img src="/docs/구현 사진/메인화면.png" height="100%" alt="alt text" />
 </div> 
 
 <br>
 
 #### 대시보드
 <div style="text-align: center;">
-    <img src="/docs/구현 사진/대시보드.png" height="450px" alt="alt text" />
+    <img src="/docs/구현 사진/대시보드.png" height="100%" alt="alt text" />
 </div> 
 
 <br>
 
 #### 캘린더
 <div style="text-align: center;">
-    <img src="/docs/구현 사진/달력.png" height="450px" alt="alt text" />
+    <img src="/docs/구현 사진/달력.png" height="100%" alt="alt text" />
 </div> 
 
 <br>
