@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class CalDashboardDAO {
 	String driver = "com.mysql.jdbc.Driver";
-	String url = "jdbc:mysql://localhost/gapi?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
+	String url = "jdbc:mysql://localhost:3306/gapi?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
 	String user = "apple";
 	String password = "1111";
 

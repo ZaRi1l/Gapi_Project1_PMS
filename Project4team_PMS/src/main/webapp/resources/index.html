@@ -202,7 +202,7 @@
 				<div id="collapsePages" class="collapse show"
 					aria-labelledby="headingPages" data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<h6 class="collapse-header">Functions:</h6> 
+						<h6 class="collapse-header">Functions:</h6>
 						<a class="collapse-item" href="calendar.html">Calendar Page</a>
 					</div>
 				</div></li>
@@ -346,6 +346,23 @@
 									<div class="modal-footer">
 										<button type="button" class="btn btn-primary"
 											onclick="addFriend()">추가</button>
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal">닫기</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="showFriendModal" class="modal fade">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h4 class="modal-title">동료 보기</h4>
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+									</div>
+									<div class="modal-body">
+										<!-- 동적으로 내용이 추가될 부분 -->
+									</div>
+									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary"
 											data-dismiss="modal">닫기</button>
 									</div>
@@ -506,9 +523,11 @@
 						<h2 class="btn-primary btn"
 							onclick="openDashboardInformationModal()" style="font-size: 2rem"></h2>
 					</div>
-
-					<!-- Button to open the add friend modal -->
+					<!-- 동료 항목 보기 버튼 -->
 					<div>
+						<button type="button" class="btn btn-primary" data-toggle="modal"
+							style="font-size: 1rem" data-target="#showFriendModal"
+							onclick="showFriend()">동료 보기</button>
 						<button type="button" class="btn btn-primary" data-toggle="modal"
 							style="font-size: 1rem" data-target="#addFriendModal">동료
 							추가</button>
@@ -798,6 +817,9 @@ function populateDashboard(dashboards) {
         
         // 대시보드 이름, 정보 업데이트
         if (window.dashboardId == dashboard.dashboardId) {
+        	
+        	window.dashboardOwnerId = dashboard.customerId; //현재 대시보드 소유자 ID 저장
+        	
         	newRow = `<h2 class="btn-primary btn" style="font-size:2rem" onclick="openDashboardInformationModal()">${dashboardData.name}</h2>`
         	dashboardHeadLine.append(newRow);
         	
@@ -805,6 +827,7 @@ function populateDashboard(dashboards) {
         	dashboardStartDate.append(`${dashboardData.startdate}`);
         	dashboardName.append(`<input id="dashboardNameText" type="text" value="${dashboardData.name}">`);
         	
+        	// 여기서 소유자 판단 후 버튼 활성화.
         	if (dashboard.customerId == window.customerId) {
         		document.getElementById('updateDashboardBtn').disabled = false;
         		document.getElementById('deleteDashboardBtn').disabled = false;
@@ -823,6 +846,8 @@ function populateDashboard(dashboards) {
     // 대시보드 목록의 새 작업 생성 버튼
     const addTaskRow = `<a class="collapse-item" href="#" onclick="openAddDashboardModal()">대시보드 생성</a>`;
      dashboardBody.append(addTaskRow);
+     
+     
  
 }
 
@@ -1106,5 +1131,79 @@ function addFriend() {
         }
     });
 }
+
+// 해당 대시보드ID 세션안에 친구 리스트 조회
+function showFriend() {
+    var params = { dashboardId: window.dashboardId };
+
+    // AJAX 호출하여 친구 목록 가져오기
+    AJAX.call("jsp/showFriend.jsp", params, function(data) {
+        if (data.trim() !== "") {  
+            console.log(typeof(data));  
+            console.log("전달받은 친구 이름들: " + data);
+
+            try {
+                var friendList = JSON.parse(data); // JSON 파싱
+                var modalBody = $('#showFriendModal .modal-body');
+                modalBody.empty(); // 기존 목록 초기화
+
+                if (friendList.length > 0) {
+                    friendList.forEach(function(friend) {
+                        // 삭제 버튼 추가한 리스트 항목
+                        let deleteButton = "";
+                        
+                        // ✅ 현재 로그인한 사용자가 소유자인 경우에만 삭제 버튼 표시
+                        if (window.customerId === window.dashboardOwnerId) {
+                            deleteButton = ` <button class="delete-btn" data-name="${friend.name}">삭제</button>`;
+                        }
+
+                        modalBody.append(
+                            `<p class="friend-item" data-name="${friend.name}">${friend.name}${deleteButton}</p>`
+                        );
+                    });
+                } else {
+                    modalBody.append('<p>동료가 없습니다.</p>');
+                }
+
+                // 모달 표시
+                $('#showFriendModal').modal('show');
+            } catch (error) {
+                console.error("JSON 파싱 오류:", error);
+                alert("데이터를 불러오는 중 오류가 발생했습니다.");
+            }
+        } else {
+            alert("동료가 없습니다.");
+        }
+    });
+}
+
+// 동적으로 추가된 친구 삭제 버튼 클릭 이벤트
+$(document).on('click', '.delete-btn', function() {
+    var friendName = $(this).data('name'); // 삭제할 친구 이름 가져오기
+
+    if (confirm(friendName + "을(를) 정말로 삭제하시겠습니까?")) {
+        // 확인을 누르면 삭제 함수 실행
+        deleteFriend(friendName);
+        fetchTasks();
+    } 
+    // 취소를 누르면 아무 작업도 하지 않음
+});
+
+// 삭제 함수
+$(document).on('click', '.delete-btn', function() {
+    var friendName = $(this).data('name'); // 삭제할 친구 이름 가져오기
+
+    // 소유자 검증 (로그인한 ID가 소유자인지 확인)
+    if (window.customerId !== window.dashboardOwnerId) {
+        alert("대시보드 소유자만 동료를 삭제할 수 있습니다.");
+        return;
+    }
+
+    if (confirm(friendName + "을(를) 정말로 삭제하시겠습니까?")) {
+        // 확인을 누르면 삭제 함수 실행
+        deleteFriend(friendName);
+        fetchTasks();
+    } 
+});
 </script>
 </html>
