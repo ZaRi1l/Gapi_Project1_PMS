@@ -33,8 +33,7 @@ public class EmailSender {
             message.setText("안녕하세요, " + recipientEmail + "님!\n\n" +
                             "PMS 프로젝트에 동료로 초대되었습니다. 프로젝트에 참여하여 함께 작업을 진행해 주세요.\n\n" +
                             "감사합니다.\nPMS Project Team \n\n\n" + 
-                            //나중에 주소 바꾸야함!
-                            "http://localhost:8080/Project4team_PMS/resources/login.html");
+                            "http://34.138.23.151:8080/Project4team_PMS/resources/login.html");
 
             Transport.send(message);
 
@@ -71,8 +70,7 @@ public class EmailSender {
                             "PMS 프로젝트에 동료로 초대되었습니다. 프로젝트에 참여하여 함께 작업을 진행해 주세요.\n\n" +
                             "해당 초대는 30일 후에 만료됩니다.\n\n" +
                             "감사합니다.\nPMS Project Team \n\n\n" + 
-                            //나중에 주소 바꾸야함!
-                            "http://localhost:8080/Project4team_PMS/resources/register.html");
+                            "http://34.138.23.151:8080/Project4team_PMS/resources/register.html");
 
             
             Transport.send(message);
