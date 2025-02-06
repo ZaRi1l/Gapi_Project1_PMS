@@ -41,7 +41,7 @@
 |OS| <img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white"/>|ubuntu 20.04|
 |Server| <img src="https://img.shields.io/badge/apache%20tomcat-%23F8DC75.svg?style=for-the-badge&logo=apache-tomcat&logoColor=black"/>|Apache Tomcat v9.0|
 |IDE| <img src="https://img.shields.io/badge/Eclipse-2C2255?style=for-the-badge&logo=eclipse&logoColor=white"/>|Eclipse IDE for Enterprise Java and Web Developers - 2024-09|
-|Language| <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"/>|Java: JavaSE-17|
+|Language| <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"/>|JDK: JavaSE-17|
 |Library| <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"/>|javax.activation.jar <br>javax.mail.jar <br>json-simple-1.1.1.jar <br>mysql-connector-java-8.0.22.jar|
 |DB| <img src="https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white"/>|mysql-8.0.41|
 
