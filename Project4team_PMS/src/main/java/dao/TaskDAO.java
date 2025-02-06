@@ -11,7 +11,7 @@ import org.json.simple.parser.ParseException;
 public class TaskDAO {
 	// 데이터베이스 연결 정보
 	String driver = "com.mysql.jdbc.Driver";
-	String url = "jdbc:mysql://localhost/gapi?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
+	String url = "jdbc:mysql://localhost:3306/gapi?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
 	String user = "apple";
 	String password = "1111";
 
@@ -168,6 +168,8 @@ public class TaskDAO {
 		JSONObject jsonstr = new JSONObject();
 		jsonstr.put("task", taskName); // JSON 데이터 삽입
 		jsonstr.put("startdate", strNow); // JSON 데이터 삽입
+		jsonstr.put("Estimated_SP", ""); // JSON 데이터 삽입
+		jsonstr.put("epic", ""); // JSON 데이터 삽입
 
 		try {
 			connDB();
