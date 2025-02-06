@@ -1,6 +1,6 @@
 ## Gapi Project
 <div style="text-align: center;">
-    <img src="/docs/구현 사진/메인화면.png" height="400px" alt="alt text" />
+    <img src="/docs/구현 사진/메인화면.png" height="450px" alt="alt text" />
 </div>
 
 ##### 프로젝트 소개
@@ -62,31 +62,36 @@
 | 동료 | 동료 추가, 삭제, 조회 |
 | 캘린더 | 작업의 시작일을 캘린더의 표시 |
 
-
-<br><br>
-
-## PMS 레퍼런스 (Monday.dev)
-<a href="/docs/PMS 레퍼런스 사진 모음/README.md" target="_blank">PMS 레퍼런스 (Monday.dev)</a>
-
 <br><br>
 ## 우리 프로젝트
 
 #### 작업
 <div style="text-align: center;">
-    <img src="/PMS 레퍼런스 사진 모음/작업창.png" alt="alt text" />
+    <img src="/docs/구현 사진/메인화면.png" height="450px" alt="alt text" />
 </div> 
 
 <br>
 
 #### 대시보드
 <div style="text-align: center;">
-    <img src="/PMS 레퍼런스 사진 모음/대시보드.png" alt="alt text" />
+    <img src="/docs/구현 사진/대시보드.png" height="450px" alt="alt text" />
 </div> 
 
 <br>
 
 #### 캘린더
-
-추가예정?
+<div style="text-align: center;">
+    <img src="/docs/구현 사진/달력.png" height="450px" alt="alt text" />
+</div> 
 
 <br>
+
+<br><br>
+
+## 소프트웨어 설계
+<a href="/docs/소프트웨어 설계/README.md" target="_blank">소프트웨어 설계</a>
+
+<br><br>
+
+## PMS 레퍼런스 (Monday.dev)
+<a href="/docs/PMS 레퍼런스 사진 모음/README.md" target="_blank">PMS 레퍼런스 (Monday.dev)</a>
