@@ -13,7 +13,7 @@
 ## 팀원 
 |최진환|김동현|김윤진|박규태|
 |:---:|:---:|:---:|:---:|
-|<a href="https://github.com/trumanjinhwan" target="_blank"><img src="https://avatars.githubusercontent.com/u/190100768?v=4" height="200px"/><br>trumanjinhwan</a>|<a href="https://github.com/kimdonghyun296" target="_blank"><img src="https://avatars.githubusercontent.com/u/193192616?v=4" height="200px"/><br>kimdonghyun296</a>|<a href="https://github.com/yunndaeng" target="_blank"><img src="https://avatars.githubusercontent.com/u/193191038?v=4" height="200px"/><br>yunndaeng</a>|<a href="https://github.com/ZaRi1l" target="_blank"><img src="https://avatars.githubusercontent.com/u/133009070?v=4" height="200px"/><br>ZaRi1l</a>|
+|<a href="https://github.com/trumanjinhwan" target="_blank"><img src="https://avatars.githubusercontent.com/u/190100768?v=4" height="auto" width="200px"/><br>trumanjinhwan</a>|<a href="https://github.com/kimdonghyun296" target="_blank"><img src="https://avatars.githubusercontent.com/u/193192616?v=4" height="auto" width="200px"/><br>kimdonghyun296</a>|<a href="https://github.com/yunndaeng" target="_blank"><img src="https://avatars.githubusercontent.com/u/193191038?v=4" height="auto" width="200px"/><br>yunndaeng</a>|<a href="https://github.com/ZaRi1l" target="_blank"><img src="https://avatars.githubusercontent.com/u/133009070?v=4" height="auto" width="200px"/><br>ZaRi1l</a>|
 
 #### 맡은 역할
 |이름|업무|
