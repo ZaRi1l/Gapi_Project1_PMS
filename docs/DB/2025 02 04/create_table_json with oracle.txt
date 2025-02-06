@@ -1,0 +1,91 @@
+DROP TABLE client_dashboard;
+DROP TABLE friendlist;
+DROP TABLE task;
+DROP TABLE invite;
+DROP TABLE dashboard;
+DROP TABLE client;
+
+-- client table
+CREATE TABLE client
+(
+    customer_id VARCHAR2(1000) NOT NULL,
+    jsonstr VARCHAR2(1000) NOT NULL,
+    CONSTRAINT client_pk PRIMARY KEY(customer_id)
+);
+
+-- dashboard table
+CREATE TABLE dashboard
+(
+    dashboard_id NUMBER NOT NULL,
+    customer_id VARCHAR2(1000) NOT NULL,
+    jsonstr VARCHAR2(1000) NOT NULL,
+    CONSTRAINT dashboard_pk PRIMARY KEY(dashboard_id),
+    CONSTRAINT dashboard_customer_fk FOREIGN KEY(customer_id) REFERENCES client(customer_id)
+);
+
+-- client_dashboard table
+CREATE TABLE client_dashboard
+(
+    customer_id VARCHAR2(1000) NOT NULL,
+    dashboard_id NUMBER NOT NULL,
+    CONSTRAINT client_dashboard_pk PRIMARY KEY(customer_id, dashboard_id),
+    CONSTRAINT client_dashboard_customer_fk FOREIGN KEY(customer_id) REFERENCES client(customer_id),
+    CONSTRAINT client_dashboard_dashboard_fk FOREIGN KEY(dashboard_id) REFERENCES dashboard(dashboard_id)
+);
+
+-- friendlist table
+CREATE TABLE friendlist
+(
+    customer_id VARCHAR2(1000) NOT NULL,
+    friend_id VARCHAR2(1000) NOT NULL,
+    CONSTRAINT friendlist_pk PRIMARY KEY(customer_id, friend_id),
+    CONSTRAINT friendlist_customer_fk FOREIGN KEY(customer_id) REFERENCES client(customer_id),
+    CONSTRAINT friendlist_friend_fk FOREIGN KEY(friend_id) REFERENCES client(customer_id)
+);
+
+-- task table
+CREATE TABLE task
+(
+    task_id NUMBER NOT NULL,
+    dashboard_id NUMBER NOT NULL,
+    customer_id VARCHAR2(1000) NOT NULL,
+    jsonstr VARCHAR2(1000) NOT NULL,
+    CONSTRAINT task_pk PRIMARY KEY(task_id),
+    CONSTRAINT task_dashboard_fk FOREIGN KEY(dashboard_id) REFERENCES dashboard(dashboard_id),
+    CONSTRAINT task_customer_fk FOREIGN KEY(customer_id) REFERENCES client(customer_id)
+);
+
+-- invite table
+CREATE TABLE invite
+(
+    friend_id    VARCHAR2(1000) NOT NULL,
+    dashboard_id    NUMBER(10) NOT NULL,
+    invite_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT invite_pk PRIMARY KEY(friend_id, dashboard_id),
+    CONSTRAINT invite_dashboard_fk FOREIGN KEY(dashboard_id) REFERENCES dashboard(dashboard_id)
+);
+
+-- DBMS_SCHEDULER.CREATE_JOB 일정시간 마다 삭제
+BEGIN
+  DBMS_SCHEDULER.DROP_JOB (
+    job_name => 'delete_expired_invites'
+  );
+END;
+/
+
+BEGIN
+  DBMS_SCHEDULER.CREATE_JOB (
+    job_name => 'delete_expired_invites',
+    job_type => 'PLSQL_BLOCK',
+    job_action => '
+      BEGIN
+        DELETE FROM INVITE WHERE invite_date < SYSDATE - INTERVAL ''30'' DAY;
+      END;
+    ',
+    start_date => SYSTIMESTAMP,  -- 즉시 실행
+    repeat_interval => 'FREQ=DAILY; INTERVAL=1', -- 매일 실행
+    enabled => TRUE
+  );
+END;
+/
+

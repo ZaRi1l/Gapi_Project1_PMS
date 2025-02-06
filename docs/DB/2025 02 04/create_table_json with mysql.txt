@@ -1,0 +1,83 @@
+DROP TABLE CLIENT_DASHBOARD;
+DROP TABLE FRIENDLIST;
+DROP TABLE TASK;
+DROP TABLE INVITE;
+DROP TABLE DASHBOARD;
+DROP TABLE CLIENT;
+
+DROP EVENT delete_expired_invites; 
+
+DROP DATABASE gapi;
+CREATE DATABASE gapi;
+ALTER DATABASE gapi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE gapi;
+
+-- client table
+CREATE TABLE CLIENT
+(
+    customer_id VARCHAR(200) NOT NULL,
+    jsonstr VARCHAR(1000) NOT NULL,
+    CONSTRAINT client_pk PRIMARY KEY(customer_id)
+);
+
+-- dashboard table
+CREATE TABLE DASHBOARD
+(
+    dashboard_id INT NOT NULL,
+    customer_id VARCHAR(200) NOT NULL,
+    jsonstr VARCHAR(1000) NOT NULL,
+    CONSTRAINT dashboard_pk PRIMARY KEY(dashboard_id),
+    CONSTRAINT dashboard_customer_fk FOREIGN KEY(customer_id) REFERENCES CLIENT(customer_id)
+);
+
+-- client_dashboard table
+CREATE TABLE CLIENT_DASHBOARD
+(
+    customer_id VARCHAR(200) NOT NULL,
+    dashboard_id INT NOT NULL,
+    CONSTRAINT client_dashboard_pk PRIMARY KEY(customer_id, dashboard_id),
+    CONSTRAINT client_dashboard_customer_fk FOREIGN KEY(customer_id) REFERENCES CLIENT(customer_id),
+    CONSTRAINT client_dashboard_dashboard_fk FOREIGN KEY(dashboard_id) REFERENCES DASHBOARD(dashboard_id)
+);
+
+-- friendlist table
+CREATE TABLE FRIENDLIST
+(
+    customer_id VARCHAR(200) NOT NULL,
+    friend_id VARCHAR(200) NOT NULL,
+    CONSTRAINT friendlist_pk PRIMARY KEY(customer_id, friend_id),
+    CONSTRAINT friendlist_customer_fk FOREIGN KEY(customer_id) REFERENCES CLIENT(customer_id),
+    CONSTRAINT friendlist_friend_fk FOREIGN KEY(friend_id) REFERENCES CLIENT(customer_id)
+);
+
+-- task table
+CREATE TABLE TASK
+(
+    task_id INT NOT NULL,
+    dashboard_id INT NOT NULL,
+    customer_id VARCHAR(200) NOT NULL,
+    jsonstr VARCHAR(1000) NOT NULL,
+    CONSTRAINT task_pk PRIMARY KEY(task_id),
+    CONSTRAINT task_dashboard_fk FOREIGN KEY(dashboard_id) REFERENCES DASHBOARD(dashboard_id),
+    CONSTRAINT task_customer_fk FOREIGN KEY(customer_id) REFERENCES CLIENT(customer_id)
+);
+
+-- invite table
+CREATE TABLE INVITE
+(
+    friend_id    VARCHAR(200) NOT NULL,
+    dashboard_id    INT(10) NOT NULL,
+    invite_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT invite_pk PRIMARY KEY(friend_id, dashboard_id),
+    CONSTRAINT invite_dashboard_fk FOREIGN KEY(dashboard_id) REFERENCES DASHBOARD(dashboard_id)
+);
+
+-- delete_expired_invites EVENT 일정시간 마다 삭제 
+CREATE EVENT delete_expired_invites
+ON SCHEDULE EVERY 1 DAY
+DO
+    DELETE FROM INVITE WHERE invite_date < DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 30 DAY);
+
+
+
