@@ -19,7 +19,7 @@
 | 이름 |업무|
 |:---:|---|
 |최진환|프론트 엔드: css / 대시보드의 작업 테이블 / 동료 추가, 조회 버튼 / 작업 추가와 수정 모달 <br>백엔드: 작업 추가, 삭제, 수정, 조회 / 동료 추가, 삭제, 조회 <br>기타: 서버 연동 / 요구사항 / Usecase Diagram / Class Diagram / DB 설계 / 간트 차트 / 발표 / 발표자료 / 리드미 작성 |
-|김동현|프론트 엔드: css / Calendar <br>백엔드: 회원 조회 / 날짜 조회 <br>기타: 발표자료 / 발표 / Sequence Diagram / Class Diagram |
+|김동현|프론트 엔드: css / Calendar / 작업 삭제 버튼 / 회원 이름 <br>백엔드: 회원 조회 / 날짜 조회 <br>기타: 발표자료 / 발표 / Sequence Diagram / Class Diagram |
 |김윤진|프론트 엔드: css / 로그인, 회원가입 화면 <br>백엔드: 회원 추가, 조회 <br>기타: Class Diagram / UI 정의서 |
 |박규태|프론트 엔드: css / 로그인, 회원가입 화면 / 대시보드 목록 / 대시보드 추가와 수정 모달 <br>백엔드: 회원 추가, 조회 / 대시보드 추가, 삭제, 수정, 조회 / 동료 추가, 삭제, 조회 <br>기타: 발표 / 발표자료 / Sequence Diagram / ERD / DB 설계 / SQL문 작성 / 리드미 작성 |
 
