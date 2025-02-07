@@ -6314,7 +6314,7 @@ a.close.disabled {
 	background-color: #fff;
 	background-clip: padding-box;
 	border: 1px solid rgba(0, 0, 0, .2);
-	border-radius: .3rem;
+	border-radius: 0.5rem;
 	outline: 0
 }
 
@@ -6343,7 +6343,9 @@ a.close.disabled {
 	padding: 1rem 1rem;
 	border-bottom: 1px solid #e3e6f0;
 	border-top-left-radius: calc(.3rem - 1px);
-	border-top-right-radius: calc(.3rem - 1px)
+	border-top-right-radius: calc(.3rem - 1px);
+    background-color: #b27f7e;
+    color: white
 }
 
 .modal-header .close {
