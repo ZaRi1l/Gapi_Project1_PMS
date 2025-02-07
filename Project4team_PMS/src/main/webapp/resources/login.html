@@ -37,7 +37,11 @@
 					<div class="card-body p-0">
 						<!-- Nested Row within Card Body -->
 						<div class="row">
-							<div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+							<div class="col-lg-6 d-none d-lg-block bg-login-image">
+								<img
+									src="https://readme-typing-svg.demolab.com?font=Black+Han+Sans&amp;size=17&amp;duration=2000&amp;pause=1500&amp;color=B27F7E&amp;center=true&amp;multiline=true&amp;width=500&amp;height=150&amp;lines=%EA%B3%84%ED%9A%8D%EC%9D%84+%EC%A0%81%EB%8B%B9%ED%9E%88+%EC%84%B8%EC%9A%B4+%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EB%8A%94+%EA%B3%84%ED%9A%8D%EB%B3%B4%EB%8B%A4+3%EB%B0%B0%EC%9D%98+%EC%8B%9C%EA%B0%84%EC%9D%84+%ED%95%84%EC%9A%94%EB%A1%9C+%ED%95%98%EC%A7%80%EB%A7%8C%2C+;%EC%8B%AC%EC%82%AC%EC%88%99%EA%B3%A0%ED%95%98%EC%97%AC+%EA%B3%84%ED%9A%8D%EB%90%9C+%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EB%8F%84+%EA%B3%84%ED%9A%8D%EB%B3%B4%EB%8B%A4+2%EB%B0%B0%EC%9D%98+%EC%8B%9C%EA%B0%84%EC%9D%B4+%EC%86%8C%EC%9A%94%EB%90%9C%EB%8B%A4.++++;-+Putnam+-"
+									alt="Typing SVG" style="padding-top: 10rem">
+							</div>
 							<div class="col-lg-6">
 								<div class="p-5">
 									<div class="text-center">
@@ -96,37 +100,40 @@
 	<script src="js/jquery-3.5.1.min.js"></script>
 	<script src="js/core.js"></script>
 	<script>
-	function login() {
-		var id = $("#Email").val().trim();
-		console.log(id);
-		if (id == "") {
-			alert("아이디를 입력해 주세요.");
-			$("#Email").focus();
-			return;
-		}
-		
-		var ps = $("#Password").val().trim();
-		console.log(ps);
-		if (ps == "") {
-			alert("패스워드를 입력해 주세요.");
-			$("#Password").focus();
-			return;
-		}
-		
-		var params = {id:id, ps:ps}; // {id:choi@naver.com, ps:1111}
-		
-		var url = "jsp/login.jsp";
-		AJAX.call(url, params, function(data) {
-			var code = data.trim();
-			if (code == "NE") {
-				alert("아이디가 존재하지 않습니다.");
-			} else if (code == "PE") {
-				alert("패스워드가 일치하지 않습니다.");
-			} else {
-				window.location.href = "index.html";
+		function login() {
+			var id = $("#Email").val().trim();
+			console.log(id);
+			if (id == "") {
+				alert("아이디를 입력해 주세요.");
+				$("#Email").focus();
+				return;
 			}
-		});
-	}
+
+			var ps = $("#Password").val().trim();
+			console.log(ps);
+			if (ps == "") {
+				alert("패스워드를 입력해 주세요.");
+				$("#Password").focus();
+				return;
+			}
+
+			var params = {
+				id : id,
+				ps : ps
+			}; // {id:choi@naver.com, ps:1111}
+
+			var url = "jsp/login.jsp";
+			AJAX.call(url, params, function(data) {
+				var code = data.trim();
+				if (code == "NE") {
+					alert("아이디가 존재하지 않습니다.");
+				} else if (code == "PE") {
+					alert("패스워드가 일치하지 않습니다.");
+				} else {
+					window.location.href = "index.html";
+				}
+			});
+		}
 	</script>
 </body>
 </html>
