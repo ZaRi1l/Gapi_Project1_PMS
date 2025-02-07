@@ -63,7 +63,7 @@
 }
 
 .table th {
-	background-color: #f4f4f4;
+	background-color: #b27f7e;
 	font-weight: bold;
 }
 
@@ -567,7 +567,8 @@
 
 				<div class="container">
 					<h2 class="my-4">Sprint</h2>
-					<table class="table table-bordered table-hover">
+					<div class="card border-left-primary shadow h-100 py-2">
+                       <table class="table table-bordered table-hover">
 						<thead>
 							<tr>
 								<th>태스크</th>
@@ -579,6 +580,7 @@
 						</thead>
 						<tbody id="taskTableBody"></tbody>
 					</table>
+                    </div>
 				</div>
 
 				<!-- 📌 수정 모달 창 -->
@@ -670,12 +672,11 @@
 						<span aria-hidden="true">×</span>
 					</button>
 				</div>
-				<div class="modal-body">Select "Logout" below if you are ready
-					to end your current session.</div>
+				<div class="modal-body">로그아웃 하시겠습니까?</div>
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button"
 						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="login.html">Logout</a>
+					<a class="btn btn-primary" href="#" onclick="logOut()">Logout</a>
 				</div>
 			</div>
 		</div>
@@ -1210,5 +1211,17 @@ $(document).on('click', '.delete-btn', function() {
         fetchTasks();
     } 
 });
+
+
+// 로그아웃
+function logOut() {
+    console.log("로그아웃 중...");
+
+    // jsp + DAO에서도 삭제 요청
+    AJAX.call("jsp/logOut.jsp", null, function(data) {
+    	window.location.href = "login.html";
+    }); 
+    
+}
 </script>
 </html>
