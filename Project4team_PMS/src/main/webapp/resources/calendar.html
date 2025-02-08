@@ -479,7 +479,7 @@
 							<div
 								class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
 								aria-labelledby="userDropdown">
-								<a class="dropdown-item" href="#"> <i
+								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#profileModal"> <i
 									class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Profile
 								</a> <a class="dropdown-item" href="#"> <i
 									class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -545,8 +545,7 @@
 						<span aria-hidden="true">×</span>
 					</button>
 				</div>
-				<div class="modal-body">Select "Logout" below if you are ready
-					to end your current session.</div>
+				<div class="modal-body">로그아웃 하시겠습니까?</div>
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button"
 						data-dismiss="modal">Cancel</button>
@@ -555,6 +554,119 @@
 			</div>
 		</div>
 	</div>
+	<!-- ✅ 회원 정보 모달 -->
+<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel">회원 정보</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>회원 ID:</strong> <span id="modalCustomerId">불러오는 중...</span></p>
+                <p><strong>이름:</strong> <span id="modalUserName">불러오는 중...</span></p>
+            </div>
+            <div class="modal-footer">
+                <!-- ✅ 정보 수정 버튼 추가 -->
+                <button type="button" class="btn btn-warning" id="openEditProfileModal">정보 수정</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ 회원 정보 수정 모달 -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">회원 정보 수정</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>회원 ID:</strong> <span id="editModalCustomerId">불러오는 중...</span></p>
+                
+                <label for="editModalUserNameInput"><strong>이름 변경:</strong></label>
+                <input type="text" id="editModalUserNameInput" class="form-control" placeholder="새로운 이름 입력">
+
+                <label for="editModalPasswordInput"><strong>비밀번호 변경:</strong></label>
+                <input type="password" id="editModalPasswordInput" class="form-control" placeholder="새로운 비밀번호 입력">
+                
+                <p id="editUpdateResultMessage" style="color:red; font-weight:bold;"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="saveEditProfileChanges">저장</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery 추가 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // ✅ 회원 정보 모달이 열릴 때 기존 회원 정보 가져오기
+    $('#profileModal').on('show.bs.modal', function () {
+        $.ajax({
+            url: 'jsp/getClientName.jsp',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                $('#modalCustomerId').text(response.customerId);
+                $('#modalUserName').text(response.userName);
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX 요청 실패:", status, error);
+                $('#modalCustomerId').text('오류 발생');
+                $('#modalUserName').text('오류 발생');
+            }
+        });
+    });
+
+    // ✅ 정보 수정 버튼 클릭 시 수정 모달로 이동
+    $('#openEditProfileModal').on('click', function() {
+        $('#editModalCustomerId').text($('#modalCustomerId').text());
+        $('#editModalUserNameInput').val($('#modalUserName').text());
+        $('#editProfileModal').modal('show'); // 정보 수정 모달 열기
+        $('#profileModal').modal('hide'); // 기존 모달 닫기
+    });
+
+    // ✅ 수정 버튼 클릭 시 AJAX로 회원 정보 업데이트
+    $('#saveEditProfileChanges').on('click', function() {
+        let customerId = $('#editModalCustomerId').text();
+        let newName = $('#editModalUserNameInput').val();
+        let newPassword = $('#editModalPasswordInput').val();
+
+        $.ajax({
+            url: 'jsp/updateClient.jsp',
+            type: 'POST',
+            data: { customerId: customerId, newName: newName, newPassword: newPassword },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === "success") {
+                    $('#editUpdateResultMessage').text("✅ 회원 정보가 성공적으로 업데이트되었습니다!").css("color", "green");
+                    setTimeout(function() { 
+                        $('#editProfileModal').modal('hide'); 
+                        location.reload(); // 새로고침하여 변경 사항 반영
+                    }, 2000);
+                } else {
+                    $('#editUpdateResultMessage').text("❌ 업데이트 실패. 다시 시도하세요.").css("color", "red");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("업데이트 AJAX 실패:", status, error);
+                $('#editUpdateResultMessage').text("❌ 서버 오류 발생").css("color", "red");
+            }
+        });
+    });
+});
+</script>
 </body>
 
 <script src="js/jquery-3.5.1.min.js"></script>
@@ -597,7 +709,10 @@ function getUserName() {
 	var url = "jsp/getClientName.jsp";
 
     AJAX.call(url, null, function (data) {
-    	document.getElementById('userName').textContent = data;
+    	var userInform = JSON.parse(data); 
+    	document.getElementById('userName').textContent = userInform.userName;
+    	 $('#modalCustomerId').text(userInform.customerId);
+         $('#modalUserName').text(userInform.userName);
     });
 }
 
