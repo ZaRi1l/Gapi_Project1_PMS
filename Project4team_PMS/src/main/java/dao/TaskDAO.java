@@ -308,4 +308,64 @@ public class TaskDAO {
 			closeResources();
 		}
 	}
+	// 고객 ID로 대시보드 조회
+		public JSONArray getDashboard(String customerId) {
+			JSONArray dashboards = new JSONArray();
+			String query = "SELECT CD.DASHBOARD_ID FROM CLIENT_DASHBOARD CD WHERE CD.CUSTOMER_ID = ?";
+
+			try {
+				connDB();
+				stmt = con.prepareStatement(query);
+				stmt.setString(1, customerId);
+				rs = stmt.executeQuery();
+
+				while (rs.next()) {
+					JSONObject dashboardObj = new JSONObject();
+					dashboardObj.put("dashboardId", rs.getString("DASHBOARD_ID"));
+					dashboards.add(dashboardObj);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				closeResources();
+			}
+			return dashboards;
+		}
+		public JSONArray getTasksByDashboard(String dashboardId) {
+			JSONArray tasks = new JSONArray();
+			String query = "SELECT JSONSTR FROM TASK WHERE DASHBOARD_ID = ?";
+
+			try {
+				connDB();
+				stmt = con.prepareStatement(query);
+				stmt.setString(1, dashboardId);
+				rs = stmt.executeQuery();
+				JSONParser parser = new JSONParser();
+
+				while (rs.next()) {
+					String jsonStr = rs.getString("JSONSTR");
+					try {
+						JSONObject jsonObject = (JSONObject) parser.parse(jsonStr);
+						String taskName = (String) jsonObject.get("task"); // 작업 이름
+						String startDate = (String) jsonObject.get("startdate"); // 시작 날짜
+		
+		               
+
+						// JSON 객체 생성
+						JSONObject taskObj = new JSONObject();
+						taskObj.put("title", taskName);
+						taskObj.put("start", startDate);
+
+						tasks.add(taskObj);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				closeResources();
+			}
+			return tasks;
+		}
 }

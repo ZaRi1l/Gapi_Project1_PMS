@@ -1,11 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ page import="java.util.*"%>
-<%@ page import="dao.*"%>
-<%@ page import="org.json.simple.*"%>
+<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.*" %>
+<%@ page import="dao.*" %>
+<%@ page import="org.json.simple.*" %>
+
 <%
-	String customerId = (String) session.getAttribute("customerId"); // 세션 테이블에서 로그인한 id 얻어오기
-	String userName = (new ClientDAO()).getUserNameByCustomerId(customerId); // TaskDAO를 통해서 DB접근 후 Task 데이터 가져오기
-	
-	out.print(userName);
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+
+    String customerId = (String) session.getAttribute("customerId"); 
+    if (customerId == null) {
+        customerId = "로그인이 필요합니다.";
+    }
+
+    String userName = (new ClientDAO()).getUserNameByCustomerId(customerId); 
+    if (userName == null) {
+        userName = "이름 정보 없음";
+    }
+
+    JSONObject userInfo = new JSONObject();
+    userInfo.put("customerId", customerId);
+    userInfo.put("userName", userName);
+
+    out.print(userInfo.toJSONString());
 %>

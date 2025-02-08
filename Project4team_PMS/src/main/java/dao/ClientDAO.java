@@ -106,7 +106,7 @@ public class ClientDAO {
 		String userName = null;
 		try {
 			connDB();
-			String sql = "SELECT JSON_VALUE(JSONSTR, '$.name') AS NAME FROM CLIENT WHERE CUSTOMER_ID = ?";
+			String sql = "SELECT JSON_VALUE(JSONSTR, '$.name')	 AS NAME FROM CLIENT WHERE CUSTOMER_ID = ?";
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, customerId);
 			rs = stmt.executeQuery();
@@ -120,6 +120,46 @@ public class ClientDAO {
 			closeResources();
 		}
 		return userName;
+	}
+	
+	public int updateUserInfo(String customerId, String newName, String newPassword) {
+	    try {
+	        connDB();
+
+	        String selectQuery = "SELECT jsonstr FROM CLIENT WHERE customer_id = ?";
+	        stmt = con.prepareStatement(selectQuery);
+	        stmt.setString(1, customerId);
+	        rs = stmt.executeQuery();
+
+	        if (!rs.next()) {
+	            return 1; // ❌ 존재하지 않는 사용자
+	        }
+
+	        String jsonStr = rs.getString("jsonstr");
+	        JSONObject obj = (JSONObject) (new JSONParser()).parse(jsonStr);
+
+	        if (newName != null && !newName.isEmpty()) {
+	            obj.put("name", newName);
+	        }
+	        if (newPassword != null && !newPassword.isEmpty()) {
+	            obj.put("password", newPassword);
+	        }
+
+	        String updatedJsonStr = obj.toJSONString();
+
+	        String updateQuery = "UPDATE CLIENT SET jsonstr = ? WHERE customer_id = ?";
+	        stmt = con.prepareStatement(updateQuery);
+	        stmt.setString(1, updatedJsonStr);
+	        stmt.setString(2, customerId);
+	        int result = stmt.executeUpdate();
+
+	        return (result > 0) ? 0 : 2;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return 3;
+	    } finally {
+	        closeResources();
+	    }
 	}
 
 	public void connDB() {

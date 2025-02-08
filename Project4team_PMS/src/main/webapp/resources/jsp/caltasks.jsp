@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="dao.CalDAO, dao.CalDashboardDAO, org.json.simple.JSONArray" %>
+<%@ page import="dao.*, org.json.simple.JSONArray" %>
 
 <%
     String customerId = (String) session.getAttribute("customerId");
@@ -10,11 +10,11 @@
         return;
     }
 
-    CalDashboardDAO dashboardDAO = new CalDashboardDAO();
-    CalDAO calDAO = new CalDAO();
+   
+    TaskDAO calDAO = new TaskDAO();
 
     // 고객의 대시보드 목록 조회
-    JSONArray dashboards = dashboardDAO.getDashboard(customerId);
+    JSONArray dashboards = calDAO.getDashboard(customerId);
     JSONArray allTasks = new JSONArray();
 
     for (int i = 0; i < dashboards.size(); i++) {
