@@ -158,7 +158,7 @@ public class TaskDAO {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String strNow = sdf.format(now);
 
-		System.out.println(strNow + "2222222222222222222222222");
+		System.out.println(strNow + " 2222222222222222222222222");
 
 		int TASK_ID = 0;
 

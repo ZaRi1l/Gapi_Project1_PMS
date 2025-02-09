@@ -145,7 +145,8 @@
 				class="sidebar-brand d-flex align-items-center justify-content-center"
 				href="index.html">
 				<div class="sidebar-brand-icon rotate-n-15">
-					<img src="https://img.icons8.com/?size=30&id=39550&format=png&color=ffffff"/>
+					<img
+						src="https://img.icons8.com/?size=30&id=39550&format=png&color=ffffff" />
 				</div>
 				<div class="sidebar-brand-text mx-3">GAPI</div>
 			</a>
@@ -497,7 +498,8 @@
 							<div
 								class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
 								aria-labelledby="userDropdown">
-								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#profileModal"> <i
+								<a class="dropdown-item" href="#" data-toggle="modal"
+									data-target="#profileModal"> <i
 									class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Profile
 								</a> <a class="dropdown-item" href="#"> <i
 									class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -515,62 +517,83 @@
 							</div></li>
 
 					</ul>
-<!-- ✅ 회원 정보 모달 -->
-<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="profileModalLabel">회원 정보</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p><strong>회원 ID:</strong> <span id="modalCustomerId">불러오는 중...</span></p>
-                <p><strong>이름:</strong> <span id="modalUserName">불러오는 중...</span></p>
-            </div>
-            <div class="modal-footer">
-                <!-- ✅ 정보 수정 버튼 추가 -->
-                <button type="button" class="btn btn-warning" id="openEditProfileModal">정보 수정</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
-</div>
+					<!-- ✅ 회원 정보 모달 -->
+					<div class="modal fade" id="profileModal" tabindex="-1"
+						role="dialog" aria-labelledby="profileModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="profileModalLabel">회원 정보</h5>
+									<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<p>
+										<strong>회원 ID:</strong> <span id="modalCustomerId">불러오는
+											중...</span>
+									</p>
+									<p>
+										<strong>이름:</strong> <span id="modalUserName">불러오는 중...</span>
+									</p>
+								</div>
+								<div class="modal-footer">
+									<!-- ✅ 정보 수정 버튼 추가 -->
+									<button type="button" class="btn btn-warning"
+										id="openEditProfileModal">정보 수정</button>
+									<button type="button" class="btn btn-secondary"
+										data-dismiss="modal">닫기</button>
+								</div>
+							</div>
+						</div>
+					</div>
 
-<!-- ✅ 회원 정보 수정 모달 -->
-<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProfileModalLabel">회원 정보 수정</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p><strong>회원 ID:</strong> <span id="editModalCustomerId">불러오는 중...</span></p>
-                
-                <label for="editModalUserNameInput"><strong>이름 변경:</strong></label>
-                <input type="text" id="editModalUserNameInput" class="form-control" placeholder="새로운 이름 입력">
+					<!-- ✅ 회원 정보 수정 모달 -->
+					<div class="modal fade" id="editProfileModal" tabindex="-1"
+						role="dialog" aria-labelledby="editProfileModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="editProfileModalLabel">회원 정보
+										수정</h5>
+									<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<p>
+										<strong>회원 ID:</strong> <span id="editModalCustomerId">불러오는
+											중...</span>
+									</p>
 
-                <label for="editModalPasswordInput"><strong>비밀번호 변경:</strong></label>
-                <input type="password" id="editModalPasswordInput" class="form-control" placeholder="새로운 비밀번호 입력">
-                
-                <p id="editUpdateResultMessage" style="color:red; font-weight:bold;"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="saveEditProfileChanges">저장</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
-</div>
+									<label for="editModalUserNameInput"><strong>이름
+											변경:</strong></label> <input type="text" id="editModalUserNameInput"
+										class="form-control" placeholder="새로운 이름 입력"> <label
+										for="editModalPasswordInput"><strong>비밀번호 변경:</strong></label>
+									<input type="password" id="editModalPasswordInput"
+										class="form-control" placeholder="새로운 비밀번호 입력">
 
-<!-- jQuery 추가 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+									<p id="editUpdateResultMessage"
+										style="color: red; font-weight: bold;"></p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary"
+										id="saveEditProfileChanges">저장</button>
+									<button type="button" class="btn btn-secondary"
+										data-dismiss="modal">닫기</button>
+								</div>
+							</div>
+						</div>
+					</div>
 
-<script>
+					<!-- jQuery 추가 -->
+					<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+					<script>
 $(document).ready(function() {
     // ✅ 회원 정보 모달이 열릴 때 기존 회원 정보 가져오기
     $('#profileModal').on('show.bs.modal', function () {
@@ -682,19 +705,19 @@ $(document).ready(function() {
 				<div class="container">
 					<h2 class="my-4">Sprint</h2>
 					<div class="card border-left-primary shadow h-100 py-2">
-                       <table class="table table-bordered table-hover">
-						<thead>
-							<tr>
-								<th>태스크</th>
-								<th>Owner</th>
-								<th>Status</th>
-								<th>Estimated SP</th>
-								<th>Epic</th>
-							</tr>
-						</thead>
-						<tbody id="taskTableBody"></tbody>
-					</table>
-                    </div>
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>태스크</th>
+									<th>Owner</th>
+									<th>Status</th>
+									<th>Estimated SP</th>
+									<th>Epic</th>
+								</tr>
+							</thead>
+							<tbody id="taskTableBody"></tbody>
+						</table>
+					</div>
 				</div>
 
 				<!-- 📌 수정 모달 창 -->
@@ -816,6 +839,36 @@ $(document).ready(function() {
 <script src="js/demo/chart-area-demo.js"></script>
 <script src="js/demo/chart-pie-demo.js"></script>
 <script>
+var socket = new WebSocket('ws://localhost:8080/Project4team_PMS/ws');
+
+//WebSocket 연결 설정
+socket.onopen = function() {
+ console.log("WebSocket 연결됨");
+};
+
+//서버에서 메시지를 받을 때 처리
+socket.onmessage = function(event) {
+    try {
+        var message = JSON.parse(event.data); // 서버에서 보낸 JSON 파싱
+        if (message.type === 'updateTasks') {  // type이 updateTasks일 때만 처리
+            console.log("작업 목록이 업데이트되었습니다.");
+            fetchTasks();  // 작업 목록 새로 고침
+        }
+    } catch (e) {
+        console.error("잘못된 메시지 형식: ", event.data);  // 오류가 발생한 메시지 출력
+    }
+};
+
+//서버와 연결이 종료될 때 처리
+socket.onclose = function() {
+ console.log('웹소켓 연결이 종료되었습니다.');
+};
+
+//서버로 메시지 전송 함수
+function sendMessage(message) {
+ socket.send(JSON.stringify(message));
+}
+
 console.log(typeof $.fn.modal)
 
 // 페이지 로드될 때 처음에 실행
@@ -903,6 +956,18 @@ function fetchTasks() {
         console.log("📌 변환된 객체 데이터: ", tasks); // JSON 데이터 확인
         populateTable(tasks);
     });
+    
+ // WebSocket을 통해 실시간으로 데이터를 받을 수 있도록 설정
+    socket.onmessage = function(event) {
+        var message = JSON.parse(event.data);  // JSON으로 메시지 파싱
+        if (message.type === 'addTask') {
+            console.log("새로운 작업이 추가되었습니다: " + message.task);
+            fetchTasks();  // 작업 목록 새로 고침
+        } else if (message.type === 'updateTasks') {
+            console.log("작업 목록이 업데이트되었습니다.");
+            fetchTasks();  // 작업 목록 새로 고침
+        }
+    };
 }
 
 // 대시보드 최신화 알고리즘
@@ -1048,30 +1113,35 @@ $(document).on("keypress", "#addTaskInput", function (event) {
 });
 
 function addTask() {
-	// id 태그가 "addTaskInput"인 것의 값(value) 가져오기
     var taskName = $("#addTaskInput").val().trim();
-	//유효성 검사: 작업명이 없으면 경고창 띄움
     if (taskName === "") {
         alert("작업명을 입력하세요.");
         return;
     }
 
     var params = {
-        task: taskName, //작업명
-        customerId: customerId,  // 로그인 아이디 세션: 추가하려는 사용자 
-        dashboardId : dashboardId  // 대시보드 세션 : 추가하려는 대시보드
+        task: taskName,
+        customerId: customerId,
+        dashboardId: dashboardId
     };
 
     var url = "jsp/addTask.jsp";
-    AJAX.call(url, params, function (data) {
-    	console.log(typeof(data)); // 수신한 데이터(data)는 문자열로 받아옴.
-    	//비지니스 로직
-        if (data.trim() === "1") {  // 작업 추가 성공
+    AJAX.call(url, params, function(data) {
+        if (data.trim() === "1") {
             alert("작업이 추가되었습니다.");
-            fetchTasks();
+            console.log("웹소켓 메시지 전송: " + taskName);  // 디버깅
+            // 작업이 추가된 후, 서버로 알림을 보내기
+            var message = {
+                type: "addTask",  // 작업 추가 타입
+                task: taskName,
+                customerId: customerId,
+                dashboardId: dashboardId
+            };
+            socket.send(JSON.stringify(message));  // JSON 형식으로 전송
+            fetchTasks(); // 작업 목록 갱신
         } else {
-            alert("작업 추가 실패!");  // 작업 추가 실패
-            fetchTasks();
+            alert("작업 추가 실패!");
+            fetchTasks(); // 작업 목록 갱신
         }
     });
 }
@@ -1183,7 +1253,7 @@ function openEditModal(taskId, taskName, status, Estimated_SP, epic) {
 }
 
 function updateTask() {
-	// JSON 형식으로 데이터 구조 생성
+    // JSON 형식으로 데이터 구조 생성
     var params = {
         taskId: $("#editTaskId").val(),
         task: $("#editTaskName").val(),
@@ -1191,14 +1261,22 @@ function updateTask() {
         Estimated_SP: $("#Estimated_SP").val(),
         epic: $("#editTaskEpic").val()
     };
-	
-	//AJAX.call( ) 이용해서 비동기 처리 --> updateTask.jsp
+
+    // AJAX를 통해 비동기 처리 --> updateTask.jsp
     AJAX.call("jsp/updateTask.jsp", params, function (data) {
         if (data.trim() === "OK") {
             alert("작업이 수정되었습니다.");
-            fetchTasks();
-            // 수정 완료후 모달 닫기
+            fetchTasks(); // 작업 목록 갱신
+            // 수정 완료 후 모달 닫기
             $("#editTaskModal").modal("hide");
+
+            // 웹소켓을 통해 다른 클라이언트에게 작업 수정 알리기
+            var message = {
+                type: "updateTasks",
+                taskId: params.taskId,
+                task: params.task
+            };
+            socket.send(JSON.stringify(message)); // 수정된 작업 정보를 보내기
         } else {
             alert("수정 실패!");
         }
@@ -1221,10 +1299,18 @@ function deleteTask() {
     AJAX.call("jsp/deleteTask.jsp", params, function (data) {
         if (data.trim() === "OK") {
             alert("작업이 삭제되었습니다.");
-            fetchTasks();
+            fetchTasks(); // 작업 목록 갱신
             $("#editTaskModal").modal("hide"); // 모달 닫기
+
+            // 웹소켓을 통해 다른 클라이언트에게 작업 삭제 알리기
+            var message = {
+                type: "deleteTask",
+                taskId: taskId
+            };
+            socket.send(JSON.stringify(message)); // 삭제된 작업 정보를 보내기
         } else {
             alert("삭제 실패!");
+            fetchTasks();
         }
     });
 }
