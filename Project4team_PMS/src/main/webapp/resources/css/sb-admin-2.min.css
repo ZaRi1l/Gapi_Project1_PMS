@@ -1792,8 +1792,8 @@ pre code {
 
 .table thead th {
 	vertical-align: bottom;
-	border-left: 1px solid #b27f7e;
-	border-top: 2px solid #b27f7e
+	border-left: 1px solid #e3dad5;
+	border-top: 2px solid #e3dad5
 }
 
 .table tbody+tbody {
@@ -2698,8 +2698,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
 	color: #fff;
-	background-color: #6610f2;
-	border-color: #6610f2
+	background-color: #793937;
+	border-color: #793937
 }
 
 .btn-primary:hover {
@@ -5002,9 +5002,9 @@ input[type=submit].btn-block {
 	flex-direction: column;
 	min-width: 0;
 	word-wrap: break-word;
-	background-color: #fff;
+	background-color: #e3dad5;
 	background-clip: border-box;
-	border: 1px solid #e3e6f0;
+	border: 1px solid #e3dad5;
 	border-radius: .35rem
 }
 
@@ -6137,10 +6137,10 @@ a.badge-dark:focus {
 
 .close {
 	float: right;
-	font-size: 1.5rem;
+	font-size: 1.8rem;
 	font-weight: 700;
 	line-height: 1;
-	color: #000;
+	color: #ffffff;
 	text-shadow: 0 1px 0 #fff;
 	opacity: .5
 }
@@ -6341,10 +6341,10 @@ a.close.disabled {
 	align-items: flex-start;
 	justify-content: space-between;
 	padding: 1rem 1rem;
-	border-bottom: 1px solid #e3e6f0;
+	border-bottom: 1px solid #793937;
 	border-top-left-radius: calc(.3rem - 1px);
 	border-top-right-radius: calc(.3rem - 1px);
-    background-color: #b27f7e;
+    background-color: #793937;
     color: white
 }
 
@@ -7116,6 +7116,14 @@ button.bg-dark:hover {
 }
 
 .bg-white {
+	background-color: #ffffff !important
+}
+
+#content .bg-white {
+	background-color: #000000 !important
+}
+
+#accordionSidebar .bg-white {
 	background-color: #fff !important
 }
 
@@ -10954,7 +10962,7 @@ a.text-dark:hover {
 
 	.table td,
 	.table th {
-		background-color: #b27f7e !important
+		background-color: #000000 !important
 	}
 
 	.table-bordered td,
@@ -11004,7 +11012,7 @@ a:focus {
 
 #wrapper #content-wrapper #content {
 	flex: 1 0 auto;
-	background-color: #ad9385;
+	background-color: #ffffff;
 }
 
 .container,
@@ -11015,7 +11023,7 @@ a:focus {
 .container-xl {
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
-	background-color: #ad9385;
+	background-color: #ad938500;
 }
 
 .scroll-to-top {
@@ -11108,7 +11116,7 @@ a:focus {
 }
 
 .bg-gradient-primary {
-	background-color: #793937;
+	background-color: #000000;
 	background-size: cover
 }
 
@@ -11248,7 +11256,7 @@ a:focus {
 }
 
 .border-left-primary {
-	border-left: .50rem solid #b27 !important
+	border-left: .50rem solid #e3dad5 !important
 }
 
 .border-bottom-primary {
