@@ -542,6 +542,8 @@
 								<div class="modal-footer">
 									<!-- ✅ 정보 수정 버튼 추가 -->
 									<button type="button" class="btn btn-warning"
+										id="deleteClient" onclick="deleteClient()">회원 탈퇴</button>
+										<button type="button" class="btn btn-primary"
 										id="openEditProfileModal">정보 수정</button>
 									<button type="button" class="btn btn-secondary"
 										data-dismiss="modal">닫기</button>
@@ -1426,6 +1428,22 @@ function logOut() {
     	window.location.href = "login.html";
     }); 
     
+}
+
+// 회원 탈퇴
+function deleteClient() {
+    console.log("회원탈퇴 중...");
+
+    if (confirm("정말로 회원을 탈퇴하시겠습니까?")) {
+    	AJAX.call("jsp/deleteClient.jsp", null, function(data) {
+    		if (data.trim() === "OK") {
+    			alert("회원탈퇴가 성공적으로 되셨습니다.");
+    			window.location.href = "login.html";
+    		} else {
+    			alert("회원탈퇴 오류");
+    		}
+        }); 
+    } 
 }
 </script>
 </html>
