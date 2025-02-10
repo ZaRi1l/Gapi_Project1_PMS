@@ -1,18 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page
-	import="org.json.simple.JSONObject, org.json.simple.parser.JSONParser"%>
-<%@ page import="dao.*"%>
+<%@ page import="java.util.*" %>
+<%@ page import="dao.*" %>
+<%@ page import="org.json.simple.*" %>
 
 <%
-	request.setCharacterEncoding("UTF-8");
-	
-	String taskName = request.getParameter("task");
-	String customerId = request.getParameter("customerId");
-	int dashboardId = Integer.valueOf(request.getParameter("dashboardId"));
-	
-	System.out.println("작업 추가를 위해 받은 값들 task: " + taskName + " customerId 값:" + customerId + "dashboardId 값: " + dashboardId);
-	
-	int result = new TaskDAO().insertTask(taskName, customerId, dashboardId); // TaskDAO로 데이터 송,수신
-	out.print(result); // 반환 값 index.html로 보내기
+    // ✅ 현재 로그인한 사용자 ID를 세션에서 가져오기
+    String customerId = (String) session.getAttribute("customerId"); 
+    String taskName = request.getParameter("task");
+    String status = request.getParameter("status");
+    String estimatedSP = request.getParameter("Estimated_SP");
+    String epic = request.getParameter("epic");
+    String dashboardIdParam = request.getParameter("dashboardId");
+
+    int dashboardId = 0;
+    if (dashboardIdParam != null && !dashboardIdParam.isEmpty()) {
+        dashboardId = Integer.parseInt(dashboardIdParam);
+    }
+
+    TaskDAO taskDAO = new TaskDAO();
+    int result = taskDAO.insertTask(taskName, customerId, dashboardId, status, estimatedSP, epic);
+
+    out.print(result);
 %>

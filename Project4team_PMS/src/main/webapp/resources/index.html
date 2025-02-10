@@ -705,72 +705,62 @@ $(document).ready(function() {
 				</div>
 
 				<div class="container">
-					<h2 class="my-4">Sprint</h2>
-					<div class="card border-left-primary shadow h-100 py-2">
-						<table class="table table-bordered table-hover">
-							<thead>
-								<tr>
-									<th>태스크</th>
-									<th>Owner</th>
-									<th>Status</th>
-									<th>Estimated SP</th>
-									<th>Epic</th>
-								</tr>
-							</thead>
-							<tbody id="taskTableBody"></tbody>
-						</table>
-					</div>
-				</div>
+   <h2 class="my-4">Sprint</h2>
+<button id="deleteSelectedTasks" class="btn btn-danger">선택 삭제</button>
 
-				<!-- 📌 수정 모달 창 -->
-				<div id="editTaskModal" class="modal fade">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 class="modal-title">작업 수정</h4>
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
-							</div>
-							<div class="modal-body">
-								<input type="hidden" id="editTaskId"> <label>작업명:</label>
-								<input type="text" id="editTaskName"> <label>상태:</label>
-								<select id="editTaskStatus">
-									<option value="진행">In Progress</option>
-									<option value="멈춤">Stuck</option>
-									<option value="예정">Ready To Start</option>
-									<option value="완료">Done</option>
-								</select> <label>Estimated SP</label> <input type="text"
-									id="Estimated_SP"> <label>Epic:</label> <input
-									type="text" id="editTaskEpic">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary"
-									onclick="updateTask()">수정 완료</button>
-								<button type="button" class="btn btn-secondary"
-									data-dismiss="modal">닫기</button>
-								<button type="button" class="btn btn-danger"
-									onclick="deleteTask()">삭제</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<br> <br> <br> <br>
-				<div class="container">
-					<h2 class="my-4">백로그</h2>
-					<table class="table table-bordered table-hover">
-						<thead>
-							<tr>
-								<th>태스크</th>
-								<th>Owner</th>
-								<th>Status</th>
-								<th>Estimated SP</th>
-								<th>Epic</th>
-							</tr>
-						</thead>
-						<tbody id="taskTableBodyDone">
+<div class="card border-left-primary shadow h-100 py-2">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"></th>
+                    <th>태스크</th>
+                    <th>Owner</th>
+                    <th>Status</th>
+                    <th>Estimated SP</th>
+                    <th>Epic</th>
+                </tr>
+            </thead>
+            <tbody id="taskTableBody">
+                <!-- 여기에 기존 태스크 목록이 동적으로 추가됨 -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan = 6><input type="text" id="newTask" class="form-control" placeholder="새 태스크 입력"></td>
+					 <!-- ✅ Owner 입력 필드 읽기 전용 -->
+                    <!-- <td>
+                        <select id="newStatus" class="form-control">
+                            <option value="진행">In Progress</option>
+                            <option value="멈춤">Stuck</option>
+                            <option value="예정">Ready To Start</option>
+                            <option value="완료">Done</option>
+                        </select>
+                    </td> -->
+                    <!-- <td><input type="text" id="newSP" class="form-control" placeholder="SP 입력"></td>
+                    <td><input type="text" id="newEpic" class="form-control" placeholder="Epic 입력"></td> -->
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
 
-						</tbody>
-					</table>
-				</div>
+<!-- 백로그 테이블 -->
+<div class="container">
+    <h2 class="my-4">백로그</h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+            	<th><input type="checkbox" id="selectAll"></th>
+                <th>태스크</th>
+                <th>Owner</th>
+                <th>Status</th>
+                <th>Estimated SP</th>
+                <th>Epic</th>
+            </tr>
+        </thead>
+        <tbody id="taskTableBodyDone"></tbody>
+    </table>
+</div>
 				<!-- End of Topbar -->
 
 				<!-- Begin Page Content -->
@@ -952,28 +942,227 @@ function fetchDashboard() {
 
 function fetchTasks() {
     var url = "jsp/getTask.jsp";
-    
-    var params = {dashboardId:dashboardId}; // {id:choi@naver.com, ps:1111}
+    var params = { dashboardId: dashboardId };
 
-    AJAX.call(url, params, function(data) {
-    	console.log("📌 AJAX 응답 데이터: ", data);
+    AJAX.call(url, params, function (data) {
         var tasks = JSON.parse(data);
-        console.log("📌 변환된 객체 데이터: ", tasks); // JSON 데이터 확인
         populateTable(tasks);
     });
-    
- // WebSocket을 통해 실시간으로 데이터를 받을 수 있도록 설정
-    socket.onmessage = function(event) {
-        var message = JSON.parse(event.data);  // JSON으로 메시지 파싱
-        if (message.type === 'addTask') {
-            console.log("새로운 작업이 추가되었습니다: " + message.task);
-            fetchTasks();  // 작업 목록 새로 고침
-        } else if (message.type === 'updateTasks') {
-            console.log("작업 목록이 업데이트되었습니다.");
-            fetchTasks();  // 작업 목록 새로 고침
-        }
-    };
 }
+
+function populateTable(tasks) {
+    const tableBody = $("#taskTableBody");
+    const taskTableBodyDone = $("#taskTableBodyDone");
+    tableBody.empty();
+    taskTableBodyDone.empty();
+
+    tasks.forEach(task => {
+    	if(task.status === "완료") {
+    		const statusSelect = `
+                <select class="edit-status form-control" data-field="status" data-id="${task.taskId}">
+                    <option value="진행" ${task.status === "진행" ? "selected" : ""}>In Progress</option>
+                    <option value="멈춤" ${task.status === "멈춤" ? "selected" : ""}>Stuck</option>
+                    <option value="예정" ${task.status === "예정" ? "selected" : ""}>Ready To Start</option>
+                    <option value="완료" ${task.status === "완료" ? "selected" : ""}>Done</option>
+                </select>
+            `;
+
+            const newRow = `
+                <tr>
+                    <td><input type="checkbox" class="task-checkbox" data-id="${task.taskId}"></td>
+                    <td class="editable" data-field="task" data-id="${task.taskId}">${task.task}</td>
+                    <td class="editable" data-field="customerName" data-id="${task.taskId}">${task.customerName}</td>
+                    <td>${statusSelect}</td>
+                    <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${task.Estimated_SP}</td>
+                    <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td>
+                </tr>
+            `;
+            
+            
+            taskTableBodyDone.append(newRow);
+    	} else {
+    	
+	        const statusSelect = `
+	            <select class="edit-status form-control" data-field="status" data-id="${task.taskId}">
+	                <option value="진행" ${task.status === "진행" ? "selected" : ""}>In Progress</option>
+	                <option value="멈춤" ${task.status === "멈춤" ? "selected" : ""}>Stuck</option>
+	                <option value="예정" ${task.status === "예정" ? "selected" : ""}>Ready To Start</option>
+	                <option value="완료" ${task.status === "완료" ? "selected" : ""}>Done</option>
+	            </select>
+	        `;
+	
+	        const newRow = `
+	            <tr>
+	                <td><input type="checkbox" class="task-checkbox" data-id="${task.taskId}"></td>
+	                <td class="editable" data-field="task" data-id="${task.taskId}">${task.task}</td>
+	                <td class="editable" data-field="customerName" data-id="${task.taskId}">${task.customerName}</td>
+	                <td>${statusSelect}</td>
+	                <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${task.Estimated_SP}</td>
+	                <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td>
+	            </tr>
+	        `;
+	        tableBody.append(newRow);
+    	}
+/*         if(task.status === "완료") taskTableBodyDone.append(newRow);
+        else tableBody.append(newRow); */
+    });
+}
+
+// ✅ 인라인 수정 기능 (텍스트 입력 필드로 변경)
+$(document).on("click", ".editable", function () {
+    if ($(this).find("input").length) return; // 이미 입력창이 있으면 실행 안 함
+
+    const field = $(this).data("field");
+    const id = $(this).data("id");
+    const currentValue = $(this).text().trim();
+
+    const input = `<input type="text" class="edit-input" data-field="${field}" data-id="${id}" value="${currentValue}" style="width:100%; padding:5px;">`;
+    $(this).html(input);
+    $(".edit-input").focus();
+});
+
+// ✅ 엔터 키 또는 포커스 아웃 시 데이터 저장
+$(document).on("keypress focusout", ".edit-input", function (event) {
+    if (event.type === "keypress" && event.which !== 13) return; // 엔터 키가 아니면 무시
+    if (event.type === "focusout" && $(this).is(":focus")) return; // 클릭 시에는 유지
+    
+
+    const field = $(this).data("field");
+    const id = $(this).data("id");
+    const newValue = $(this).val().trim();
+    
+    if (field === null) {
+    	return;
+    }
+    
+    console.log("dfdfdfdfddfd");
+    console.log(field);
+    console.log(id);
+    console.log(newValue); 
+    
+    if (newValue === "") return;
+
+    const params = { taskId: id, value: newValue, field: field};
+    AJAX.call("jsp/updateTask.jsp", params, function (data) {
+        if (data.trim() === "OK") fetchTasks();
+    });
+});
+
+var field;
+
+// 스테이터스용
+$(document).on("keypress focusout change", ".edit-status", function (event) {
+	if (event.type === "keypress" && event.which !== 13) return; // 엔터 키가 아니면 무시
+    if (event.type === "focusout" && $(this).is(":focus")) return; // 클릭 시에는 유지
+	
+    field = $(this).data("field");
+    const id = $(this).data("id");
+    const newValue = $(this).val().trim();
+    
+    console.log("dfdfdfdfddfd");
+    console.log(field);
+    console.log(id);
+    console.log(newValue); 
+    
+    if (newValue === "") return;
+
+    const params = { taskId: id, value: newValue, field: field};
+    AJAX.call("jsp/updateTask.jsp", params, function (data) {
+        if (data.trim() === "OK") fetchTasks();
+    });
+});   
+
+// ✅ 상태 변경 시 업데이트
+/* $(document).on("change", ".edit-status", function () {
+    const id = $(this).data("id");
+    const newValue = $(this).val();
+
+    
+    const params = { taskId: id, status: newValue };
+    AJAX.call("jsp/updateTask.jsp", params, function (data) {
+        if (data.trim() === "OK") fetchTasks();
+    });
+}); */
+
+// ✅ 새 작업 추가 기능 (입력 후 엔터)
+$(document).on("keypress", "#newTask, #newSP, #newEpic", function (event) {
+    if (event.which === 13) { // Enter 키 감지
+        addNewTask();
+    }
+});
+
+// ✅ 새 작업 추가 함수
+function addNewTask() {
+    const task = $("#newTask").val().trim();
+    const status = "";
+    const estimatedSP = "";
+    const epic = "";
+    
+    // ✅ 현재 로그인한 사용자 ID (세션에서 가져오기)
+    const owner = customerId; // 전역 변수로 세션에서 설정
+
+    if (task === "" && estimatedSP === "" && epic === "") {
+        alert("최소한 하나의 값을 입력하세요.");
+        return;
+    }
+
+    const params = {
+        task: task,
+        customerId: owner,  // ✅ 현재 로그인한 사용자를 자동 입력
+        status: status,
+        Estimated_SP: estimatedSP,
+        epic: epic,
+        dashboardId: dashboardId
+    };
+
+    AJAX.call("jsp/addTask.jsp", params, function (data) {
+        console.log("서버 응답:", data);
+        if (data.trim() === "1") {
+            alert("작업이 추가되었습니다.");
+            fetchTasks();
+            clearNewTaskFields();
+        } else {
+            alert("작업 추가 실패!");
+        }
+    });
+}
+
+// ✅ Owner 필드 제거 및 자동 설정
+function clearNewTaskFields() {
+    $("#newTask").val("");
+    $("#newStatus").val("진행");
+    $("#newSP").val("");
+    $("#newEpic").val("");
+}
+
+
+// ✅ 체크박스로 선택된 작업 삭제
+$(document).on("click", "#deleteSelectedTasks", function () {
+    const selectedTasks = $(".task-checkbox:checked").map(function () {
+        return $(this).data("id");
+    }).get();
+
+    if (selectedTasks.length === 0) return;
+    if (!confirm("선택한 작업을 삭제하시겠습니까?")) return;
+
+    selectedTasks.forEach(taskId => {
+        const params = { taskId: taskId };
+        AJAX.call("jsp/deleteTask.jsp", params, function (data) {
+            if (data.trim() === "OK") fetchTasks();
+        });
+    });
+});
+
+// ✅ 전체 선택 체크박스 기능
+$(document).on("change", "#selectAll", function () {
+    $(".task-checkbox").prop("checked", $(this).prop("checked"));
+});
+
+// ✅ 페이지 로드 시 작업 목록 불러오기
+$(document).ready(fetchTasks);
+
+    
+ 
 
 // 대시보드 최신화 알고리즘
 function populateDashboard(dashboards) {
@@ -1047,109 +1236,11 @@ function changeDashboardId(dashboardId) {
 }
 
 
-function populateTable(tasks) {
-    const tableBody = $("#taskTableBody");
-    const taskTableBodyDone = $("#taskTableBodyDone");
-    tableBody.empty(); // 기존 데이터를 모두 제거
-    taskTableBodyDone.empty(); // 기존 데이터를 모두 제거
-    console.log(tasks + "-------------------------------------------------------");
 
-    tasks.forEach(task => {
-        let statusHTML = ""; 
-        if (task.status === "완료") {
-            statusHTML = `<span class="status-done">Done</span>`;
-        } else if (task.status === "진행") {
-            statusHTML = `<span class="status-in-progress">In Progress</span>`;
-        } else if (task.status === "예정") {
-            statusHTML = `<span class="status-ready-to-start">Ready To Start</span>`;
-        }
-        else if (task.status === "멈춤") {
-            statusHTML = `<span class="status-stuck">Stuck</span>`;
-        }
-        
-        // 진행 상태가 "완료(Done)"이면 밑에 테이블(백로그)로 내려가기
-        if(task.status === "완료"){
-        	//테이블 클릭하면 모달 열림
-        	const newRow2 = `
-                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimated_SP}','${task.epic}')">
-                    <td>${task.task}</td>
-                    <td>${task.customerName}</td>
-                    <td>${statusHTML}</td>
-                    <td>${task.Estimated_SP}</td>
-                    <td>${task.epic}</td>
-                </tr>`;
-                
-                taskTableBodyDone.append(newRow2);
-        }
-        // 진행 상태가 "진행", "멈춤", "예정"이면 위에 테이블
-        else{
-        	//테이블 클릭하면 모달 열림
-            const newRow = `
-                <tr onclick="openEditModal('${task.taskId}','${task.task}','${task.status}','${task.Estimated_SP}','${task.epic}')">
-                    <td>${task.task}</td>
-                    <td>${task.customerName}</td>
-                    <td>${statusHTML}</td>
-                    <td>${task.Estimated_SP}</td>
-                    <td>${task.epic}</td>
-                </tr>`;
-                
-                tableBody.append(newRow);
-        }
-    });
 
-    // 새 작업 추가 입력란
-    const addTaskRow = `
-        <tr>
-            <td><input type="text" id="addTaskInput" placeholder="작업 추가"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>`;
-    tableBody.append(addTaskRow);
-}
 
-// Enter 키 이벤트를 document에 바인딩 (이벤트 중복 방지)
-$(document).on("keypress", "#addTaskInput", function (event) {
-    if (event.which === 13) { // 13 = Enter 키
-        addTask();
-        fetchTasks();
-    }
-});
 
-function addTask() {
-    var taskName = $("#addTaskInput").val().trim();
-    if (taskName === "") {
-        alert("작업명을 입력하세요.");
-        return;
-    }
 
-    var params = {
-        task: taskName,
-        customerId: customerId,
-        dashboardId: dashboardId
-    };
-
-    var url = "jsp/addTask.jsp";
-    AJAX.call(url, params, function(data) {
-        if (data.trim() === "1") {
-            alert("작업이 추가되었습니다.");
-            console.log("웹소켓 메시지 전송: " + taskName);  // 디버깅
-            // 작업이 추가된 후, 서버로 알림을 보내기
-            var message = {
-                type: "addTask",  // 작업 추가 타입
-                task: taskName,
-                customerId: customerId,
-                dashboardId: dashboardId
-            };
-            socket.send(JSON.stringify(message));  // JSON 형식으로 전송
-            fetchTasks(); // 작업 목록 갱신
-        } else {
-            alert("작업 추가 실패!");
-            fetchTasks(); // 작업 목록 갱신
-        }
-    });
-}
 
 // 대시보드 생성용 모달
 function openAddDashboardModal() {
@@ -1244,81 +1335,6 @@ function deleteDashboard() {
 
 
 
-function openEditModal(taskId, taskName, status, Estimated_SP, epic) {
-	console.log("모달 열기 실행됨!"); // 로그 확인용
-    $("#editTaskId").val(taskId);
-    $("#editTaskName").val(taskName);
-    $("#editTaskStatus").val(status);
-    $("#Estimated_SP").val(Estimated_SP);
-    $("#editTaskEpic").val(epic);
-    console.log("모달 ID 확인:", $("#editTaskModal").length); // 모달이 존재하는지 확인
-    console.log("Task 클릭됨: ", taskId, taskName, status, Estimated_SP, epic);
-
-    $("#editTaskModal").modal("show");
-}
-
-function updateTask() {
-    // JSON 형식으로 데이터 구조 생성
-    var params = {
-        taskId: $("#editTaskId").val(),
-        task: $("#editTaskName").val(),
-        status: $("#editTaskStatus").val(),
-        Estimated_SP: $("#Estimated_SP").val(),
-        epic: $("#editTaskEpic").val()
-    };
-
-    // AJAX를 통해 비동기 처리 --> updateTask.jsp
-    AJAX.call("jsp/updateTask.jsp", params, function (data) {
-        if (data.trim() === "OK") {
-            alert("작업이 수정되었습니다.");
-            fetchTasks(); // 작업 목록 갱신
-            // 수정 완료 후 모달 닫기
-            $("#editTaskModal").modal("hide");
-
-            // 웹소켓을 통해 다른 클라이언트에게 작업 수정 알리기
-            var message = {
-                type: "updateTasks",
-                taskId: params.taskId,
-                task: params.task
-            };
-            socket.send(JSON.stringify(message)); // 수정된 작업 정보를 보내기
-        } else {
-            alert("수정 실패!");
-        }
-    });
-}
-function deleteTask() {
-    var taskId = $("#editTaskId").val();
-
-    if (!taskId) {
-        alert("삭제할 작업이 선택되지 않았습니다.");
-        return;
-    }
-
-    if (!confirm("정말 이 작업을 삭제하시겠습니까?")) {
-        return; // 사용자가 취소하면 실행하지 않음
-    }
-
-    var params = { taskId: taskId };
-    
-    AJAX.call("jsp/deleteTask.jsp", params, function (data) {
-        if (data.trim() === "OK") {
-            alert("작업이 삭제되었습니다.");
-            fetchTasks(); // 작업 목록 갱신
-            $("#editTaskModal").modal("hide"); // 모달 닫기
-
-            // 웹소켓을 통해 다른 클라이언트에게 작업 삭제 알리기
-            var message = {
-                type: "deleteTask",
-                taskId: taskId
-            };
-            socket.send(JSON.stringify(message)); // 삭제된 작업 정보를 보내기
-        } else {
-            alert("삭제 실패!");
-            fetchTasks();
-        }
-    });
-}
 
 function addFriend() {
     var friendEmail = $("#friendEmail").val().trim();
