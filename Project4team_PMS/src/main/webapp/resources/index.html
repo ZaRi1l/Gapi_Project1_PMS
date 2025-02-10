@@ -64,7 +64,7 @@
 }
 
 .table th {
-	background-color: #b27f7e;
+	background-color: #b27e;
 	font-weight: bold;
 }
 
@@ -766,7 +766,9 @@ $(document).ready(function() {
 								<th>Epic</th>
 							</tr>
 						</thead>
-						<tbody id="taskTableBodyDone"></tbody>
+						<tbody id="taskTableBodyDone">
+
+						</tbody>
 					</table>
 				</div>
 				<!-- End of Topbar -->
@@ -841,8 +843,8 @@ $(document).ready(function() {
 <script src="js/demo/chart-area-demo.js"></script>
 <script src="js/demo/chart-pie-demo.js"></script>
 <script>
-//var socket = new WebSocket('ws://localhost:8080/Project4team_PMS/ws');
-var socket = new WebSocket('ws://34.138.23.151:8080/Project4team_PMS/ws');  // VM 인스턴스 용
+var socket = new WebSocket('ws://localhost:8080/Project4team_PMS/ws');
+//var socket = new WebSocket('ws://34.138.23.151:8080/Project4team_PMS/ws');  // VM 인스턴스 용
 
 //WebSocket 연결 설정
 socket.onopen = function() {

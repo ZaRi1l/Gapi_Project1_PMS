@@ -72,7 +72,7 @@ body {
 	font-size: 1rem;
 	font-weight: 400;
 	line-height: 1.5;
-	color: #858796;
+	color: #000000;
 	text-align: left;
 	background-color: #fff
 }
@@ -1783,7 +1783,7 @@ pre code {
 .table th {
 	padding: .75rem;
 	vertical-align: top;
-	border-top: 1px solid #b27f7e
+	border-top: 1px solid #2e59d9
 }
 
 .table th {
@@ -2698,8 +2698,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
 	color: #fff;
-	background-color: #793937;
-	border-color: #793937
+	background-color: #6610f2;
+	border-color: #6610f2
 }
 
 .btn-primary:hover {
@@ -11003,7 +11003,8 @@ a:focus {
 }
 
 #wrapper #content-wrapper #content {
-	flex: 1 0 auto
+	flex: 1 0 auto;
+	background-color: #ad9385;
 }
 
 .container,
@@ -11013,7 +11014,8 @@ a:focus {
 .container-sm,
 .container-xl {
 	padding-left: 1.5rem;
-	padding-right: 1.5rem
+	padding-right: 1.5rem;
+	background-color: #ad9385;
 }
 
 .scroll-to-top {
@@ -11106,7 +11108,7 @@ a:focus {
 }
 
 .bg-gradient-primary {
-	background-color: #b27f7e;
+	background-color: #793937;
 	background-size: cover
 }
 
@@ -11246,7 +11248,7 @@ a:focus {
 }
 
 .border-left-primary {
-	border-left: .50rem solid #b27f7e !important
+	border-left: .50rem solid #b27 !important
 }
 
 .border-bottom-primary {
