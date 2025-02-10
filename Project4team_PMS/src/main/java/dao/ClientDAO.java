@@ -161,6 +161,29 @@ public class ClientDAO {
 	        closeResources();
 	    }
 	}
+	
+	// 대시보드 삭제하기
+		public boolean deleteClient(String customerId) {
+			String deleteClientQuery = "DELETE FROM CLIENT WHERE CUSTOMER_ID = ?";
+
+			boolean isDeleted = true;
+			try {
+				connDB();
+				
+				stmt = con.prepareStatement(deleteClientQuery);
+				stmt.setString(1, customerId);
+				int rowsDeleted = stmt.executeUpdate(); // 삭제된 행 수 반환
+				isDeleted = isDeleted && rowsDeleted > 0; // 성공 시 true, 실패 시 false 
+				
+				return isDeleted; // 성공 시 true, 실패 시 false
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			} finally {
+				closeResources();
+			}
+		}
 
 	public void connDB() {
 		try {

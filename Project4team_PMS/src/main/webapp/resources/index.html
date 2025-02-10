@@ -64,7 +64,7 @@
 }
 
 .table th {
-	background-color: #b27f7e;
+	background-color: #e3dad5;
 	font-weight: bold;
 }
 
@@ -491,7 +491,7 @@
 							class="nav-link dropdown-toggle" href="#" id="userDropdown"
 							role="button" data-toggle="dropdown" aria-haspopup="true"
 							aria-expanded="false"> <span id="userName"
-								class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas
+								class="mr-2 d-none d-lg-inline text-white small">Douglas
 									McGee</span> <img class="img-profile rounded-circle"
 								src="img/undraw_profile.svg">
 						</a> <!-- Dropdown - User Information -->
@@ -542,6 +542,8 @@
 								<div class="modal-footer">
 									<!-- ✅ 정보 수정 버튼 추가 -->
 									<button type="button" class="btn btn-warning"
+										id="deleteClient" onclick="deleteClient()">회원 탈퇴</button>
+										<button type="button" class="btn btn-primary"
 										id="openEditProfileModal">정보 수정</button>
 									<button type="button" class="btn btn-secondary"
 										data-dismiss="modal">닫기</button>
@@ -1444,6 +1446,22 @@ function logOut() {
     	window.location.href = "login.html";
     }); 
     
+}
+
+// 회원 탈퇴
+function deleteClient() {
+    console.log("회원탈퇴 중...");
+
+    if (confirm("정말로 회원을 탈퇴하시겠습니까?")) {
+    	AJAX.call("jsp/deleteClient.jsp", null, function(data) {
+    		if (data.trim() === "OK") {
+    			alert("회원탈퇴가 성공적으로 되셨습니다.");
+    			window.location.href = "login.html";
+    		} else {
+    			alert("회원탈퇴 오류");
+    		}
+        }); 
+    } 
 }
 </script>
 </html>
