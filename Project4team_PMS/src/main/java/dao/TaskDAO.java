@@ -40,6 +40,7 @@ public class TaskDAO {
 				taskObj.put("taskData", rs.getString("TASK_JSON"));
 				taskObj.put("dashboardId", rs.getString("DASHBOARD_ID"));
 				taskObj.put("customerName", customerName);
+				
 
 				// JSONArray에 추가
 				tasks.add(taskObj);
@@ -53,6 +54,45 @@ public class TaskDAO {
 
 		return tasks;
 	}
+	
+	public JSONObject getTask(String taskId) { // 그냥 모든 작업을 다 보는 메서드
+		// CLIENT 테이블이랑 TASK 테이블이랑 조인해서 누가 어느 작업을 올렸는지 조회한다.
+		JSONObject taskObj = new JSONObject();
+		String query = "SELECT JSONSTR FROM TASK WHERE TASK_ID = ?";
+		try {
+			connDB();
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, taskId);
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				// CLIENT 테이블 JSONSTR 파싱
+				String taskJsonStr = rs.getString("JSONSTR");
+				JSONObject taskJson = (JSONObject) new JSONParser().parse(taskJsonStr);
+				
+				System.out.println(taskJsonStr);
+
+			    String task = taskJson.get("task") != null ? taskJson.get("task").toString() : "";
+			    String status = taskJson.get("status") != null ? taskJson.get("status").toString() : "";
+			    String estimited_ep = taskJson.get("Estimated_SP") != null ? taskJson.get("Estimated_SP").toString() : "";
+			    String epic = taskJson.get("epic") != null ? taskJson.get("epic").toString() : "";
+
+				// TASK 테이블 데이터 생성
+				taskObj.put("task", task);
+				taskObj.put("status", status);
+				taskObj.put("Estimated_SP", estimited_ep);
+				taskObj.put("epic", epic);
+
+			}
+			System.out.println(taskObj.toJSONString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+		return taskObj;
+	}
+	
 
 	public JSONArray getFriendTasks(String customerId) { // 동료과의 작업물만 보는 메서드
 		System.out.println(customerId);
@@ -147,70 +187,47 @@ public class TaskDAO {
 		return tasks;
 	}
 
-	public int insertTask(String taskName, String customerId, int dashboardId) {
-		String checkDashboardQuery = "SELECT COUNT(*) FROM DASHBOARD WHERE DASHBOARD_ID = ?";
-		String insertDashboardQuery = "INSERT INTO DASHBOARD (DASHBOARD_ID, JSONSTR) VALUES (?, ?)";
-		String insertTaskQuery = "INSERT INTO TASK (TASK_ID, DASHBOARD_ID, CUSTOMER_ID, JSONSTR) VALUES (?, ?, ?, ?)";
-		// task_id의 최대값을 추출한 후 +1 하기
-		String maxTaskIdQuery = "SELECT MAX(TASK_ID) + 1 AS MAXTASKID FROM TASK";
+	public int insertTask(String taskName, String customerId, int dashboardId, String status, String estimatedSP, String epic) {
+	    String insertTaskQuery = "INSERT INTO TASK (TASK_ID, DASHBOARD_ID, CUSTOMER_ID, JSONSTR) VALUES (?, ?, ?, ?)";
+	    String maxTaskIdQuery = "SELECT MAX(TASK_ID) + 1 AS MAXTASKID FROM TASK";
 
-		Date now = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String strNow = sdf.format(now);
+	    Date now = new Date();
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    String strNow = sdf.format(now);
 
-		System.out.println(strNow + " 2222222222222222222222222");
+	    int TASK_ID = 0;
+	    int DASHBOARD_ID = dashboardId;
 
-		int TASK_ID = 0;
+	    // ✅ JSON 데이터에 필요한 값 추가
+	    JSONObject jsonstr = new JSONObject();
+	    jsonstr.put("task", taskName);
+	    jsonstr.put("startdate", strNow);
+	    jsonstr.put("status", status);
+	    jsonstr.put("Estimated_SP", estimatedSP);
+	    jsonstr.put("epic", epic);
 
-		// DASHBOARD_ID가 숫자형일 경우
-		int DASHBOARD_ID = dashboardId; // 예시로 taskName의 해시코드를 사용하여 숫자로 처리
+	    try {
+	        connDB();
+	        stmt = con.prepareStatement(maxTaskIdQuery);
+	        rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            TASK_ID = rs.getInt("MAXTASKID");
+	        }
 
-		JSONObject jsonstr = new JSONObject();
-		jsonstr.put("task", taskName); // JSON 데이터 삽입
-		jsonstr.put("startdate", strNow); // JSON 데이터 삽입
-		jsonstr.put("Estimated_SP", ""); // JSON 데이터 삽입
-		jsonstr.put("epic", ""); // JSON 데이터 삽입
+	        // ✅ Task 생성 시 customerId를 변경할 수 없도록 함
+	        stmt = con.prepareStatement(insertTaskQuery);
+	        stmt.setInt(1, TASK_ID);
+	        stmt.setInt(2, DASHBOARD_ID);
+	        stmt.setString(3, customerId); // ✅ 로그인한 사용자 ID 고정
+	        stmt.setString(4, jsonstr.toJSONString());
 
-		try {
-			connDB();
-
-			stmt = con.prepareStatement(maxTaskIdQuery);
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				// 최대값 할당
-				TASK_ID = rs.getInt("MAXTASKID");
-			}
-			System.out.println("새로운 TASK_ID: " + TASK_ID);
-
-			// 1. 대시보드 존재 여부 확인
-			stmt = con.prepareStatement(checkDashboardQuery);
-			stmt.setInt(1, DASHBOARD_ID); // 숫자형으로 설정
-			rs = stmt.executeQuery();
-			rs.next();
-			int count = rs.getInt(1);
-
-			// 2. 대시보드가 없으면 생성
-			if (count == 0) {
-				stmt = con.prepareStatement(insertDashboardQuery);
-				stmt.setInt(1, DASHBOARD_ID); // 숫자형으로 설정
-				stmt.setString(2, "{}"); // 기본 JSON 데이터
-				stmt.executeUpdate();
-			}
-
-			// 3. 새로운 TASK 삽입
-			stmt = con.prepareStatement(insertTaskQuery);
-			stmt.setInt(1, TASK_ID); // TASK_ID 설정
-			stmt.setInt(2, DASHBOARD_ID); // 숫자형 DASHBOARD_ID 설정
-			stmt.setString(3, customerId);
-			stmt.setString(4, jsonstr.toJSONString());
-
-			return stmt.executeUpdate(); // 성공 시 1 반환
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return 0; // 실패 시 0 반환
-		} finally {
-			closeResources();
-		}
+	        return stmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return 0;
+	    } finally {
+	        closeResources();
+	    }
 	}
 
 	public boolean updateTask(String taskId, String task, String status, String estimited_ep, String epic) throws ParseException {
