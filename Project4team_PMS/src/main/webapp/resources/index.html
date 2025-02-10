@@ -837,34 +837,41 @@ $(document).ready(function() {
 <script src="js/demo/chart-pie-demo.js"></script>
 <script>
 var socket = new WebSocket('ws://localhost:8080/Project4team_PMS/ws');
+//var socket = new WebSocket('ws://34.138.23.151:8080/Project4team_PMS/ws');
 
 //✅ WebSocket 연결 설정
 socket.onopen = function() {
- console.log("WebSocket 연결됨");
- requestTaskUpdate(); // 초기 연결 시 최신 작업 목록 요청
+    console.log("WebSocket 연결됨");
+
+    // ✅ 로그인 후 첫 연결 시, dashboardId가 없으면 설정된 후 WebSocket에 반영
+    if (dashboardId !== "") {
+        updateDashboardOnWebSocket();
+    } else {
+        console.log("처음 로그인이라 dashboardId가 아직 설정되지 않았지만 그래도 잘 될거임");
+    }
 };
 
-//✅ 서버에서 받은 메시지를 처리하여 UI 업데이트
 socket.onmessage = function(event) {
- try {
-     let message = JSON.parse(event.data);
-     console.log("서버 응답:", message);
+    try {
+        let message = JSON.parse(event.data);
+        console.log("서버 응답:", message);
 
-     if (message.type === "update" && message.tasks && message.dashboardId === dashboardId) {
-         populateTable(message.tasks); // 테이블 업데이트
-     }
-     
- } catch (e) {
-     console.error("잘못된 메시지 형식: ", event.data);
- }
+        if (message.type === "update" && message.tasks) {
+            if (message.dashboardId === String(dashboardId)) {  // 현재 dashboardId와 일치하는 경우만 업데이트
+                populateTable(message.tasks);
+            }
+        }
+    } catch (e) {
+        console.error("잘못된 메시지 형식: ", event.data);
+    }
 };
 
 //✅ 서버로부터 작업 목록을 요청하는 함수
 function requestTaskUpdate() {
- var message = {
-     type: "update_request",
-     dashboardId: dashboardId
- };
+	var message = {
+         type: "update_request",
+         dashboardId: String(dashboardId)   //숫자를 문자열로 변환
+	    };
  socket.send(JSON.stringify(message));
 }
 
@@ -910,23 +917,26 @@ function getDashboard() {
     var url = "jsp/getDashboard.jsp";
 
     AJAX.call(url, null, function (data) {
-    	var dashboards = JSON.parse(data);
-    	console.log("📌 대시보드 객체 데이터: ", dashboards);
+        var dashboards = JSON.parse(data);
+        console.log("📌 대시보드 객체 데이터: ", dashboards);
 
         if (dashboards.length !== 0) {
-        		
-        	if (dashboardId == "") {
-        			window.dashboardId = dashboards[0].dashboardId;
-        	} else {
-        		window.dashboardId = dashboards[dashboards.length - 1].dashboardId;
-        	}
-        	
-        	populateDashboard(dashboards);
-        	
+            // ✅ 처음 로그인 시, 첫 번째 대시보드를 자동으로 선택
+            if (dashboardId == "") {
+                window.dashboardId = dashboards[0].dashboardId;
+            } else {
+                window.dashboardId = dashboards[dashboards.length - 1].dashboardId;
+            }
+
+            populateDashboard(dashboards);
             console.log("현재 dashboardId: ", dashboardId);
-            fetchTasks()
+
+            // ✅ WebSocket에 현재 대시보드를 구독하도록 요청
+            updateDashboardOnWebSocket();
+            fetchTasks();
         } else {
             alert("대시보드를 생성해주세요!");
+            fetchTasks();
         }
     });
 }
@@ -939,6 +949,7 @@ function fetchDashboard() {
     	var dashboards = JSON.parse(data);
         	
        	populateDashboard(dashboards);
+       	fetchTasks();
         	
         console.log("현재 dashboardId: ", dashboardId);
     });
@@ -951,10 +962,14 @@ function fetchTasks() {
 
     AJAX.call(url, params, function (data) {
         var tasks = JSON.parse(data);
-        populateTable(tasks); // UI 업데이트
+        populateTable(tasks);
 
-        // WebSocket으로 업데이트 요청 보내기
-        requestTaskUpdate();
+        // WebSocket 연결이 된 상태에서만 실행
+        if (socket.readyState === WebSocket.OPEN) {
+            requestTaskUpdate();
+        } else {
+            console.log("WebSocket이 아직 연결되지 않음.");
+        }
     });
 }
 
@@ -1237,13 +1252,28 @@ function populateDashboard(dashboards) {
 }
 
 function changeDashboardId(dashboardId) {
-	window.dashboardId = dashboardId; 
-	console.log("현재 dashboardId: ", dashboardId);
-	fetchDashboard();
-	fetchTasks();
+    window.dashboardId = dashboardId; 
+    console.log("현재 dashboardId 변경됨: ", dashboardId);
+
+    fetchDashboard();
+    fetchTasks();
+
+    //새로운 dashboardId를 서버에 알리기
+    updateDashboardOnWebSocket();
 }
 
-
+//✅ 서버에 새로운 dashboardId를 알림
+function updateDashboardOnWebSocket() {
+    if (socket.readyState === WebSocket.OPEN) {
+        var message = {
+            type: "update_dashboard",
+            dashboardId: String(dashboardId) // int → String 형변환
+        };
+        socket.send(JSON.stringify(message));
+    } else {
+        console.log("WebSocket이 아직 연결되지 않음.");
+    }
+}
 
 
 
