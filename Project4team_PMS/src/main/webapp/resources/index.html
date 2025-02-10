@@ -541,9 +541,9 @@
 								</div>
 								<div class="modal-footer">
 									<!-- ✅ 정보 수정 버튼 추가 -->
-									<button type="button" class="btn btn-warning"
-										id="deleteClient" onclick="deleteClient()">회원 탈퇴</button>
-										<button type="button" class="btn btn-primary"
+									<button type="button" class="btn btn-warning" id="deleteClient"
+										onclick="deleteClient()">회원 탈퇴</button>
+									<button type="button" class="btn btn-primary"
 										id="openEditProfileModal">정보 수정</button>
 									<button type="button" class="btn btn-secondary"
 										data-dismiss="modal">닫기</button>
@@ -705,30 +705,32 @@ $(document).ready(function() {
 				</div>
 
 				<div class="container">
-   <h2 class="my-4">Sprint</h2>
-<button id="deleteSelectedTasks" class="btn btn-danger">선택 삭제</button>
+					<h2 class="my-4">Sprint</h2>
+					<button id="deleteSelectedTasks" class="btn btn-danger">선택
+						삭제</button>
 
-<div class="card border-left-primary shadow h-100 py-2">
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="selectAll"></th>
-                    <th>태스크</th>
-                    <th>Owner</th>
-                    <th>Status</th>
-                    <th>Estimated SP</th>
-                    <th>Epic</th>
-                </tr>
-            </thead>
-            <tbody id="taskTableBody">
-                <!-- 여기에 기존 태스크 목록이 동적으로 추가됨 -->
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan = 6><input type="text" id="newTask" class="form-control" placeholder="새 태스크 입력"></td>
-					 <!-- ✅ Owner 입력 필드 읽기 전용 -->
-                    <!-- <td>
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="table-responsive">
+							<table class="table table-bordered table-hover">
+								<thead>
+									<tr>
+										<th><input type="checkbox" id="selectAll"></th>
+										<th>태스크</th>
+										<th>Owner</th>
+										<th>Status</th>
+										<th>Estimated SP</th>
+										<th>Epic</th>
+									</tr>
+								</thead>
+								<tbody id="taskTableBody">
+									<!-- 여기에 기존 태스크 목록이 동적으로 추가됨 -->
+								</tbody>
+								<tfoot>
+									<tr>
+										<td colspan=6><input type="text" id="newTask"
+											class="form-control" placeholder="새 태스크 입력"></td>
+										<!-- ✅ Owner 입력 필드 읽기 전용 -->
+										<!-- <td>
                         <select id="newStatus" class="form-control">
                             <option value="진행">In Progress</option>
                             <option value="멈춤">Stuck</option>
@@ -736,82 +738,83 @@ $(document).ready(function() {
                             <option value="완료">Done</option>
                         </select>
                     </td> -->
-                    <!-- <td><input type="text" id="newSP" class="form-control" placeholder="SP 입력"></td>
+										<!-- <td><input type="text" id="newSP" class="form-control" placeholder="SP 입력"></td>
                     <td><input type="text" id="newEpic" class="form-control" placeholder="Epic 입력"></td> -->
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-</div>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
 
-<!-- 백로그 테이블 -->
-<div class="container">
-    <h2 class="my-4">백로그</h2>
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-            	<th><input type="checkbox" id="selectAll"></th>
-                <th>태스크</th>
-                <th>Owner</th>
-                <th>Status</th>
-                <th>Estimated SP</th>
-                <th>Epic</th>
-            </tr>
-        </thead>
-        <tbody id="taskTableBodyDone"></tbody>
-    </table>
-</div>
-				<!-- End of Topbar -->
+					<!-- 백로그 테이블 -->
+					<div class="container">
+						<h2 class="my-4">백로그</h2>
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th><input type="checkbox" id="selectAll"></th>
+									<th>태스크</th>
+									<th>Owner</th>
+									<th>Status</th>
+									<th>Estimated SP</th>
+									<th>Epic</th>
+								</tr>
+							</thead>
+							<tbody id="taskTableBodyDone"></tbody>
+						</table>
+					</div>
+					<!-- End of Topbar -->
 
-				<!-- Begin Page Content -->
-				<div class="container-fluid"></div>
-				<!-- /.container-fluid -->
+					<!-- Begin Page Content -->
+					<div class="container-fluid"></div>
+					<!-- /.container-fluid -->
+
+				</div>
+				<!-- End of Main Content -->
+
+				<!-- Footer -->
+				<footer class="sticky-footer bg-white">
+					<div class="container my-auto">
+						<div class="copyright text-center my-auto">
+							<span>Copyright &copy; Your Website 2021</span>
+						</div>
+					</div>
+				</footer>
+				<!-- End of Footer -->
 
 			</div>
-			<!-- End of Main Content -->
+			<!-- End of Content Wrapper -->
 
-			<!-- Footer -->
-			<footer class="sticky-footer bg-white">
-				<div class="container my-auto">
-					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+		</div>
+		<!-- End of Page Wrapper -->
+
+		<!-- Scroll to Top Button-->
+		<a class="scroll-to-top rounded" href="#page-top"> <i
+			class="fas fa-angle-up"></i>
+		</a>
+
+		<!-- Logout Modal-->
+		<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Ready to
+							Leave?</h5>
+						<button class="close" type="button" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="modal-body">로그아웃 하시겠습니까?</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button"
+							data-dismiss="modal">Cancel</button>
+						<a class="btn btn-primary" href="#" onclick="logOut()">Logout</a>
 					</div>
 				</div>
-			</footer>
-			<!-- End of Footer -->
-
-		</div>
-		<!-- End of Content Wrapper -->
-
-	</div>
-	<!-- End of Page Wrapper -->
-
-	<!-- Scroll to Top Button-->
-	<a class="scroll-to-top rounded" href="#page-top"> <i
-		class="fas fa-angle-up"></i>
-	</a>
-
-	<!-- Logout Modal-->
-	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-					<button class="close" type="button" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">로그아웃 하시겠습니까?</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button"
-						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="#" onclick="logOut()">Logout</a>
-				</div>
 			</div>
 		</div>
-	</div>
 </body>
 
 <script src="js/jquery-3.5.1.min.js"></script>
@@ -834,33 +837,34 @@ $(document).ready(function() {
 <script src="js/demo/chart-pie-demo.js"></script>
 <script>
 var socket = new WebSocket('ws://localhost:8080/Project4team_PMS/ws');
-//var socket = new WebSocket('ws://34.138.23.151:8080/Project4team_PMS/ws');  // VM 인스턴스 용
 
-//WebSocket 연결 설정
+//✅ WebSocket 연결 설정
 socket.onopen = function() {
  console.log("WebSocket 연결됨");
+ requestTaskUpdate(); // 초기 연결 시 최신 작업 목록 요청
 };
 
-//서버에서 메시지를 받을 때 처리
+//✅ 서버에서 받은 메시지를 처리하여 UI 업데이트
 socket.onmessage = function(event) {
-    try {
-        var message = JSON.parse(event.data); // 서버에서 보낸 JSON 파싱
-        if (message.type === 'updateTasks') {  // type이 updateTasks일 때만 처리
-            console.log("작업 목록이 업데이트되었습니다.");
-            fetchTasks();  // 작업 목록 새로 고침
-        }
-    } catch (e) {
-        console.error("잘못된 메시지 형식: ", event.data);  // 오류가 발생한 메시지 출력
-    }
+ try {
+     let message = JSON.parse(event.data);
+     console.log("서버 응답:", message);
+
+     if (message.type === "update" && message.tasks && message.dashboardId === dashboardId) {
+         populateTable(message.tasks); // 테이블 업데이트
+     }
+     
+ } catch (e) {
+     console.error("잘못된 메시지 형식: ", event.data);
+ }
 };
 
-//서버와 연결이 종료될 때 처리
-socket.onclose = function() {
- console.log('웹소켓 연결이 종료되었습니다.');
-};
-
-//서버로 메시지 전송 함수
-function sendMessage(message) {
+//✅ 서버로부터 작업 목록을 요청하는 함수
+function requestTaskUpdate() {
+ var message = {
+     type: "update_request",
+     dashboardId: dashboardId
+ };
  socket.send(JSON.stringify(message));
 }
 
@@ -940,13 +944,17 @@ function fetchDashboard() {
     });
 }
 
+//✅ fetchTasks() 실행 시 WebSocket을 통해 최신 데이터 요청
 function fetchTasks() {
     var url = "jsp/getTask.jsp";
     var params = { dashboardId: dashboardId };
 
     AJAX.call(url, params, function (data) {
         var tasks = JSON.parse(data);
-        populateTable(tasks);
+        populateTable(tasks); // UI 업데이트
+
+        // WebSocket으로 업데이트 요청 보내기
+        requestTaskUpdate();
     });
 }
 
