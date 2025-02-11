@@ -1781,7 +1781,6 @@ pre code {
 
 .table td,
 .table th {
-	padding: .75rem;
 	vertical-align: top;
 	border-top: 1px solid #2e59d9
 }
@@ -7119,7 +7118,7 @@ button.bg-dark:hover {
 	background-color: #ffffff !important
 }
 
-#content .bg-white {
+.bg-black {
 	background-color: #000000 !important
 }
 
