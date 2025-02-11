@@ -268,7 +268,7 @@ option {
 						</div>
 						<div class="modal-body">
 							<input type="hidden" id="editTaskId"> <label>대시보드
-								명:</label> <input type="text" id="addDashboardName">
+								명:</label> <input type="text" id="addDashboardName" class="form-control">
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary"
@@ -785,7 +785,7 @@ $(document).ready(function() {
 							<thead>
 								<tr>
 									<th><input type="checkbox" id="selectAll"></th>
-									<th>태스크</th>
+									<th>Task</th>
 									<th>Owner</th>
 									<th>Status</th>
 									<th>Estimated SP</th>
@@ -1043,6 +1043,19 @@ function populateTable(tasks) {
         
         // Estimated_SP가 ""이라면 0 넣기
         estimated_sp = task.Estimated_SP === "" ? 0 : task.Estimated_SP;
+        
+        
+        // epic 5가지 옵션
+        epic = task.epic === "" ? "요구사항 분석" : task.epic;
+        const epicSelect = `
+            <select class="edit-status" data-field="epic" data-id="${task.taskId}" data-status="${epic}">
+                <option value="요구사항 분석" ${epic === "요구사항 분석" ? "selected" : ""}>요구사항 분석</option>
+                <option value="설계" ${epic === "설계" ? "selected" : ""}>설계</option>
+                <option value="구현" ${epic === "구현" ? "selected" : ""}>구현</option>
+                <option value="테스트" ${epic === "테스트" ? "selected" : ""}>테스트</option>
+                <option value="유지보수" ${epic === "유지보수" ? "selected" : ""}>유지보수</option>
+            </select>
+        `;
 
         const newRow = `
             <tr>
@@ -1058,7 +1071,7 @@ function populateTable(tasks) {
               	</td> // 진행상황
 
                 <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${estimated_sp} SP</td> // Estimated_SP
-                <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td> // epic
+                <td>${epicSelect}</td> // epic
             </tr>
         `;
 
@@ -1138,7 +1151,7 @@ $(document).on("keypress focusout", ".edit-input", function (event) {
 
 var field;
 
-// 스테이터스용
+// 스테이터스, 에픽 용
 $(document).on("keypress focusout change", ".edit-status", function (event) {
 	if (event.type === "keypress" && event.which !== 13) return; // 엔터 키가 아니면 무시
     if (event.type === "focusout" && $(this).is(":focus")) return; // 클릭 시에는 유지
@@ -1290,7 +1303,7 @@ function populateDashboard(dashboards) {
         	
         	dashboardOwner.append(`${dashboard.customerId}`);
         	dashboardStartDate.append(`${dashboardData.startdate}`);
-        	dashboardName.append(`<input id="dashboardNameText" type="text" value="${dashboardData.name}">`);
+        	dashboardName.append(`<input id="dashboardNameText" type="text" class="form-control" value="${dashboardData.name}">`);
         	
         	// 여기서 소유자 판단 후 버튼 활성화.
         	if (dashboard.customerId == window.customerId) {
