@@ -732,19 +732,8 @@ $(document).ready(function() {
 								</tbody>
 								<tfoot>
 									<tr>
-										<td colspan=6><input type="text" id="newTask"
-											class="form-control" placeholder="새 태스크 입력"></td>
-										<!-- ✅ Owner 입력 필드 읽기 전용 -->
-										<!-- <td>
-                        <select id="newStatus" class="form-control">
-                            <option value="진행">In Progress</option>
-                            <option value="멈춤">Stuck</option>
-                            <option value="예정">Ready To Start</option>
-                            <option value="완료">Done</option>
-                        </select>
-                    </td> -->
-										<!-- <td><input type="text" id="newSP" class="form-control" placeholder="SP 입력"></td>
-                    <td><input type="text" id="newEpic" class="form-control" placeholder="Epic 입력"></td> -->
+										<td colspan=6><input type="text" id="newTask" class="form-control" 
+										placeholder="새 태스크 입력" enterkeyhint="go"></td>
 									</tr>
 								</tfoot>
 							</table>
@@ -839,8 +828,8 @@ $(document).ready(function() {
 <script src="js/demo/chart-area-demo.js"></script>
 <script src="js/demo/chart-pie-demo.js"></script>
 <script>
-var socket = new WebSocket('ws://localhost:8080/Project4team_PMS/ws');
-// var socket = new WebSocket('ws://34.138.23.151:8080/Project4team_PMS/ws');
+//var socket = new WebSocket('ws://localhost:8080/Project4team_PMS/ws');
+var socket = new WebSocket('ws://34.138.23.151:8080/Project4team_PMS/ws');
 
 //✅ WebSocket 연결 설정
 socket.onopen = function() {
@@ -1157,12 +1146,13 @@ $(document).on("keypress focusout change", ".edit-status", function (event) {
     });
 }); */
 
-// ✅ 새 작업 추가 기능 (입력 후 엔터)
+//✅ 새 작업 추가 기능 (입력 후 엔터 및 다음 키)
 $(document).on("keypress", "#newTask, #newSP, #newEpic", function (event) {
-    if (event.which === 13) { // Enter 키 감지
+    if (event.which === 13 || event.which === 10) { // Enter 키 및 다음 키 감지
         addNewTask();
     }
 });
+
 
 // ✅ 새 작업 추가 함수
 function addNewTask() {
@@ -1550,6 +1540,6 @@ function deleteClient() {
     		}
         }); 
     } 
-}
+}//
 </script>
 </html>
