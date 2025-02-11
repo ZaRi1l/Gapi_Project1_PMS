@@ -1042,19 +1042,19 @@ function populateTable(tasks) {
 
         const newRow = `
             <tr>
-                <td><input type="checkbox" class="task-checkbox" data-id="${task.taskId}"></td>
-                <td class="editable" data-field="task" data-id="${task.taskId}">${task.task}</td>
-                <td class="editable" data-field="customerName" data-id="${task.taskId}">${task.customerName}</td>
+                <td><input type="checkbox" class="task-checkbox" data-id="${task.taskId}"></td> // 삭제 체크박스
+                <td class="editable" data-field="task" data-id="${task.taskId}">${task.task}</td> // 작업명
+                <td class="editable" data-field="customerName" data-id="${task.taskId}">${task.customerName}</td> // 오너
                 
                 <td href="#_" style="width: 100%; background-color: ${color}" class="relative inline-flex items-center justify-start overflow-hidden font-medium transition-all shadow rounded hover:bg-white group">
                 <span class="bg-white w-48 h-48 rounded rotate-[-40deg] absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
                 <span class="relative w-full text-left text-black transition-colors duration-300 ease-in-out group-hover:text-white">
                 ${statusSelect}
                 </span>
-              	</td>
+              	</td> // 진행상황
 
-                <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${task.Estimated_SP}</td>
-                <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td>
+                <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${task.Estimated_SP}</td> // Estimated_SP
+                <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td> // epic
             </tr>
         `;
 
@@ -1165,7 +1165,7 @@ $(document).on("keypress", "#newTask, #newSP, #newEpic", function (event) {
 // ✅ 새 작업 추가 함수
 function addNewTask() {
     const task = $("#newTask").val().trim();
-    const status = "";
+    const status = "진행";
     const estimatedSP = "";
     const epic = "";
     
