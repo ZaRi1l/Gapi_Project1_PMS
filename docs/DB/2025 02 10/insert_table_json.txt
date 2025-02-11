@@ -1,0 +1,71 @@
+-- client table insert
+INSERT INTO client(customer_id, jsonstr) 
+    VALUES('kchs@naver.com', '{"name":"김철수","password":"1234"}');
+INSERT INTO client(customer_id, jsonstr) 
+    VALUES('ddd@naver.com', '{"name":"이영자","password":"1234"}');
+INSERT INTO client(customer_id, jsonstr) 
+    VALUES('sky@gmail.com', '{"name":"박하늘","password":"1234"}');
+
+-- dashboard table insert
+INSERT INTO dashboard(dashboard_id, customer_id, jsonstr) 
+    VALUES(1, 'kchs@naver.com', '{"name":"게임앱","startdate":"2025-01-02"}');
+INSERT INTO dashboard(dashboard_id, customer_id, jsonstr) 
+    VALUES(2, 'kchs@naver.com', '{"name":"날씨앱","startdate":"2024-01-30"}');
+INSERT INTO dashboard(dashboard_id, customer_id, jsonstr) 
+    VALUES(3, 'sky@gmail.com', '{"name":"금융","startdate":"2025-01-15"}');
+
+-- client_dashboard table insert
+INSERT INTO client_dashboard(customer_id, dashboard_id) 
+    VALUES('kchs@naver.com', 1);
+INSERT INTO client_dashboard(customer_id, dashboard_id) 
+    VALUES('kchs@naver.com', 2);
+INSERT INTO client_dashboard(customer_id, dashboard_id) 
+    VALUES('ddd@naver.com', 1);
+INSERT INTO client_dashboard(customer_id, dashboard_id) 
+    VALUES('kchs@naver.com', 3);
+INSERT INTO client_dashboard(customer_id, dashboard_id) 
+    VALUES('sky@gmail.com', 3);
+
+-- friendlist table insert
+INSERT INTO friendlist(customer_id, friend_id) 
+    VALUES('kchs@naver.com', 'ddd@naver.com');
+INSERT INTO friendlist(customer_id, friend_id) 
+    VALUES('ddd@naver.com', 'kchs@naver.com');
+INSERT INTO friendlist(customer_id, friend_id) 
+    VALUES('ddd@naver.com', 'sky@gmail.com');
+INSERT INTO friendlist(customer_id, friend_id) 
+    VALUES('sky@gmail.com', 'ddd@naver.com');
+
+-- task table insert
+INSERT INTO task(task_id, dashboard_id, customer_id, jsonstr) 
+    VALUES(1, 1, 'ddd@naver.com', '{"task":"게임 그래픽","status":"진행","startdate":"2025-01-05","enddate":"2025-01-30"}');
+INSERT INTO task(task_id, dashboard_id, customer_id, jsonstr) 
+    VALUES(2, 1, 'kchs@naver.com', '{"task":"게임 UI","status":"완료","startdate":"2025-01-15","enddate":"2025-01-20"}');
+
+INSERT INTO task(task_id, dashboard_id, customer_id, jsonstr) 
+    VALUES(3, 2, 'kchs@naver.com', '{"task":"날씨 UI","status":"완료","startdate":"2024-07-15","enddate":"2025-01-01"}');
+INSERT INTO task(task_id, dashboard_id, customer_id, jsonstr) 
+    VALUES(4, 2, 'kchs@naver.com', '{"task":"날씨 어플","status":"진행","startdate":"2025-01-20","enddate":"2025-01-31"}');
+
+INSERT INTO task(task_id, dashboard_id, customer_id, jsonstr) 
+    VALUES(5, 3, 'sky@gmail.com', '{"task":"금융 회의","status":"완료","startdate":"2025-01-15","enddate":"2025-01-31"}');
+INSERT INTO task(task_id, dashboard_id, customer_id, jsonstr) 
+    VALUES(6, 3, 'kchs@naver.com', '{"task":"금융 UI","status":"예정","startdate":"2025-09-15","enddate":"2025-12-01"}');
+
+-- invite table insert
+INSERT INTO invite(friend_id, dashboard_id) 
+    VALUES('aaa@gmail.com', 1);
+INSERT INTO invite(friend_id, dashboard_id) 
+    VALUES('aaa@gmail.com', 3);
+INSERT INTO invite(friend_id, dashboard_id) 
+    VALUES('bbb@naver.com', 2);
+INSERT INTO invite(friend_id, dashboard_id) 
+    VALUES('bbb@naver.com', 3);
+INSERT INTO invite(friend_id, dashboard_id) 
+    VALUES('ccc@gmail.com', 2);
+
+COMMIT;
+
+
+
+
