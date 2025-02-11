@@ -20,7 +20,12 @@
 	rel="stylesheet">
 
 <!-- Custom styles for this template-->
+<link href="css/button.css" rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+<!-- Select2 라이브러리 추가 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
 
 <!-- CSS 가져온거 PMS -->
@@ -58,7 +63,7 @@
 }
 
 .table th, .table td {
-	padding: 10px;
+	padding: .2rem;
 	border: 1px solid #ddd;
 	background-color: #ffffff;
 }
@@ -126,6 +131,34 @@
 	width: 100%;
 	padding: 5px;
 	margin-bottom: 10px;
+}
+
+/* 상태별 색상 적용 */
+
+/* 기본 스타일 */
+.edit-status {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 0px solid #ccc;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ffffff00;
+    color: #000000;
+    width: 100%
+}
+
+option {
+	color: #000000;
+	background-color: #ffffff00;
+}
+
+
+/* 드롭다운 화살표 변경 */
+.edit-status:focus {
+    outline: none;
+    border-color: #007bff;
 }
 </style>
 </head>
@@ -284,7 +317,7 @@
 
 				<!-- Topbar -->
 				<nav
-					class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+					class="navbar navbar-expand navbar-light bg-black topbar mb-4 static-top shadow">
 
 					<!-- Sidebar Toggle (Topbar) -->
 					<button id="sidebarToggleTop"
@@ -706,7 +739,7 @@ $(document).ready(function() {
 
 				<div class="container">
 					<h2 class="my-4">Sprint</h2>
-					<button id="deleteSelectedTasks" class="btn btn-danger">선택
+					<button id="deleteSelectedTasks" class="btn btn-primary">선택
 						삭제</button>
 
 					<div class="card border-left-primary shadow h-100 py-2">
@@ -747,8 +780,7 @@ $(document).ready(function() {
 					</div>
 
 					<!-- 백로그 테이블 -->
-					<div class="container">
-						<h2 class="my-4">백로그</h2>
+						<h2 class="my-2 mt-5">백로그</h2>
 						<table class="table table-bordered table-hover">
 							<thead>
 								<tr>
@@ -762,7 +794,6 @@ $(document).ready(function() {
 							</thead>
 							<tbody id="taskTableBodyDone"></tbody>
 						</table>
-					</div>
 					<!-- End of Topbar -->
 
 					<!-- Begin Page Content -->
@@ -980,56 +1011,79 @@ function populateTable(tasks) {
     taskTableBodyDone.empty();
 
     tasks.forEach(task => {
-    	if(task.status === "완료") {
-    		const statusSelect = `
-                <select class="edit-status form-control" data-field="status" data-id="${task.taskId}">
-                    <option value="진행" ${task.status === "진행" ? "selected" : ""}>In Progress</option>
-                    <option value="멈춤" ${task.status === "멈춤" ? "selected" : ""}>Stuck</option>
-                    <option value="예정" ${task.status === "예정" ? "selected" : ""}>Ready To Start</option>
-                    <option value="완료" ${task.status === "완료" ? "selected" : ""}>Done</option>
-                </select>
-            `;
-
-            const newRow = `
-                <tr>
-                    <td><input type="checkbox" class="task-checkbox" data-id="${task.taskId}"></td>
-                    <td class="editable" data-field="task" data-id="${task.taskId}">${task.task}</td>
-                    <td class="editable" data-field="customerName" data-id="${task.taskId}">${task.customerName}</td>
-                    <td>${statusSelect}</td>
-                    <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${task.Estimated_SP}</td>
-                    <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td>
-                </tr>
-            `;
-            
-            
-            taskTableBodyDone.append(newRow);
-    	} else {
+    	// 색깔 속성
+    	var color;
     	
-	        const statusSelect = `
-	            <select class="edit-status form-control" data-field="status" data-id="${task.taskId}">
-	                <option value="진행" ${task.status === "진행" ? "selected" : ""}>In Progress</option>
-	                <option value="멈춤" ${task.status === "멈춤" ? "selected" : ""}>Stuck</option>
-	                <option value="예정" ${task.status === "예정" ? "selected" : ""}>Ready To Start</option>
-	                <option value="완료" ${task.status === "완료" ? "selected" : ""}>Done</option>
-	            </select>
-	        `;
-	
-	        const newRow = `
-	            <tr>
-	                <td><input type="checkbox" class="task-checkbox" data-id="${task.taskId}"></td>
-	                <td class="editable" data-field="task" data-id="${task.taskId}">${task.task}</td>
-	                <td class="editable" data-field="customerName" data-id="${task.taskId}">${task.customerName}</td>
-	                <td>${statusSelect}</td>
-	                <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${task.Estimated_SP}</td>
-	                <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td>
-	            </tr>
-	        `;
-	        tableBody.append(newRow);
-    	}
-/*         if(task.status === "완료") taskTableBodyDone.append(newRow);
-        else tableBody.append(newRow); */
+	    switch (task.status) {
+	    case '진행':
+	      color = "#ff00ff";
+	      break;
+	    case '멈춤':
+	      color = "#ff0000";
+	      break;
+	    case '예정':
+	    color = "#00ff00";
+	      break;
+	    case '완료':
+	    color = "#00ffff";
+	      break;
+	  }
+    	
+    	
+        // 상태값에 따른 데이터 속성 추가
+        const statusSelect = `
+            <select class="edit-status" data-field="status" data-id="${task.taskId}" data-status="${task.status}">
+                <option value="진행" ${task.status === "진행" ? "selected" : ""}>In Progress</option>
+                <option value="멈춤" ${task.status === "멈춤" ? "selected" : ""}>Stuck</option>
+                <option value="예정" ${task.status === "예정" ? "selected" : ""}>Ready To Start</option>
+                <option value="완료" ${task.status === "완료" ? "selected" : ""}>Done</option>
+            </select>
+        `;
+
+        const newRow = `
+            <tr>
+                <td><input type="checkbox" class="task-checkbox" data-id="${task.taskId}"></td>
+                <td class="editable" data-field="task" data-id="${task.taskId}">${task.task}</td>
+                <td class="editable" data-field="customerName" data-id="${task.taskId}">${task.customerName}</td>
+                
+                <td href="#_" style="width: 100%; background-color: ${color}" class="relative inline-flex items-center justify-start overflow-hidden font-medium transition-all shadow rounded hover:bg-white group">
+                <span class="bg-white w-48 h-48 rounded rotate-[-40deg] absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+                <span class="relative w-full text-left text-black transition-colors duration-300 ease-in-out group-hover:text-white">
+                ${statusSelect}
+                </span>
+              	</td>
+
+                <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${task.Estimated_SP}</td>
+                <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td>
+            </tr>
+        `;
+
+        // "완료" 상태라면 taskTableBodyDone에 추가, 아니면 일반 tableBody에 추가
+        (task.status === "완료" ? taskTableBodyDone : tableBody).append(newRow);
+    });
+
+    // 이벤트 리스너 추가 -> 상태 변경 시 색상 업데이트
+    document.addEventListener("change", function(event) {
+        if (event.target.classList.contains("edit-status")) {
+            const select = event.target;
+            const selectedStatus = select.value;
+            select.setAttribute("data-status", selectedStatus);
+        }
     });
 }
+document.addEventListener("change", function(event) {
+    if (event.target.classList.contains("edit-status")) {
+        const select = event.target;
+        const selectedStatus = select.value;
+        select.setAttribute("data-status", selectedStatus);
+    }
+});
+
+
+$(document).ready(function() {
+    $(".edit-status").select2();
+});
+
 
 // ✅ 인라인 수정 기능 (텍스트 입력 필드로 변경)
 $(document).on("click", ".editable", function () {

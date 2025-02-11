@@ -1781,7 +1781,6 @@ pre code {
 
 .table td,
 .table th {
-	padding: .75rem;
 	vertical-align: top;
 	border-top: 1px solid #2e59d9
 }
@@ -2698,8 +2697,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
 	color: #fff;
-	background-color: #793937;
-	border-color: #793937
+	background-color: #000000;
+	border-color: #000000
 }
 
 .btn-primary:hover {
@@ -2903,7 +2902,7 @@ fieldset:disabled a.btn {
 
 .btn-danger {
 	color: #fff;
-	background-color: #e74a3b;
+	background-color: #ff0000;
 	border-color: #e74a3b
 }
 
@@ -7119,7 +7118,7 @@ button.bg-dark:hover {
 	background-color: #ffffff !important
 }
 
-#content .bg-white {
+.bg-black {
 	background-color: #000000 !important
 }
 
