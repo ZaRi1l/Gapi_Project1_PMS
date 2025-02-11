@@ -748,7 +748,7 @@ $(document).ready(function() {
 								<thead>
 									<tr>
 										<th><input type="checkbox" id="selectAll"></th>
-										<th>태스크</th>
+										<th>Task</th>
 										<th>Owner</th>
 										<th>Status</th>
 										<th>Estimated SP</th>
@@ -780,7 +780,7 @@ $(document).ready(function() {
 					</div>
 
 					<!-- 백로그 테이블 -->
-						<h2 class="my-2 mt-5">백로그</h2>
+						<h2 class="my-2 mt-5">Back Log</h2>
 						<table class="table table-bordered table-hover">
 							<thead>
 								<tr>
@@ -1039,6 +1039,10 @@ function populateTable(tasks) {
                 <option value="완료" ${task.status === "완료" ? "selected" : ""}>Done</option>
             </select>
         `;
+        
+        
+        // Estimated_SP가 ""이라면 0 넣기
+        estimated_sp = task.Estimated_SP === "" ? 0 : task.Estimated_SP;
 
         const newRow = `
             <tr>
@@ -1053,7 +1057,7 @@ function populateTable(tasks) {
                 </span>
               	</td> // 진행상황
 
-                <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${task.Estimated_SP}</td> // Estimated_SP
+                <td class="editable" data-field="Estimated_SP" data-id="${task.taskId}">${estimated_sp} SP</td> // Estimated_SP
                 <td class="editable" data-field="epic" data-id="${task.taskId}">${task.epic}</td> // epic
             </tr>
         `;
@@ -1091,9 +1095,17 @@ $(document).on("click", ".editable", function () {
 
     const field = $(this).data("field");
     const id = $(this).data("id");
-    const currentValue = $(this).text().trim();
+    
+    var input;
+    if (field === "Estimated_SP") {
+    	const currentValue = $(this).text().trim().slice(0, -3);
+    	input = `<input type="number" min="0" class="edit-input" data-field="${field}" data-id="${id}" value="${currentValue}" style="width:100%; padding:5px;">`;
+    } else {
+    	const currentValue = $(this).text().trim();
+    	input = `<input type="text" class="edit-input" data-field="${field}" data-id="${id}" value="${currentValue}" style="width:100%; padding:5px;">`
+    }
 
-    const input = `<input type="text" class="edit-input" data-field="${field}" data-id="${id}" value="${currentValue}" style="width:100%; padding:5px;">`;
+   
     $(this).html(input);
     $(".edit-input").focus();
 });
@@ -1106,13 +1118,18 @@ $(document).on("keypress focusout", ".edit-input", function (event) {
 
     const field = $(this).data("field");
     const id = $(this).data("id");
-    const newValue = $(this).val().trim();
+    var newValue = $(this).val().trim();
     
-    console.log("dfdfdfdfddfd");
+    // 만약에 Estimated_SP에서 값이 0보다 작으면 0 넣기
+    if (field === "Estimated_SP" && Number(newValue) < 0) {
+    	var newValue = 0;
+    }
+    
+    /* console.log("dfdfdfdfddfd");
     console.log(field);
     console.log(id);
     console.log(newValue); 
-
+ */
     const params = { taskId: id, value: newValue, field: field};
     AJAX.call("jsp/updateTask.jsp", params, function (data) {
         if (data.trim() === "OK") fetchTasks();
