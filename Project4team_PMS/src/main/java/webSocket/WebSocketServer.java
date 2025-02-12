@@ -5,7 +5,7 @@ import java.util.*;
 import javax.websocket.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import dao.TaskDAO; // TaskDAO 가져오기
+import dao.*; // TaskDAO 가져오기
 
 @javax.websocket.server.ServerEndpoint("/ws")
 public class WebSocketServer {
@@ -25,16 +25,23 @@ public class WebSocketServer {
         try {
             JSONObject jsonMessage = (JSONObject) new org.json.simple.parser.JSONParser().parse(message);
             String type = (String) jsonMessage.get("type");
-            String dashboardId = String.valueOf(jsonMessage.get("dashboardId")); // 🔥 오류 방지: Long → String 변환
-
-            // 🔹 클라이언트가 새로운 대시보드 ID를 요청하면 업데이트
+            String dashboardId = String.valueOf(jsonMessage.get("dashboardId"));
+            String customerId = (String) jsonMessage.get("customerId");  // 탈퇴할 사용자 ID
+            
+            // 1. 대시보드 변경 요청 처리
             if ("update_dashboard".equals(type)) {
-                sessionDashboardMap.put(session, dashboardId);
-                sendUpdatedTasks(session, dashboardId);
+                sessionDashboardMap.put(session, dashboardId);  // 대시보드 ID 갱신
+                sendUpdatedTasksToAll(dashboardId);
             }
-            // 🔹 대시보드에 변경사항이 있을 때 모든 관련 세션에 전송
+		
+	      // 2 대시보드에 변경사항이 있을 때 모든 관련 세션에 전송
             else if ("update_request".equals(type)) {
                 sendUpdatedTasksToAll(dashboardId);
+            }
+
+            // 3. 회원 탈퇴 처리
+            else if ("delete_client".equals(type)) {
+                sendUpdatedTasksToAll(dashboardId);  // 삭제된 작업 후 대시보드 작업 목록 갱신
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,24 +60,10 @@ public class WebSocketServer {
         throwable.printStackTrace();
     }
 
-    // 🔹 특정 세션에만 업데이트 전송
-    private void sendUpdatedTasks(Session session, String dashboardId) {
-        JSONArray taskList = new TaskDAO().getDashboardTasks(dashboardId);
-
-        JSONObject message = new JSONObject();
-        message.put("type", "update");
-        message.put("tasks", taskList);
-        message.put("dashboardId", dashboardId);
-
-        try {
-            session.getBasicRemote().sendText(message.toJSONString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // 🔹 특정 대시보드의 모든 구독자에게 업데이트 전송
     private void sendUpdatedTasksToAll(String dashboardId) {
+    	
+    	System.out.println("갱신할 대시보드 : " + dashboardId);
         JSONArray taskList = new TaskDAO().getDashboardTasks(dashboardId);
 
         JSONObject message = new JSONObject();

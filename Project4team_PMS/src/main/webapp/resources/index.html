@@ -1562,21 +1562,34 @@ function logOut() {
     
 }
 
-// 회원 탈퇴
+//회원 탈퇴
 function deleteClient() {
     console.log("회원탈퇴 중...");
 
     if (confirm("정말로 회원을 탈퇴하시겠습니까?")) {
-    	AJAX.call("jsp/deleteClient.jsp", null, function(data) {
-    		if (data.trim() === "OK") {
-    			alert("회원탈퇴가 성공적으로 되셨습니다.");
-    			window.location.href = "login.html";
-    		} else {
-    			alert("회원탈퇴 오류");
-    		}
-        }); 
+    	// WebSocket을 통해 탈퇴한 회원의 작업을 제거하라는 요청 보내기
+        var message = {
+            type: "delete_client",
+            dashboardId: String(dashboardId)  // 탈퇴할 사용자 ID
+        };
+        socket.send(JSON.stringify(message));  // 서버로 알림
+        fetchTasks();
+        
+        // AJAX로 서버에 회원 탈퇴 요청
+        AJAX.call("jsp/deleteClient.jsp", null, function(data) {
+            if (data.trim() === "OK") {
+                alert("회원탈퇴가 성공적으로 되셨습니다.");
+                fetchTasks();
+
+                // 페이지 리다이렉션
+                window.location.href = "login.html";
+            } else {
+                alert("회원탈퇴 오류");
+                fetchTasks();
+            }
+        });
     } 
-}//
+}
 
 // 인공지능 버튼
 const chatbotButton = document.getElementById('chatbot-button');
