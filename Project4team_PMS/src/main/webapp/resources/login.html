@@ -50,7 +50,7 @@
 									<div class="form-group">
 										<input type="email" class="form-control form-control-user"
 											id="Email" aria-describedby="emailHelp"
-											placeholder="Enter Email Address...">
+											placeholder="Enter Email Address..." required>
 									</div>
 									<div class="form-group">
 										<input type="password" class="form-control form-control-user"
@@ -100,6 +100,7 @@
 	<script src="js/jquery-3.5.1.min.js"></script>
 	<script src="js/core.js"></script>
 	<script>
+	
 		function login() {
 			var id = $("#Email").val().trim();
 			console.log(id);
@@ -107,6 +108,14 @@
 				alert("아이디를 입력해 주세요.");
 				$("#Email").focus();
 				return;
+			}
+			
+			// 이메일 형식 확인 (정규식을 사용)
+			var emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+			if (!emailPattern.test(id)) {
+			    alert("올바른 이메일 주소를 입력해 주세요.");
+			    $("#Email").focus();
+			    return;
 			}
 
 			var ps = $("#Password").val().trim();

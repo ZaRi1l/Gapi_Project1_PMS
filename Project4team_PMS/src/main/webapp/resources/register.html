@@ -41,7 +41,7 @@
 							<div class="form-group">
 								<input id="Email" type="email"
 									class="form-control form-control-user"
-									placeholder="Email Address">
+									placeholder="Email Address" required>
 							</div>
 							<div class="form-group">
 								<input id="Name" type="text"
@@ -60,6 +60,7 @@
 							</div>
 							<input type="submit" class="btn btn-primary btn-user btn-block"
 								value="Register Account" onclick="register()">
+
 							<hr>
 							<a href="index.html" class="btn btn-google btn-user btn-block">
 								<i class="fab fa-google fa-fw"></i> Register with Google
@@ -98,60 +99,74 @@
 	<script src="js/jquery-3.5.1.min.js"></script>
 	<script src="js/core.js"></script>
 	<script>
-      function register() {
-         var id = $("#Email").val().trim();
-         if (id == "") {
-            alert("이메일을 입력해 주세요.");
-            $("#Email").focus();
-            return;
-         }
-         
-         var name = $("#Name").val().trim();
-         if (id == "") {
-            alert("이름을 입력해 주세요.");
-            $("#Name").focus();
-            return;
-         }
+		function register() {
+			var id = $("#Email").val().trim();
+			if (id == "") {
+				alert("이메일을 입력해 주세요.");
+				$("#Email").focus();
+				return;
+			}
+			
+			// 이메일 형식 확인 (정규식을 사용)
+			var emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+			if (!emailPattern.test(id)) {
+			    alert("올바른 이메일 주소를 입력해 주세요.");
+			    $("#Email").focus();
+			    return;
+			}
 
-         var ps = $("#Password").val().trim();
-         if (ps == "") {
-            alert("패스워드를 입력해 주세요.");
-            $("#Password").focus();
-            return;
-         }
-         
-         var rps = $("#RepeatPassword").val().trim();
-         if (rps == "") {
-            alert("비밀번호를 확인해주세요");
-            $("#RepeatPassword").focus();
-            return;
-         }
-         
-         if (rps != ps) {
-        	 alert("비밀번호가 일치하지 않습니다.");
-             $("#Password").focus();
-             return;
-         }
-       
-         var usrobj = {name:name, password:ps};  // {name:최진환, password:1111}
-     	 var params = {id: id, jsonstr: JSON.stringify(usrobj)};  // {id: 'choi@naver.com', jsonstr: '{"name":"최진환","password":"1111"}'}
-     	 
-     	 console.log(usrobj);
-     	 console.log(params);
-     	var url = "jsp/register.jsp";
-     	AJAX.call(url, params, function(data) {
-     		var code = data.trim();
-     		if (code == "EX") {
-     			alert("이미 가입한 회원입니다.");
-     		} else if (code == "ER") {
-     			alert("회원가입 처리 중 에러가 발생하였습니다.");
-     		} else {
-     			alert("회원가입이 완료되었습니다.");
-     			window.location.href = "login.html";
-     		}
-     	});
-     }
-   </script>
+			var name = $("#Name").val().trim();
+			if (id == "") {
+				alert("이름을 입력해 주세요.");
+				$("#Name").focus();
+				return;
+			}
+
+			var ps = $("#Password").val().trim();
+			if (ps == "") {
+				alert("패스워드를 입력해 주세요.");
+				$("#Password").focus();
+				return;
+			}
+
+			var rps = $("#RepeatPassword").val().trim();
+			if (rps == "") {
+				alert("비밀번호를 확인해주세요");
+				$("#RepeatPassword").focus();
+				return;
+			}
+
+			if (rps != ps) {
+				alert("비밀번호가 일치하지 않습니다.");
+				$("#Password").focus();
+				return;
+			}
+
+			var usrobj = {
+				name : name,
+				password : ps
+			}; // {name:최진환, password:1111}
+			var params = {
+				id : id,
+				jsonstr : JSON.stringify(usrobj)
+			}; // {id: 'choi@naver.com', jsonstr: '{"name":"최진환","password":"1111"}'}
+
+			console.log(usrobj);
+			console.log(params);
+			var url = "jsp/register.jsp";
+			AJAX.call(url, params, function(data) {
+				var code = data.trim();
+				if (code == "EX") {
+					alert("이미 가입한 회원입니다.");
+				} else if (code == "ER") {
+					alert("회원가입 처리 중 에러가 발생하였습니다.");
+				} else {
+					alert("회원가입이 완료되었습니다.");
+					window.location.href = "login.html";
+				}
+			});
+		}
+	</script>
 </body>
 
 </html>
