@@ -12,16 +12,7 @@ import java.util.Date;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class Cliend_DashboardDAO {
-	// 데이터베이스 연결 정보
-	String driver = "com.mysql.jdbc.Driver";
-	String url = "jdbc:mysql://localhost:3306/gapi?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8";
-	String user = "apple";
-	String password = "1111";
-
-	private Connection con;
-	private PreparedStatement stmt;
-	private ResultSet rs;
+public class Cliend_DashboardDAO extends ParentDAO{
 
 	public JSONArray showFriends(int dashboardId) { // 현재 대시보드 ID로 대시보드 안에 사람들 조회
 		JSONArray friends = new JSONArray();
@@ -96,39 +87,4 @@ public class Cliend_DashboardDAO {
 	    return result; // 성공 시 1 이상, 실패 시 0 반환
 	}
 
-	public void connDB() {
-		try {
-			Class.forName(driver); // JDBC 드라이버 로드
-			System.out.println("JDBC driver loading success.");
-
-			try {
-				con = DriverManager.getConnection(url, user, password); // 첫 번째 URL로 연결
-				System.out.println("Oracle connection success with URL: " + url);
-			} catch (Exception e) {
-				System.out.println("Connection failed with URL: " + url);
-				System.out.println("Retrying with alternate URL...");
-
-				// 대체 URL로 연결
-				String alternateUrl = "jdbc:oracle:thin:@localhost:1521/XE";
-				con = DriverManager.getConnection(alternateUrl, user, password);
-				System.out.println("Oracle connection success with alternate URL: " + alternateUrl);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	// 6. 자원 해제
-	private void closeResources() {
-		try {
-			if (rs != null)
-				rs.close();
-			if (stmt != null)
-				stmt.close();
-			if (con != null)
-				con.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }
