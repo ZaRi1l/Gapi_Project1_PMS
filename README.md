@@ -6,6 +6,7 @@
 ##### 프로젝트 소개
 누구나 쉽고 빠르게 프로젝트를 계획하고 실시간 일정 관리를 통해 팀원 간 협업을 극대화하는 PMS를 개발한다.
 ##### 사이트 주소: http://gapi-pms.github.io
+##### 설치 방법: <a href="/docs/설치 방법/README.md" target="_blank">설치 방법</a>
 <br>
 <br>
 <br>
