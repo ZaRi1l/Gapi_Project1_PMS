@@ -50,7 +50,7 @@
 ## 요구사항
 
 <div style="text-align: center;">
-    <img height="500px" src="/docs/소프트웨어 설계/요구사항.png" alt="alt text" />
+    <img height="500px" src="/docs/소프트웨어 설계/요구 사항.png" alt="alt text" />
 </div>
 
 #### 요구사항 분석(기능 정리)
